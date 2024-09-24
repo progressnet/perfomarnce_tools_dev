@@ -26,13 +26,11 @@ const VIEW_OPTIONS = [
 
 type Props = {
   loading: boolean;
-  canReset: boolean;
   view: ICalendarView;
   date: IDateValue;
   onToday: () => void;
   onNextDate: () => void;
   onPrevDate: () => void;
-  onOpenFilters: () => void;
   onChangeView: (newView: ICalendarView) => void;
 };
 
@@ -41,11 +39,9 @@ export function CalendarToolbar({
   view,
   loading,
   onToday,
-  canReset,
   onNextDate,
   onPrevDate,
   onChangeView,
-  onOpenFilters,
 }: Props) {
   const popover = usePopover();
 
@@ -86,14 +82,7 @@ export function CalendarToolbar({
           <Button size="small" color="error" variant="contained" onClick={onToday}>
             Today
           </Button>
-
-          <IconButton onClick={onOpenFilters}>
-            <Badge color="error" variant="dot" invisible={!canReset}>
-              <Iconify icon="ic:round-filter-list" />
-            </Badge>
-          </IconButton>
         </Stack>
-
         {loading && (
           <LinearProgress
             color="inherit"

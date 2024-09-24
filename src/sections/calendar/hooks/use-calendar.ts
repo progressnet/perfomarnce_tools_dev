@@ -9,9 +9,9 @@ import { useResponsive } from 'src/hooks/use-responsive';
 
 // ----------------------------------------------------------------------
 
-export function useCalendar() {
+export function useCalendar(events: ICalendarEvent[]) {
   const calendarRef = useRef<FullCalendar>(null);
-
+  const [dayEvents, setDayEvents] = useState<ICalendarEvent[]>([])
   const calendarEl = calendarRef.current;
 
   const smUp = useResponsive('up', 'sm');
@@ -99,14 +99,17 @@ export function useCalendar() {
     [calendarEl, onOpenForm]
   );
 
+
+  // on click event
   const onClickEvent = useCallback(
     (arg: EventClickArg) => {
       const { event } = arg;
-
+      const filteredEvents = events.filter((evt) => evt.start === event.startStr);
+      setDayEvents(filteredEvents)
       onOpenForm();
       setSelectEventId(event.id);
     },
-    [onOpenForm]
+    [onOpenForm, events]
   );
 
   const onResizeEvent = useCallback(
@@ -115,7 +118,6 @@ export function useCalendar() {
 
       updateEvent({
         id: event.id,
-        allDay: event.allDay,
         start: event.startStr,
         end: event.endStr,
       });
@@ -126,10 +128,8 @@ export function useCalendar() {
   const onDropEvent = useCallback(
     (arg: EventDropArg, updateEvent: (eventData: Partial<ICalendarEvent>) => void) => {
       const { event } = arg;
-
       updateEvent({
         id: event.id,
-        allDay: event.allDay,
         start: event.startStr,
         end: event.endStr,
       });
@@ -168,8 +168,12 @@ export function useCalendar() {
     onCloseForm,
     //
     selectEventId,
+    setSelectEventId,
     selectedRange,
     //
     onClickEventInFilters,
+    //
+    dayEvents,
+    setDayEvents,
   };
 }

@@ -15,6 +15,7 @@ export function useEvent(
 ) {
   const currentEvent = events.find((event) => event.id === selectEventId);
 
+
   const defaultValues: ICalendarEvent = useMemo(
     () => ({
       id: '',

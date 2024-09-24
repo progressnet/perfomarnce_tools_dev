@@ -1,7 +1,5 @@
-import Calendar from '@fullcalendar/react'; // => request placed at the top
-import type { ICalendarEvent, ICalendarFilters } from 'src/types/calendar';
-
-import { useEffect } from 'react';
+import {useEffect, useState} from 'react';
+import Calendar from '@fullcalendar/react';
 import listPlugin from '@fullcalendar/list';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -9,48 +7,29 @@ import timelinePlugin from '@fullcalendar/timeline';
 import interactionPlugin from '@fullcalendar/interaction';
 
 import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
+import Stack from "@mui/material/Stack";
 import Dialog from '@mui/material/Dialog';
 import { useTheme } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
-import DialogTitle from '@mui/material/DialogTitle';
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
 
-import { useBoolean } from 'src/hooks/use-boolean';
-import { useSetState } from 'src/hooks/use-set-state';
-
-import { fDate, fIsAfter, fIsBetween } from 'src/utils/format-time';
+import { fDate } from 'src/utils/format-time';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-import { CALENDAR_COLOR_OPTIONS } from 'src/_mock/_calendar';
 import { updateEvent, useGetEvents } from 'src/actions/calendar';
-
-import { Iconify } from 'src/components/iconify';
 
 import { StyledCalendar } from '../styles';
 import { useEvent } from '../hooks/use-event';
-import { CalendarForm } from '../calendar-form';
 import { useCalendar } from '../hooks/use-calendar';
+import {Iconify} from "../../../components/iconify";
 import { CalendarToolbar } from '../calendar-toolbar';
-import { CalendarFilters } from '../calendar-filters';
-import { CalendarFiltersResult } from '../calendar-filters-result';
+
+import type {ICalendarEvent} from "../../../types/calendar";
 
 // ----------------------------------------------------------------------
 
 export function CalendarView() {
-  const theme = useTheme();
-
-  const openFilters = useBoolean();
-
   const { events, eventsLoading } = useGetEvents();
-
-  const filters = useSetState<ICalendarFilters>({
-    colors: [],
-    startDate: null,
-    endDate: null,
-  });
-
-  const dateError = fIsAfter(filters.state.startDate, filters.state.endDate);
 
   const {
     calendarRef,
@@ -69,71 +48,44 @@ export function CalendarView() {
     onInitialView,
     //
     openForm,
-    onOpenForm,
     onCloseForm,
     //
     selectEventId,
     selectedRange,
     //
-    onClickEventInFilters,
-  } = useCalendar();
+    dayEvents, setDayEvents
+  } = useCalendar(events);
 
-  const currentEvent = useEvent(events, selectEventId, selectedRange, openForm);
 
   useEffect(() => {
     onInitialView();
   }, [onInitialView]);
 
-  const canReset =
-    filters.state.colors.length > 0 || (!!filters.state.startDate && !!filters.state.endDate);
-
-  const dataFiltered = applyFilter({ inputData: events, filters: filters.state, dateError });
-
-  const renderResults = (
-    <CalendarFiltersResult
-      filters={filters}
-      totalResults={dataFiltered.length}
-      sx={{ mb: { xs: 3, md: 5 } }}
-    />
-  );
 
   const flexProps = { flex: '1 1 auto', display: 'flex', flexDirection: 'column' };
+  const currentEvent = useEvent(events, selectEventId, selectedRange, openForm);
 
+
+  const handleDayClick = (e: any) => {
+    // const day = e.dateStr;
+    // const filteredEvents = events.filter((event) => event.start === day);
+    // console.log({filteredEvents})
+    // setDayEvents(filteredEvents)
+  }
   return (
     <>
       <DashboardContent maxWidth="xl" sx={{ ...flexProps }}>
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          sx={{ mb: { xs: 3, md: 5 } }}
-        >
-          <Typography variant="h4">Calendar</Typography>
-          <Button
-            variant="contained"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-            onClick={onOpenForm}
-          >
-            New event
-          </Button>
-        </Stack>
-
-        {canReset && renderResults}
-
         <Card sx={{ ...flexProps, minHeight: '50vh' }}>
           <StyledCalendar sx={{ ...flexProps, '.fc.fc-media-screen': { flex: '1 1 auto' } }}>
             <CalendarToolbar
               date={fDate(date)}
               view={view}
-              canReset={canReset}
               loading={eventsLoading}
               onNextDate={onDateNext}
               onPrevDate={onDatePrev}
               onToday={onDateToday}
               onChangeView={onChangeView}
-              onOpenFilters={openFilters.onTrue}
             />
-
             <Calendar
               weekends
               editable
@@ -144,10 +96,11 @@ export function CalendarView() {
               eventResizableFromStart
               ref={calendarRef}
               initialDate={date}
+              dateClick={handleDayClick}
               initialView={view}
               dayMaxEventRows={3}
               eventDisplay="block"
-              events={dataFiltered}
+              events={events}
               headerToolbar={false}
               select={onSelectRange}
               eventClick={onClickEvent}
@@ -165,78 +118,250 @@ export function CalendarView() {
                 timeGridPlugin,
                 interactionPlugin,
               ]}
+
             />
           </StyledCalendar>
         </Card>
       </DashboardContent>
-
-      <Dialog
-        fullWidth
-        maxWidth="xs"
-        open={openForm}
-        onClose={onCloseForm}
-        transitionDuration={{
-          enter: theme.transitions.duration.shortest,
-          exit: theme.transitions.duration.shortest - 80,
-        }}
-        PaperProps={{
-          sx: {
-            display: 'flex',
-            overflow: 'hidden',
-            flexDirection: 'column',
-            '& form': { minHeight: 0, display: 'flex', flex: '1 1 auto', flexDirection: 'column' },
-          },
-        }}
-      >
-        <DialogTitle sx={{ minHeight: 76 }}>
-          {openForm && <> {currentEvent?.id ? 'Edit' : 'Add'} event</>}
-        </DialogTitle>
-
-        <CalendarForm
-          currentEvent={currentEvent}
-          colorOptions={CALENDAR_COLOR_OPTIONS}
-          onClose={onCloseForm}
-        />
-      </Dialog>
-
-      <CalendarFilters
-        events={events}
-        filters={filters}
-        canReset={canReset}
-        dateError={dateError}
-        open={openFilters.value}
-        onClose={openFilters.onFalse}
-        onClickEvent={onClickEventInFilters}
-        colorOptions={CALENDAR_COLOR_OPTIONS}
+      <CalendarDialog
+        onCloseForm={onCloseForm}
+        openForm={openForm}
+        currentEvent={currentEvent || undefined}
+        events={dayEvents}
       />
     </>
   );
 }
 
-// ----------------------------------------------------------------------
 
-type ApplyFilterProps = {
-  dateError: boolean;
-  filters: ICalendarFilters;
-  inputData: ICalendarEvent[];
+type DialogProps = {
+  events: ICalendarEvent[];
+  currentEvent: ICalendarEvent | undefined;
+  onCloseForm: () => void;
+  openForm: boolean;
 };
 
-function applyFilter({ inputData, filters, dateError }: ApplyFilterProps) {
-  const { colors, startDate, endDate } = filters;
+export const CalendarDialog = (
+  {
+    events,
+    currentEvent,
+    onCloseForm,
+    openForm,
+  }: DialogProps) => {
+  const theme = useTheme();
 
-  const stabilizedThis = inputData.map((el, index) => [el, index] as const);
-
-  inputData = stabilizedThis.map((el) => el[0]);
-
-  if (colors.length) {
-    inputData = inputData.filter((event) => colors.includes(event.color as string));
+  console.log({currentEvent})
+  const [eventActive, setEventActive] = useState<ICalendarEvent | undefined>(currentEvent);
+  console.log({eventActive})
+  const handleAddNewTask = () => {
+    console.log('add new task')
   }
+  return (
+    <Dialog
+      fullWidth
+      maxWidth="md"
+      open={openForm}
+      onClose={onCloseForm}
+      transitionDuration={{
+        enter: theme.transitions.duration.shortest,
+        exit: theme.transitions.duration.shortest - 80,
+      }}
+      PaperProps={{
+        sx: {
+          minHeight:'300px',
+          display: 'flex',
+          position: 'relative',
+          overflow: 'hidden',
+          flexDirection: 'column',
+        },
+      }}
+    >
+       <Stack
+          flexDirection="row"
+          spacing={1}
+          sx={{ flexGrow: 1, padding: '12px', backgroundColor: 'rgba(246,246,246,0.99)', borderRadius: '15px'}}
+       >
+         {/* LEFT SIDE */}
+          <Stack sx={{
+            flex: 1,
+            backgroundColor: '#fbfbfb',
+            borderRadius: 1,
+            boxShadow: '0px 0px 20px 0px rgba(0,0,0,0.1)',
 
-  if (!dateError) {
-    if (startDate && endDate) {
-      inputData = inputData.filter((event) => fIsBetween(event.start, startDate, endDate));
-    }
-  }
+          }}
+          >
+            <Stack
+              alignItems="flex-end"
+              justifyContent="center"
+              sx={{
+                height: '80px',
+                p:2,
+                borderBottom: '1px dashed',
+                borderColor: 'grey.300',
+            }}
+            >
+              {/* NEW TASK */}
+             <AddTaskBtn onClick={handleAddNewTask} />
+            </Stack>
+            <Stack sx={{
+              padding: 2,
 
-  return inputData;
+            }}>
+              {/* DISPLAY LIST OF CURRENT TASKS */}
+              <ListOfCurrentEvents
+                eventActive={eventActive}
+                events={events}
+                setEventActive={setEventActive}
+              />
+            </Stack>
+          </Stack>
+         {/* RIGHT SIDE */}
+          <Stack
+            sx={{
+              flex: 2,
+              backgroundColor: '#fff',
+              borderRadius: 1,
+              boxShadow: '0px 0px 20px 0px rgba(0,0,0,0.1)'
+            }}
+          >
+            <Stack sx={{
+              height: '80px',
+              p:1,
+              borderBottom: '1px dashed',
+              borderColor: 'grey.300',
+              alignItems: 'flex-end',
+              justifyContent: 'center'
+              }}
+            >
+              <IconButton
+                aria-label="close"
+                onClick={onCloseForm}
+
+              >
+                <Iconify icon="material-symbols:close" sx={{width: 25, height: 25,}} />
+              </IconButton>
+            </Stack>
+            <Stack>
+              b
+            </Stack>
+          </Stack>
+       </Stack>
+    </Dialog>
+  )
 }
+
+
+type ListOfCurrentEventsProps = {
+  events: ICalendarEvent[];
+  eventActive: ICalendarEvent | undefined;
+  setEventActive?: (event: ICalendarEvent) => void;
+}
+const ListOfCurrentEvents = ({events, eventActive, setEventActive}: ListOfCurrentEventsProps) => {
+  const initialTime = 0;
+  const time = events.reduce((acc, event) => acc + event.extendedProps.hours, initialTime)
+
+  const color = time >= 8 ? 'green' : 'red';
+  return (
+    <Stack>
+      <Typography  sx={{fontSize: '14px'}} color={color}>
+        {time} out of 8 hours have been added
+      </Typography>
+      <Stack sx={{marginTop: 2, overflow: 'auto'}} spacing={2}>
+        {events.map((event) => (
+          <EventListItem
+            eventActive={eventActive}
+            event={event}
+            key={event.id}
+            setEventActive={setEventActive}
+          />
+        ))}
+      </Stack>
+    </Stack>
+
+  )
+}
+
+
+type EventListItemProps = {
+  event: ICalendarEvent;
+  eventActive: ICalendarEvent | undefined;
+  setEventActive?: (event: ICalendarEvent) => void;
+}
+
+export function EventListItem(
+  {
+    event,
+    eventActive,
+    setEventActive
+  }: EventListItemProps)  {
+
+  const borderColor = eventActive?.id === event.id ? 'primary.main' : 'transparent';
+  return (
+    <Stack sx={{borderWidth: 1, borderColor}} flexDirection="row" alignItems="center">
+       <Stack sx={{ width: '100%'}}>
+         <Typography sx={{width: '200px', textWrap: 'wrap'}} variant="subtitle2">
+           {event.extendedProps.task}
+         </Typography >
+         <Typography sx={{width: '200px', textWrap: 'wrap'}} variant="caption" color="primary">
+           {event.extendedProps.process.title}
+         </Typography >
+         <Typography sx={{width: '200px', textWrap: 'wrap', marginTop: 1}} variant="subtitle2" color="primary">
+           {`${event.extendedProps.hours  } hours`}
+         </Typography >
+       </Stack>
+       <Stack sx={{width: '40px'}}>
+         <IconButton>
+            <Iconify icon="mingcute:right-fill" sx={{width: 18, height: 18,}} />
+         </IconButton>
+       </Stack>
+    </Stack>
+  )
+}
+
+type AddTaskBtnProps = {
+  onClick: () => void;
+
+}
+
+
+// --- ADD NEW TASK BUTTON:
+const AddTaskBtn = ({onClick}: AddTaskBtnProps) => (
+    <Stack  flexDirection="row" spacing={1} justifyContent="flex-end" alignItems="center">
+      <Typography>
+        Add New Task
+      </Typography>
+      <IconButton
+        onClick={onClick}
+        size="small"
+        aria-label="new task"
+        sx={{
+          backgroundColor: 'primary.main',
+          color: '#fff'
+        }}
+      >
+        <Iconify icon="mdi:plus" sx={{width: 25, height: 25,}} />
+      </IconButton>
+    </Stack>
+  )
+
+{/* <DialogTitle sx={{ minHeight: 76 }}> */}
+{/*  {openForm && <> {currentEvent?.id ? 'Edit' : 'Add'} event</>} */}
+{/* </DialogTitle> */}
+{/* <IconButton */}
+{/*  aria-label="close" */}
+{/*  onClick={onCloseForm} */}
+{/*  sx={{ */}
+{/*    position: 'absolute', */}
+{/*    right: 8, */}
+{/*    top: 8, */}
+{/*  }} */}
+{/* > */}
+
+{/*  <Iconify icon="material-symbols:close" sx={{width: 25, height: 25,}} /> */}
+{/* </IconButton> */}
+{/* <CalendarForm */}
+{/*  dayEvents={events} */}
+{/*  currentEvent={currentEvent} */}
+{/*  colorOptions={CALENDAR_COLOR_OPTIONS} */}
+{/*  onClose={onCloseForm} */}
+{/* /> */}

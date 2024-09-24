@@ -1,12 +1,6 @@
-import type { IDatePickerControl } from './common';
 
 // ----------------------------------------------------------------------
 
-export type ICalendarFilters = {
-  colors: string[];
-  startDate: IDatePickerControl;
-  endDate: IDatePickerControl;
-};
 
 export type ICalendarDate = string | number;
 
@@ -18,8 +12,20 @@ export type ICalendarEvent = {
   id: string;
   color: string;
   title: string;
-  allDay: boolean;
-  description: string;
+  allDay?: boolean;
   end: ICalendarDate;
   start: ICalendarDate;
+  extendedProps: {
+    process: {
+      id: string;
+      title: string;
+    };
+    subprocess: {
+      id: string;
+      title: string;
+    };
+    hours: number;
+    task: string;
+  };
+
 };

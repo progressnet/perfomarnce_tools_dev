@@ -23,6 +23,7 @@ import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { Form, Field } from 'src/components/hook-form';
 import { ColorPicker } from 'src/components/color-utils';
+import Typography from "@mui/material/Typography";
 
 // ----------------------------------------------------------------------
 
@@ -50,9 +51,11 @@ type Props = {
   colorOptions: string[];
   onClose: () => void;
   currentEvent?: ICalendarEvent;
+  dayEvents: ICalendarEvent[];
 };
 
-export function CalendarForm({ currentEvent, colorOptions, onClose }: Props) {
+export function CalendarForm({ currentEvent, colorOptions, onClose, dayEvents }: Props) {
+  console.log({dayEvents})
   const methods = useForm<EventSchemaType>({
     mode: 'all',
     resolver: zodResolver(EventSchema),
@@ -76,8 +79,6 @@ export function CalendarForm({ currentEvent, colorOptions, onClose }: Props) {
       id: currentEvent?.id ? currentEvent?.id : uuidv4(),
       color: data?.color,
       title: data?.title,
-      allDay: data?.allDay,
-      description: data?.description,
       end: data?.end,
       start: data?.start,
     };
@@ -112,41 +113,11 @@ export function CalendarForm({ currentEvent, colorOptions, onClose }: Props) {
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Scrollbar sx={{ p: 3, bgcolor: 'background.neutral' }}>
-        <Stack spacing={3}>
-          <Field.Text name="title" label="Title" />
-
-          <Field.Text name="description" label="Description" multiline rows={3} />
-
-          <Field.Switch name="allDay" label="All day" />
-
-          <Field.MobileDateTimePicker name="start" label="Start date" />
-
-          <Field.MobileDateTimePicker
-            name="end"
-            label="End date"
-            slotProps={{
-              textField: {
-                error: dateError,
-                helperText: dateError ? 'End date must be later than start date' : null,
-              },
-            }}
-          />
-
-          <Controller
-            name="color"
-            control={control}
-            render={({ field }) => (
-              <ColorPicker
-                selected={field.value as string}
-                onSelectColor={(color) => field.onChange(color as string)}
-                colors={colorOptions}
-              />
-            )}
-          />
-        </Stack>
+          <Typography>test</Typography>
       </Scrollbar>
-
-      <DialogActions sx={{ flexShrink: 0 }}>
+      <DialogActions
+        sx={{ flexShrink: 0 }}
+      >
         {!!currentEvent?.id && (
           <Tooltip title="Delete event">
             <IconButton onClick={onDelete}>
@@ -156,11 +127,9 @@ export function CalendarForm({ currentEvent, colorOptions, onClose }: Props) {
         )}
 
         <Box sx={{ flexGrow: 1 }} />
-
         <Button variant="outlined" color="inherit" onClick={onClose}>
           Cancel
         </Button>
-
         <LoadingButton
           type="submit"
           variant="contained"
