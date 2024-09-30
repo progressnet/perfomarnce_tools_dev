@@ -12,6 +12,8 @@ import { RHFSelect, RHFMultiSelect } from './rhf-select';
 import { RHFCheckbox, RHFMultiCheckbox } from './rhf-checkbox';
 import { RHFUpload, RHFUploadBox, RHFUploadAvatar } from './rhf-upload';
 import { RHFDatePicker, RHFMobileDateTimePicker } from './rhf-date-picker';
+import {RHFSelectProcess} from "./rhf-select-process";
+import {RHFSelectSubProcesses} from "./rhf-select-subprocess";
 
 // ----------------------------------------------------------------------
 
@@ -36,4 +38,7 @@ export const Field = {
   MultiCheckbox: RHFMultiCheckbox,
   CountrySelect: RHFCountrySelect,
   MobileDateTimePicker: RHFMobileDateTimePicker,
+  // custom:
+  SelectProcesses: RHFSelectProcess,
+  SelectSubProcesses: RHFSelectSubProcesses,
 };

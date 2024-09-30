@@ -38,12 +38,6 @@ function ForbiddenIllustration({ hideBackground, sx, ...other }: Props) {
     >
       {!hideBackground && <BackgroundShape />}
 
-      <image
-        href={`${CONFIG.assetsDir}/assets/illustrations/characters/character-4.webp`}
-        height="300"
-        x="220"
-        y="30"
-      />
 
       <path
         fill={PRIMARY_MAIN}

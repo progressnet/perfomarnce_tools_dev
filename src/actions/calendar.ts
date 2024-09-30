@@ -10,7 +10,7 @@ import axios, {fetcher} from 'src/utils/axios';
 const enableServer = false;
 
 // const CALENDAR_ENDPOINT = endpoints.calendar;
-const CALENDAR_ENDPOINT = "https://mocki.io/v1/0d9a8b7e-9d69-48f4-b325-055d8087b14c";
+const CALENDAR_ENDPOINT = "https://mocki.io/v1/4f628224-ecab-4b26-8ff7-becf1216c54a";
 
 const swrOptions = {
   revalidateIfStale: enableServer,

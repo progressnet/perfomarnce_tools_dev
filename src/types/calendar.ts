@@ -15,17 +15,5 @@ export type ICalendarEvent = {
   allDay?: boolean;
   end: ICalendarDate;
   start: ICalendarDate;
-  extendedProps: {
-    process: {
-      id: string;
-      title: string;
-    };
-    subprocess: {
-      id: string;
-      title: string;
-    };
-    hours: number;
-    task: string;
-  };
-
+  extendedProps: Record<string, any>; // ExtendedProps is now an object
 };

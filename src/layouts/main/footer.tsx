@@ -13,7 +13,6 @@ import Typography from '@mui/material/Typography';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
-import { _socials } from 'src/_mock';
 import { TwitterIcon, FacebookIcon, LinkedinIcon, InstagramIcon } from 'src/assets/icons';
 
 import { Logo } from 'src/components/logo';
@@ -83,25 +82,6 @@ export function Footer({ layoutQuery, sx }: FooterProps) {
               The starting point for your next project with Minimal UI Kit, built on the newest
               version of Material-UI ©, ready to be customized to your style.
             </Typography>
-
-            <Stack
-              direction="row"
-              sx={{
-                mt: 3,
-                mb: 5,
-                justifyContent: 'center',
-                [theme.breakpoints.up(layoutQuery)]: { mb: 0, justifyContent: 'flex-start' },
-              }}
-            >
-              {_socials.map((social) => (
-                <IconButton key={social.label} color="inherit">
-                  {social.value === 'twitter' && <TwitterIcon />}
-                  {social.value === 'facebook' && <FacebookIcon />}
-                  {social.value === 'instagram' && <InstagramIcon />}
-                  {social.value === 'linkedin' && <LinkedinIcon />}
-                </IconButton>
-              ))}
-            </Stack>
           </Grid>
 
           <Grid {...{ xs: 12, [layoutQuery]: 6 }}>

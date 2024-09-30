@@ -21,6 +21,7 @@ export function useEvent(
       id: '',
       title: '',
       description: '',
+      extendedProps: {},
       color: CALENDAR_COLOR_OPTIONS[1],
       allDay: false,
       start: selectedRange ? selectedRange.start : dayjs(new Date()).format(),

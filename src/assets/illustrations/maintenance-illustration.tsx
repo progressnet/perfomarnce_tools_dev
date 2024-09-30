@@ -216,12 +216,7 @@ function MaintenanceIllustration({ hideBackground, sx, ...other }: Props) {
         </linearGradient>
       </defs>
 
-      <image
-        href={`${CONFIG.assetsDir}/assets/illustrations/characters/character-5.webp`}
-        height="300"
-        x="245"
-        y="30"
-      />
+
     </Box>
   );
 }

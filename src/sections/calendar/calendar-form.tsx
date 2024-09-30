@@ -1,144 +1,128 @@
+import type {ReactNode} from "react";
 import type { ICalendarEvent } from 'src/types/calendar';
 
 import { z as zod } from 'zod';
 import { useCallback } from 'react';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm, Controller } from 'react-hook-form';
 
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import IconButton from '@mui/material/IconButton';
+import Typography from "@mui/material/Typography";
 import LoadingButton from '@mui/lab/LoadingButton';
 import DialogActions from '@mui/material/DialogActions';
 
-import { uuidv4 } from 'src/utils/uuidv4';
-import { fIsAfter } from 'src/utils/format-time';
-
-import { createEvent, updateEvent, deleteEvent } from 'src/actions/calendar';
-
-import { toast } from 'src/components/snackbar';
-import { Iconify } from 'src/components/iconify';
-import { Scrollbar } from 'src/components/scrollbar';
 import { Form, Field } from 'src/components/hook-form';
-import { ColorPicker } from 'src/components/color-utils';
-import Typography from "@mui/material/Typography";
 
 // ----------------------------------------------------------------------
 
 export type EventSchemaType = zod.infer<typeof EventSchema>;
 
 export const EventSchema = zod.object({
-  title: zod
-    .string()
-    .min(1, { message: 'Title is required!' })
-    .max(100, { message: 'Title must be less than 100 characters' }),
-  description: zod
-    .string()
-    .min(1, { message: 'Description is required!' })
-    .min(50, { message: 'Description must be at least 50 characters' }),
-  // Not required
-  color: zod.string(),
-  allDay: zod.boolean(),
-  start: zod.union([zod.string(), zod.number()]),
-  end: zod.union([zod.string(), zod.number()]),
+  process: zod.string().min(1, 'Process is required'),
+  subProcess: zod.string().min(1, 'sub-process is required'),
 });
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  colorOptions: string[];
   onClose: () => void;
   currentEvent?: ICalendarEvent;
-  dayEvents: ICalendarEvent[];
 };
 
-export function CalendarForm({ currentEvent, colorOptions, onClose, dayEvents }: Props) {
-  console.log({dayEvents})
+export function CalendarForm({ currentEvent, onClose }: Props) {
   const methods = useForm<EventSchemaType>({
     mode: 'all',
     resolver: zodResolver(EventSchema),
-    defaultValues: currentEvent,
+    defaultValues: {
+      process: currentEvent?.extendedProps.process?.id,
+      subProcess: currentEvent?.extendedProps.subProcess?.id
+    },
   });
 
   const {
-    reset,
     watch,
-    control,
+    setValue,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = methods;
 
   const values = watch();
 
-  const dateError = fIsAfter(values.start, values.end);
 
   const onSubmit = handleSubmit(async (data) => {
-    const eventData = {
-      id: currentEvent?.id ? currentEvent?.id : uuidv4(),
-      color: data?.color,
-      title: data?.title,
-      end: data?.end,
-      start: data?.start,
-    };
-
-    try {
-      if (!dateError) {
-        if (currentEvent?.id) {
-          await updateEvent(eventData);
-          toast.success('Update success!');
-        } else {
-          await createEvent(eventData);
-          toast.success('Create success!');
-        }
-        onClose();
-        reset();
-      }
-    } catch (error) {
-      console.error(error);
-    }
   });
 
-  const onDelete = useCallback(async () => {
-    try {
-      await deleteEvent(`${currentEvent?.id}`);
-      toast.success('Delete success!');
-      onClose();
-    } catch (error) {
-      console.error(error);
-    }
-  }, [currentEvent?.id, onClose]);
+
+
+  const handleProcess = useCallback((value: string) => {
+      setValue('process', value)
+  }, [setValue])
+
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
-      <Scrollbar sx={{ p: 3, bgcolor: 'background.neutral' }}>
-          <Typography>test</Typography>
-      </Scrollbar>
+      <Stack spacing={2}>
+        <HorizontalInputContainer label="Process">
+          <Field.SelectProcesses
+            name="process"
+            error={errors?.process?.message || ""}
+            label="Process"
+            value={values.process}
+            handleValue={handleProcess}
+          />
+        </HorizontalInputContainer>
+        <HorizontalInputContainer label="Sub-process">
+          <Field.SelectProcesses
+            name="process"
+            error={errors?.process?.message || ""}
+            label="Process"
+            value={values.process}
+            handleValue={handleProcess}
+          />
+        </HorizontalInputContainer>
+        <Stack spacing={2}>
+          <Typography variant="h6">Choose the task that you have been working on</Typography>
+          <HorizontalInputContainer label="Task">
+            <Field.SelectProcesses
+              name="process"
+              error={errors?.process?.message || ""}
+              label="Process"
+              value={values.process}
+              handleValue={handleProcess}
+            />
+          </HorizontalInputContainer>
+        </Stack>
+      </Stack>
       <DialogActions
         sx={{ flexShrink: 0 }}
       >
-        {!!currentEvent?.id && (
-          <Tooltip title="Delete event">
-            <IconButton onClick={onDelete}>
-              <Iconify icon="solar:trash-bin-trash-bold" />
-            </IconButton>
-          </Tooltip>
-        )}
-
-        <Box sx={{ flexGrow: 1 }} />
-        <Button variant="outlined" color="inherit" onClick={onClose}>
-          Cancel
-        </Button>
         <LoadingButton
           type="submit"
           variant="contained"
           loading={isSubmitting}
-          disabled={dateError}
         >
           Save changes
         </LoadingButton>
+        <Button variant="outlined" color="inherit" onClick={onClose}>
+          Cancel
+        </Button>
       </DialogActions>
     </Form>
   );
 }
+
+
+export type HorizontalInputProps = {
+  children: ReactNode;
+  label: string;
+}
+
+export const HorizontalInputContainer = ({children, label}:  HorizontalInputProps) => (
+    <Stack spacing={1} alignItems="center" flexDirection="row">
+      <Stack sx={{minWidth: '150px'}}>
+        <Typography variant="body2" sx={{fontWeight: 'medium'}}>{label}</Typography>
+      </Stack>
+      {children}
+    </Stack>
+  )

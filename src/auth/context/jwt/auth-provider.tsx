@@ -22,6 +22,15 @@ type Props = {
   children: React.ReactNode;
 };
 
+
+const dummyUser = {
+  id: 1,
+  name: 'John Doe',
+  role: 'admin',
+  accessToken: 'dummyAccessToken123',
+};
+
+
 export function AuthProvider({ children }: Props) {
   const { state, setState } = useSetState<AuthState>({
     user: null,
@@ -29,24 +38,24 @@ export function AuthProvider({ children }: Props) {
   });
 
   const checkUserSession = useCallback(async () => {
-    try {
-      const accessToken = sessionStorage.getItem(STORAGE_KEY);
+    // try {
+    //   const accessToken = sessionStorage.getItem(STORAGE_KEY);
+    //   if (accessToken && isValidToken(accessToken)) {
+    //     setSession(accessToken);
+    //     // const res = await axios.get(endpoints.auth.me);
+    //     // const { user } = res.data;
+    //     const user = { ...dummyUser, accessToken };
+    //
+    //     setState({ user: { ...user, accessToken }, loading: false });
+    //   } else {
+    //     setState({ user: null, loading: false });
+    //   }
+    // } catch (error) {
+    //   console.error(error);
+    //   setState({ user: null, loading: false });
+    // }
 
-      if (accessToken && isValidToken(accessToken)) {
-        setSession(accessToken);
-
-        const res = await axios.get(endpoints.auth.me);
-
-        const { user } = res.data;
-
-        setState({ user: { ...user, accessToken }, loading: false });
-      } else {
-        setState({ user: null, loading: false });
-      }
-    } catch (error) {
-      console.error(error);
-      setState({ user: null, loading: false });
-    }
+      setState({ user: dummyUser, loading: false });
   }, [setState]);
 
   useEffect(() => {
