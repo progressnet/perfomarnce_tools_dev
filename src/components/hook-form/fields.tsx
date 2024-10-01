@@ -3,17 +3,18 @@ import { RHFRating } from './rhf-rating';
 import { RHFEditor } from './rhf-editor';
 import { RHFSlider } from './rhf-slider';
 import { RHFTextField } from './rhf-text-field';
+import {RHFSelectTask} from "./rhf-select-task";
 import { RHFRadioGroup } from './rhf-radio-group';
 import { RHFPhoneInput } from './rhf-phone-input';
 import { RHFAutocomplete } from './rhf-autocomplete';
+import {RHFSelectProcess} from "./rhf-select-process";
 import { RHFCountrySelect } from './rhf-country-select';
 import { RHFSwitch, RHFMultiSwitch } from './rhf-switch';
 import { RHFSelect, RHFMultiSelect } from './rhf-select';
+import {RHFSelectSubProcess} from "./rhf-select-subprocess";
 import { RHFCheckbox, RHFMultiCheckbox } from './rhf-checkbox';
 import { RHFUpload, RHFUploadBox, RHFUploadAvatar } from './rhf-upload';
 import { RHFDatePicker, RHFMobileDateTimePicker } from './rhf-date-picker';
-import {RHFSelectProcess} from "./rhf-select-process";
-import {RHFSelectSubProcesses} from "./rhf-select-subprocess";
 
 // ----------------------------------------------------------------------
 
@@ -39,6 +40,7 @@ export const Field = {
   CountrySelect: RHFCountrySelect,
   MobileDateTimePicker: RHFMobileDateTimePicker,
   // custom:
-  SelectProcesses: RHFSelectProcess,
-  SelectSubProcesses: RHFSelectSubProcesses,
+  SelectProcess: RHFSelectProcess,
+  SelectSubProcess: RHFSelectSubProcess,
+  SelectTask: RHFSelectTask,
 };

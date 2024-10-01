@@ -3,7 +3,7 @@ import type { TextFieldProps } from '@mui/material/TextField';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
-import {useGetSubProcess} from "../../actions/subprocess";
+import {useGetTask} from "../../actions/task";
 
 // ----------------------------------------------------------------------
 
@@ -19,7 +19,7 @@ export type RHFAutocompleteProps =  {
   handleValue: (name: string, value: any, options?: any) => void;
 };
 
-export function RHFSelectSubProcess(
+export function RHFSelectTask(
   {
     name,
     handleValue,
@@ -29,7 +29,7 @@ export function RHFSelectSubProcess(
     helperText,
     placeholder,
   }: RHFAutocompleteProps) {
-  const {subprocesses, error: processError} = useGetSubProcess();
+  const {tasks, error: taskError} = useGetTask();
 
 
   return (
@@ -37,17 +37,17 @@ export function RHFSelectSubProcess(
       sx={{width: '100%'}}
       id={`rhf-autocomplete-${name}`}
       onChange={(event, newValue) => handleValue(name, newValue?.id || null, { shouldValidate: true })} // Safely handle newValue
-      options={subprocesses}
-      getOptionLabel={(option) => option.subProcess}
+      options={tasks}
+      getOptionLabel={(option) => option.taskName}
       renderInput={(params) => (
         <TextField
           {...params}
           label={label}
           placeholder={placeholder}
           variant={variant}
-          error={!!error || !!processError}
-          helperText={ processError || error || helperText} // Better handling of error and helperText
-          inputProps={{ ...params.inputProps, autoComplete: 'new-password' }}
+          error={!!error || !!taskError}
+          helperText={ taskError || error || helperText}
+          inputProps={{ ...params.inputProps, autoComplete: 'task' }}
         />
       )}
     />

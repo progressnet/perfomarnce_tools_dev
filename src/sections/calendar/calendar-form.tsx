@@ -64,7 +64,7 @@ export function CalendarForm({ currentEvent, onClose }: Props) {
     <Form methods={methods} onSubmit={onSubmit}>
       <Stack spacing={2}>
         <HorizontalInputContainer label="Process">
-          <Field.SelectProcesses
+          <Field.SelectProcess
             name="process"
             error={errors?.process?.message || ""}
             label="Process"
@@ -73,10 +73,10 @@ export function CalendarForm({ currentEvent, onClose }: Props) {
           />
         </HorizontalInputContainer>
         <HorizontalInputContainer label="Sub-process">
-          <Field.SelectProcesses
-            name="process"
+          <Field.SelectSubProcess
+            name="Sub-process"
             error={errors?.process?.message || ""}
-            label="Process"
+            label="Sub-process"
             value={values.process}
             handleValue={handleProcess}
           />
@@ -84,10 +84,10 @@ export function CalendarForm({ currentEvent, onClose }: Props) {
         <Stack spacing={2}>
           <Typography variant="h6">Choose the task that you have been working on</Typography>
           <HorizontalInputContainer label="Task">
-            <Field.SelectProcesses
-              name="process"
+            <Field.SelectTask
+              name="Task"
               error={errors?.process?.message || ""}
-              label="Process"
+              label="Task"
               value={values.process}
               handleValue={handleProcess}
             />

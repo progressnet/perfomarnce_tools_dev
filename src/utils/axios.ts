@@ -35,6 +35,8 @@ export const fetcher = async (args: string | [string, AxiosRequestConfig]) => {
 export const endpoints = {
   calendar: '/calendar',
   process: '/Process',
+  subprocess: '/SubProcess',
+  task: '/Task',
   auth: {
     me: '/api/auth/me',
     signIn: '/api/auth/sign-in',
