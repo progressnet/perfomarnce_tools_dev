@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import Calendar from '@fullcalendar/react';
 import listPlugin from '@fullcalendar/list';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -59,6 +59,7 @@ export function CalendarView() {
 
   const flexProps = { flex: '1 1 auto', display: 'flex', flexDirection: 'column' };
   const currentEvent = useEvent(events, selectEventId, selectedRange, openForm);
+  const [currentDate, setCurrentDate] = useState(new Date()); // Start from today's date
 
   console.log({dayEvents})
   const handleDayClick = (e: any) => {
@@ -67,6 +68,11 @@ export function CalendarView() {
     // console.log({filteredEvents})
     // setDayEvents(filteredEvents)
   }
+
+  const handleDatesSet = (dateInfo: any) => {
+    // Here you can use the dateInfo.start to control the displayed range
+    setCurrentDate(dateInfo.start);
+  };
   return (
     <>
       <DashboardContent maxWidth="xl" sx={{ ...flexProps }}>

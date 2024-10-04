@@ -34,6 +34,7 @@ export const fetcher = async (args: string | [string, AxiosRequestConfig]) => {
 
 export const endpoints = {
   calendar: '/calendar',
+  timesheet: '/TimesheetEntries',
   process: '/Process',
   subprocess: '/SubProcess',
   task: '/Task',

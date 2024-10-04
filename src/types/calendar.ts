@@ -4,7 +4,7 @@
 
 export type ICalendarDate = string | number;
 
-export type ICalendarView = 'dayGridMonth' | 'timeGridWeek' | 'timeGridDay' | 'listWeek';
+export type ICalendarView = 'dayGridMonth' | 'timeGridWeek' | 'timeGridDay' | 'listWeek' | 'dayGridWeek';
 
 export type ICalendarRange = { start: ICalendarDate; end: ICalendarDate } | null;
 

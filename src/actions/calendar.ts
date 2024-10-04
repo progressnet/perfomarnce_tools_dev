@@ -3,14 +3,31 @@ import type {ICalendarEvent} from 'src/types/calendar';
 import {useMemo} from 'react';
 import useSWR, {mutate} from 'swr';
 
-import axios, {fetcher} from 'src/utils/axios';
+import axios, {endpoints, fetcher} from 'src/utils/axios';
+import dayjs from "dayjs";
 
 // ----------------------------------------------------------------------
-
+export type Timesheet = {
+  id: number;
+  employeeFirstName: string;
+  employeeLastName: string;
+  timesheetdate: string; // or Date, depending on how you're handling dates
+  hours: number;
+  taskID: number;
+  taskName: string;
+  assignmentCompletionBar: number;
+  comments: string;
+  timesheetCreationDate: string; // or Date
+  timesheetLastEditDate: string; // or Date
+  processID: number;
+  processName: string;
+  subProcessID: number;
+  subProcessName: string;
+};
 const enableServer = false;
 
-// const CALENDAR_ENDPOINT = endpoints.calendar;
-const CALENDAR_ENDPOINT = "https://mocki.io/v1/4f628224-ecab-4b26-8ff7-becf1216c54a";
+const ENDPOINT = endpoints.timesheet;
+// const ENDPOINT = "https://mocki.io/v1/4f628224-ecab-4b26-8ff7-becf1216c54a";
 
 const swrOptions = {
   revalidateIfStale: enableServer,
@@ -41,60 +58,97 @@ type HoursPerDay = {
   [key: string]: number;
 }
 
-const calculateTotalHoursPerDay = (events: EventsData[]) => {
+const calculateTotalHoursPerDay = (events: Timesheet[]) => {
 
   const hoursPerDay: HoursPerDay = {};
   events.forEach((event) => {
-    if(!hoursPerDay[event.start_date]){
-      hoursPerDay[event.start_date] = 0;
+    const date = dayjs(event.timesheetdate).format('YYYY-MM-DD');
+    if(!hoursPerDay[date]){
+      hoursPerDay[date] = 0;
     }
-    hoursPerDay[event.start_date] += event.hours;
+    hoursPerDay[date] += event.hours;
   })
   return hoursPerDay;
 }
 
+// export function useGetEvents() {
+//   const { data, isLoading, error, isValidating } = useSWR<EventsData[]>(
+//     ENDPOINT,
+//     fetcher,
+//     swrOptions
+//   );
+//
+//   return useMemo(() => {
+//     const totalHoursPerDay = calculateTotalHoursPerDay(data || []);
+//     const events = data?.map((event) => {
+//
+//       const dayHours = totalHoursPerDay[event.start_date];
+//       const title =  event.task;
+//
+//       return {
+//         id: event.id.toString(),
+//         title: `${title} - ${event.hours}h`,
+//         start: event.start_date,
+//         end: event.start_date,
+//         color: dayHours >= 8 ? "green" : "red",
+//         extendedProps: {
+//           process: event.process,
+//           subprocess: event.subprocess,
+//           hours: event.hours,
+//           task: event.task,
+//         },
+//       }
+//     });
+//
+//     return {
+//       events: events || [],
+//       eventsLoading: isLoading,
+//       eventsError: error,
+//       eventsValidating: isValidating,
+//       eventsEmpty: !isLoading && !data?.length,
+//     };
+//   }, [data, error, isLoading, isValidating]);
+// }
+
+// ----------------------------------------------------------------------
+
 export function useGetEvents() {
-  const { data, isLoading, error, isValidating } = useSWR<EventsData[]>(
-    CALENDAR_ENDPOINT,
+  const { data, isLoading, error, isValidating } = useSWR<Timesheet[]>(
+    ENDPOINT,
     fetcher,
     swrOptions
   );
-
-
-  return useMemo(() => {
-    const totalHoursPerDay = calculateTotalHoursPerDay(data || []);
-
-    const events = data?.map((event) => {
-
-      const dayHours = totalHoursPerDay[event.start_date];
-      const title =  event.task;
-
-      return {
-        id: event.id.toString(),
-        title: `${title} - ${event.hours}h`,
-        start: event.start_date,
-        end: event.start_date,
-        color: dayHours >= 8 ? "green" : "red",
-        extendedProps: {
-          process: event.process,
-          subprocess: event.subprocess,
-          hours: event.hours,
-          task: event.task,
-        },
-      }
-    });
-
+  const totalHoursPerDay = calculateTotalHoursPerDay(data || []);
+  // ============================================================
+  const transformData = data && data.map((ts) => {
+    const start_date = dayjs(ts.timesheetdate).format('YYYY-MM-DD');
+    const dayHours = totalHoursPerDay[start_date];
+    const title =  ts.taskName;
     return {
-      events: events || [],
-      eventsLoading: isLoading,
-      eventsError: error,
-      eventsValidating: isValidating,
-      eventsEmpty: !isLoading && !data?.length,
-    };
-  }, [data, error, isLoading, isValidating]);
+      id: ts.id.toString(),
+      title: `${title} - ${ts.hours}h`,
+      start: start_date,
+      end: start_date,
+      color: dayHours >= 8 ? "green" : "red",
+      extendedProps: {
+        processID: ts.processID,
+        processName: ts.processName,
+        subprocessID: ts.subProcessID,
+        subprocessName: ts.subProcessName,
+        taskID: ts.taskID,
+        hours: ts.hours,
+      },
+    }
+  })
+  return useMemo(() => ({
+    events: transformData || [],
+    eventsLoading: isLoading,
+    error,
+    isValidating,
+    empty: !isLoading && !data?.length,
+  }), [data, transformData, error, isLoading, isValidating]);
 }
 
-// ----------------------------------------------------------------------
 
 export async function createEvent(eventData: ICalendarEvent) {
   /**
@@ -102,14 +156,14 @@ export async function createEvent(eventData: ICalendarEvent) {
    */
   if (enableServer) {
     const data = { eventData };
-    await axios.post(CALENDAR_ENDPOINT, data);
+    await axios.post(ENDPOINT, data);
   }
 
   /**
    * Work in local
    */
   await mutate(
-    CALENDAR_ENDPOINT,
+    ENDPOINT,
     (currentData: any) => {
       const currentEvents: ICalendarEvent[] = currentData?.events;
 
@@ -129,14 +183,14 @@ export async function updateEvent(eventData: Partial<ICalendarEvent>) {
    */
   if (enableServer) {
     const data = { eventData };
-    await axios.put(CALENDAR_ENDPOINT, data);
+    await axios.put(ENDPOINT, data);
   }
 
   /**
    * Work in local
    */
  await mutate(
-    CALENDAR_ENDPOINT,
+    ENDPOINT,
     (currentData: any) => {
       const currentEvents: ICalendarEvent[] = currentData?.events;
 
@@ -158,14 +212,14 @@ export async function deleteEvent(eventId: string) {
    */
   if (enableServer) {
     const data = { eventId };
-    await axios.patch(CALENDAR_ENDPOINT, data);
+    await axios.patch(ENDPOINT, data);
   }
 
   /**
    * Work in local
    */
  await mutate(
-    CALENDAR_ENDPOINT,
+    ENDPOINT,
     (currentData: any) => {
       const currentEvents: ICalendarEvent[] = currentData?.events;
 
