@@ -136,6 +136,7 @@ export function useGetEvents() {
         subprocessID: ts.subProcessID,
         subprocessName: ts.subProcessName,
         taskID: ts.taskID,
+        taskName: ts.taskName,
         hours: ts.hours,
       },
     }

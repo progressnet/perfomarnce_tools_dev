@@ -37,3 +37,23 @@ export function useGetTask() {
     empty: !isLoading && !data?.length,
   }), [data, error, isLoading, isValidating]);
 }
+
+
+
+const ENDPOINT_BY_SUBPROCESS = endpoints.taskBySubProcess
+
+export function useGetTaskByParent(id: number | undefined) {
+  const { data, isLoading, error, isValidating } = useSWR<EventsData[]>(
+    id ?ENDPOINT_BY_SUBPROCESS.concat(`/${id}`) : null,
+    fetcher,
+    swrOptions
+  );
+
+  return useMemo(() => ({
+    tasks: data || [],
+    isLoading,
+    error,
+    isValidating,
+    empty: !isLoading && !data?.length,
+  }), [data, error, isLoading, isValidating]);
+}

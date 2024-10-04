@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useState, useEffect} from 'react';
 import Calendar from '@fullcalendar/react';
 import listPlugin from '@fullcalendar/list';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -61,11 +61,9 @@ export function CalendarView() {
   const currentEvent = useEvent(events, selectEventId, selectedRange, openForm);
   const [currentDate, setCurrentDate] = useState(new Date()); // Start from today's date
 
-  console.log({dayEvents})
   const handleDayClick = (e: any) => {
-    // const day = e.dateStr;
-    // const filteredEvents = events.filter((event) => event.start === day);
-    // console.log({filteredEvents})
+    const day = e.dateStr;
+    const filteredEvents = events.filter((event) => event.start === day);
     // setDayEvents(filteredEvents)
   }
 
@@ -124,12 +122,12 @@ export function CalendarView() {
           </StyledCalendar>
         </Card>
       </DashboardContent>
-      <CalendarDialog
+       <CalendarDialog
         onCloseForm={onCloseForm}
-        openForm={openForm}
+        openForm={openForm }
         currentEvent={currentEvent as ICalendarEvent}
         events={dayEvents}
-      />
+       />
     </>
   );
 }

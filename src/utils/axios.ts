@@ -37,7 +37,9 @@ export const endpoints = {
   timesheet: '/TimesheetEntries',
   process: '/Process',
   subprocess: '/SubProcess',
+  subprocessByProcess: '/SubProcessByProcessID',
   task: '/Task',
+  taskBySubProcess: '/TaskBySubProcessID',
   auth: {
     me: '/api/auth/me',
     signIn: '/api/auth/sign-in',

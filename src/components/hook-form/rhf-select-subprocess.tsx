@@ -1,42 +1,46 @@
 import type { TextFieldProps } from '@mui/material/TextField';
 
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
+import { useEffect, useCallback } from "react";
 
-import {useGetSubProcess} from "../../actions/subprocess";
+import TextField from '@mui/material/TextField';
+import Autocomplete, {AutocompleteValue} from '@mui/material/Autocomplete';
+
+import { useGetSubProcessByProcess } from "../../actions/subprocess";
 
 // ----------------------------------------------------------------------
 
-
-export type RHFAutocompleteProps =  {
+export type RHFAutocompleteProps = {
   name: string;
   label?: string;
   placeholder?: string;
-  value: any;
+  value: number;
   helperText?: React.ReactNode;
   variant?: TextFieldProps['variant'];
   error?: string;
-  handleValue: (name: string, value: any, options?: any) => void;
+  handleValue: (value: {id: number, name: string}) => void;
+  processID: number;
 };
 
 export function RHFSelectSubProcess(
   {
     name,
+    value,
     handleValue,
+    processID,
     label,
     error,
     variant,
     helperText,
     placeholder,
   }: RHFAutocompleteProps) {
-  const {subprocesses, error: processError} = useGetSubProcess();
-
+  const { subprocesses, error: subprocessError } = useGetSubProcessByProcess(processID);
 
   return (
     <Autocomplete
-      sx={{width: '100%'}}
+      sx={{ width: '100%' }}
       id={`rhf-autocomplete-${name}`}
-      onChange={(event, newValue) => handleValue(name, newValue?.id || null, { shouldValidate: true })} // Safely handle newValue
+      value={subprocesses.find((subprocess) => subprocess.id === value) || null}
+      onChange={(event, newValue) => handleValue({id: newValue?.id || 0, name: newValue?.subProcess || ""})}
       options={subprocesses}
       getOptionLabel={(option) => option.subProcess}
       renderInput={(params) => (
@@ -45,9 +49,8 @@ export function RHFSelectSubProcess(
           label={label}
           placeholder={placeholder}
           variant={variant}
-          error={!!error || !!processError}
-          helperText={ processError || error || helperText} // Better handling of error and helperText
-          inputProps={{ ...params.inputProps, autoComplete: 'new-password' }}
+          error={!!error || !!subprocessError}
+          helperText={subprocessError || error || helperText}
         />
       )}
     />

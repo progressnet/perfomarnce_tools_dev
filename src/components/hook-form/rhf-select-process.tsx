@@ -1,27 +1,31 @@
 import type { TextFieldProps } from '@mui/material/TextField';
 
 import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
+import Autocomplete, {AutocompleteValue} from '@mui/material/Autocomplete';
 
 import {useGetProcess} from "../../actions/process";
+
+import type {EventSchemaType} from "../../sections/calendar/calendar-form";
+
 
 // ----------------------------------------------------------------------
 
 
 export type RHFAutocompleteProps =  {
-  name: string;
+  name:  keyof EventSchemaType;
   label?: string;
   placeholder?: string;
-  value: any;
+  value: number;
   helperText?: React.ReactNode;
   variant?: TextFieldProps['variant'];
   error?: string;
-  handleValue: (name: string, value: any, options?: any) => void;
+  handleValue: (value: {id: number, name: string} ) => void;
 };
 
 export function RHFSelectProcess(
   {
     name,
+    value,
     handleValue,
     label,
     error,
@@ -37,9 +41,10 @@ export function RHFSelectProcess(
     <Autocomplete
       sx={{width: '100%'}}
       id={`rhf-autocomplete-${name}`}
-      onChange={(event, newValue) => handleValue(name, newValue?.id || null, { shouldValidate: true })} // Safely handle newValue
+      onChange={(event, newValue) => handleValue({id: newValue?.id || 0, name: newValue?.processName || ""} )}
       options={processes}
       getOptionLabel={(option) => option.processName}
+      value={processes.find((process) => process.id === value) || null}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -48,7 +53,6 @@ export function RHFSelectProcess(
           variant={variant}
           error={!!error || !!processError}
           helperText={ processError || error || helperText} // Better handling of error and helperText
-          inputProps={{ ...params.inputProps, autoComplete: 'new-password' }}
         />
       )}
     />

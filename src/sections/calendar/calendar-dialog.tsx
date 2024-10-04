@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 
 import {Iconify} from "../../components/iconify";
 import {CalendarForm} from "./calendar-form";
+import {Scrollbar} from "../../components/scrollbar";
 
 type DialogProps = {
   events: ICalendarEvent[];
@@ -59,77 +60,85 @@ export const CalendarDialog = (
         },
       }}
     >
-      <Stack
-        flexDirection="row"
-        spacing={1}
-        sx={{ flexGrow: 1, padding: '12px', backgroundColor: 'rgba(246,246,246,0.99)', borderRadius: '15px'}}
-      >
-        {/* LEFT SIDE */}
-        <Stack sx={{
-          flex: 1,
-          backgroundColor: '#fbfbfb',
-          borderRadius: 1,
-          boxShadow: '0px 0px 20px 0px rgba(0,0,0,0.1)',
-
-        }}
+      <Scrollbar fillContent>
+        <Stack
+          flexDirection={{ xs: 'column', md: 'row' }} // 'column' for mobile, 'row' for desktop
+          spacing={1}
+          sx={{
+            flexGrow: 1,
+            padding: '12px',
+            backgroundColor: 'rgba(246,246,246,0.99)',
+            borderRadius: '15px',
+          }}
         >
+          {/* LEFT SIDE */}
+          <Stack sx={{
+            flex: 1,
+            backgroundColor: '#fbfbfb',
+            borderRadius: 1,
+            boxShadow: '0px 0px 20px 0px rgba(0,0,0,0.1)',
+
+          }}
+          >
+            <Stack
+              alignItems="flex-end"
+              justifyContent="center"
+              sx={{
+                height: '80px',
+                p:2,
+                borderBottom: '1px dashed',
+                borderColor: 'grey.300',
+              }}
+            >
+              {/* NEW TASK */}
+              <AddTaskBtn onClick={handleAddNewTask} />
+            </Stack>
+            <Stack >
+              {/* DISPLAY LIST OF CURRENT TASKS */}
+              <ListOfCurrentEvents
+                eventActive={eventActive}
+                events={events}
+                setEventActive={setEventActive}
+              />
+            </Stack>
+          </Stack>
+          {/* RIGHT SIDE */}
           <Stack
-            alignItems="flex-end"
-            justifyContent="center"
             sx={{
-              height: '80px',
-              p:2,
-              borderBottom: '1px dashed',
-              borderColor: 'grey.300',
+              flex: 2,
+              backgroundColor: '#fff',
+              borderRadius: 1,
+              boxShadow: '0px 0px 20px 0px rgba(0,0,0,0.1)'
             }}
           >
-            {/* NEW TASK */}
-            <AddTaskBtn onClick={handleAddNewTask} />
-          </Stack>
-          <Stack >
-            {/* DISPLAY LIST OF CURRENT TASKS */}
-            <ListOfCurrentEvents
-              eventActive={eventActive}
-              events={events}
-              setEventActive={setEventActive}
-            />
-          </Stack>
-        </Stack>
-        {/* RIGHT SIDE */}
-        <Stack
-          sx={{
-            flex: 2,
-            backgroundColor: '#fff',
-            borderRadius: 1,
-            boxShadow: '0px 0px 20px 0px rgba(0,0,0,0.1)'
-          }}
-        >
-          <Stack sx={{
-            height: '80px',
-            p:1,
-            borderBottom: '1px dashed',
-            borderColor: 'grey.300',
-            alignItems: 'flex-end',
-            justifyContent: 'center'
-          }}
-          >
-            <IconButton
-              aria-label="close"
-              onClick={onCloseForm}
+            <Stack sx={{
+              height: '80px',
+              p:1,
+              borderBottom: '1px dashed',
+              borderColor: 'grey.300',
+              alignItems: 'flex-end',
+              justifyContent: 'center'
+            }}
             >
-              <Iconify icon="material-symbols:close" sx={{width: 25, height: 25,}} />
-            </IconButton>
-          </Stack>
-          <Stack
-            sx={{padding: 2, paddingX: 3}}
-          >
-            <CalendarForm
-              currentEvent={eventActive}
-              onClose={onCloseForm}
-            />
+              <IconButton
+                aria-label="close"
+                onClick={onCloseForm}
+              >
+                <Iconify icon="material-symbols:close" sx={{width: 25, height: 25,}} />
+              </IconButton>
+            </Stack>
+            <Stack
+              sx={{padding: 2, paddingX: 3}}
+            >
+              <CalendarForm
+                currentEvent={eventActive}
+                onClose={onCloseForm}
+              />
+            </Stack>
           </Stack>
         </Stack>
-      </Stack>
+      </Scrollbar>
+
     </Dialog>
   )
 }
@@ -210,14 +219,14 @@ export function EventListItem(
         alignItems="center"
         >
       <Stack sx={{ width: '100%'}}>
-        <Typography sx={{width: '200px', textWrap: 'wrap'}} variant="subtitle2">
-          {event.extendedProps.task}
+        <Typography sx={{width: '200px', textWrap: 'wrap', lineHeight: 1.2, mb: 0.4}} variant="subtitle2">
+          {event.extendedProps?.taskName}
         </Typography >
         <Typography sx={{width: '200px', textWrap: 'wrap'}} variant="caption" color="primary">
-          {event.extendedProps.process.title}
+          {event.extendedProps?.subprocessName}
         </Typography >
         <Typography sx={{width: '200px', textWrap: 'wrap', marginTop: 1}} variant="subtitle2" color="primary">
-          {`${event.extendedProps.hours  } hours`}
+          {`${event.extendedProps?.hours  } hours`}
         </Typography >
       </Stack>
       <Stack sx={{width: '40px'}}>

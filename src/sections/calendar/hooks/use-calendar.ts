@@ -99,6 +99,7 @@ export function useCalendar(events: ICalendarEvent[]) {
     [calendarEl, onOpenForm]
   );
 
+  console.log({dayEvents})
 
   // on click event
   const onClickEvent = useCallback(
@@ -106,8 +107,9 @@ export function useCalendar(events: ICalendarEvent[]) {
       const { event } = arg;
       const filteredEvents = events.filter((evt) => evt.start === event.startStr);
       setDayEvents(filteredEvents)
-      onOpenForm();
       setSelectEventId(event.id);
+      onOpenForm();
+
     },
     [onOpenForm, events]
   );
