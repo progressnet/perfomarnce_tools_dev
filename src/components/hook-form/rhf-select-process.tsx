@@ -1,7 +1,7 @@
 import type { TextFieldProps } from '@mui/material/TextField';
 
 import TextField from '@mui/material/TextField';
-import Autocomplete, {AutocompleteValue} from '@mui/material/Autocomplete';
+import Autocomplete from '@mui/material/Autocomplete';
 
 import {useGetProcess} from "../../actions/process";
 

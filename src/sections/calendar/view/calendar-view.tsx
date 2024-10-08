@@ -14,12 +14,11 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { updateEvent, useGetEvents } from 'src/actions/calendar';
 
 import { StyledCalendar } from '../styles';
-import { useEvent } from '../hooks/use-event';
 import {CalendarDialog} from "../calendar-dialog";
 import { useCalendar } from '../hooks/use-calendar';
 import { CalendarToolbar } from '../calendar-toolbar';
+import useCalendarStore from "../../../store/calendarStore";
 
-import type {ICalendarEvent} from "../../../types/calendar";
 
 // ----------------------------------------------------------------------
 
@@ -45,10 +44,6 @@ export function CalendarView() {
     openForm,
     onCloseForm,
     //
-    selectEventId,
-    selectedRange,
-
-    //
     setDayEvents,
     dayEvents,
   } = useCalendar(events);
@@ -59,19 +54,16 @@ export function CalendarView() {
   }, [onInitialView]);
 
   const flexProps = { flex: '1 1 auto', display: 'flex', flexDirection: 'column' };
-  const currentEvent = useEvent(events, selectEventId, selectedRange, openForm);
-  const [currentDate, setCurrentDate] = useState(new Date()); // Start from today's date
+  const handleDayPress = useCalendarStore((state) => state.handleDayPress);
 
   const handleDayClick = (e: any) => {
     const day = e.dateStr;
     const filteredEvents = events.filter((event) => event.start === day);
     setDayEvents(filteredEvents)
+    handleDayPress(day)
   }
 
-  const handleDatesSet = (dateInfo: any) => {
-    // Here you can use the dateInfo.start to control the displayed range
-    setCurrentDate(dateInfo.start);
-  };
+
   return (
     <>
       <DashboardContent maxWidth="xl" sx={{ ...flexProps }}>
@@ -126,7 +118,6 @@ export function CalendarView() {
        <CalendarDialog
         onCloseForm={onCloseForm}
         openForm={openForm }
-        currentEvent={currentEvent as ICalendarEvent}
         events={dayEvents}
        />
     </>

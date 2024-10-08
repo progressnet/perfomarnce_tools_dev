@@ -20,6 +20,7 @@ import DialogActions from '@mui/material/DialogActions';
 import { Form, Field } from 'src/components/hook-form';
 
 import {handleTimesheetCreate, handleTimesheetUpdate} from "../../actions/calendar";
+import useCalendarStore from "../../store/calendarStore";
 
 
 // ----------------------------------------------------------------------
@@ -37,7 +38,8 @@ type Event = {
     id: number | null;
     name: string | null;
   };
-  hours: number | null; // Allow `null` here
+  hours: number | null;
+  exists: boolean;
 };
 export type EventSchemaType = zod.infer<typeof EventSchema>;
 
@@ -60,8 +62,9 @@ export const EventSchema = zod.object({
   }).refine((value) => value.id !== null && value.name !== null, {
     message: 'Task is required',
   }),
-  hours: zod.number().nullable().refine((value) => value !== null, {
-    message: 'Hours is a required field',
+  exists: zod.boolean().optional(),
+  hours: zod.number().nullable().refine((value) => value !== null &&  value > 0, {
+    message: 'Hours is a required and must be greater than 0',
   }),
 })
 
@@ -69,11 +72,22 @@ export const EventSchema = zod.object({
 
 type Props = {
   onClose: () => void;
-  currentEvent?: ICalendarEvent;
   events: ICalendarEvent[];
+
 };
 
-export function CalendarForm({events, currentEvent, onClose }: Props) {
+export function CalendarForm(
+  {
+    events,
+    onClose,
+
+  }: Props) {
+  const currentEvent = useCalendarStore((state) => state.currentEvent);
+  const setCurrentEvent = useCalendarStore((state) => state.setCurrentEvent);
+  const setActiveEvent = useCalendarStore((state) => state.setActiveEvent);
+  const activeEvent = useCalendarStore((state) => state.activeEvent);
+  const clickedDate = useCalendarStore((state) => state.clickedDate);
+
   const defaultValues = useMemo(
     () => ({
       process: {
@@ -90,6 +104,7 @@ export function CalendarForm({events, currentEvent, onClose }: Props) {
       },
       timesheetID: currentEvent?.extendedProps.timesheetID,
       hours: currentEvent?.extendedProps?.hours || 0,
+      exists: false,
     }),
     [currentEvent]
   );
@@ -105,11 +120,9 @@ export function CalendarForm({events, currentEvent, onClose }: Props) {
     reset,
     setValue,
     handleSubmit,
-    trigger,
     formState: { isSubmitting, errors },
   } = methods;
   const values = watch();
-
 
   useEffect(() => {
     reset(defaultValues);
@@ -119,26 +132,30 @@ export function CalendarForm({events, currentEvent, onClose }: Props) {
     if (!submitData.hours || !submitData.task?.id ) return;
 
     const processedData = {
-      timesheetdate: dayjs(currentEvent?.start).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),
+      timesheetdate: dayjs(clickedDate).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),
       employeeID: 1,
       hours: submitData.hours,
       taskID: submitData.task.id,
       assignmentID: submitData.task.id
     };
+
+
+
     const isEdit = Boolean(currentEvent?.id);
     const exists = events.find(item => item.extendedProps.taskID === values.task.id);
+
 
     try {
       if ( isEdit || exists) {
         // Update existing timesheet
         const res=  await handleTimesheetUpdate({
           ...processedData,
-          // id: isEdit ? Number(currentEvent?.id) : Number(exists?.id),
+          id: isEdit ? Number(currentEvent?.id) : Number(exists?.id),
         });
         if(res.data.status === 204) {
           toast.success('Timesheet updated successfully');
         } else {
-          toast.error('')
+          toast.error('An error occurred');
         }
 
       } else {
@@ -148,7 +165,6 @@ export function CalendarForm({events, currentEvent, onClose }: Props) {
       }
       onClose();
     } catch (error) {
-      console.log({error})
       toast.error(error.message || 'An error occurred');
     }
   });
@@ -163,20 +179,25 @@ export function CalendarForm({events, currentEvent, onClose }: Props) {
       setValue('process', value)
       setValue('subprocess',resetToDefault)
       setValue('task', resetToDefault)
-      trigger().then(r => r)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setValue])
 
   const handleSubProcessChange = useCallback((value: {id: number | null, name: string | null}) => {
       setValue('subprocess', value)
       setValue('task', resetToDefault)
-      trigger().then(r => r)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setValue])
 
   const handleTaskChange = useCallback((value: {id: number | null, name: string | null}) => {
-      setValue('task', value)
-      trigger().then(r => r)
+
+    const exists = events.find(item => item.extendedProps.taskID === value.id);
+    if(exists) {
+      setCurrentEvent(exists as ICalendarEvent);
+    } else {
+      setActiveEvent(null)
+    }
+    setValue('task', value)
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setValue])
 
@@ -185,7 +206,6 @@ export function CalendarForm({events, currentEvent, onClose }: Props) {
   }, [setValue]);
 
 
-  // console.log({values})
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Stack spacing={2}>
@@ -236,6 +256,13 @@ export function CalendarForm({events, currentEvent, onClose }: Props) {
                 />
               ): null}
             </Grid>
+            <Grid item xs={8}>
+              {values.exists && (
+                <Box  component="p" sx={{fontSize: '12px', margin: 0, marginTop: 1}}>
+                  You have already worked on this task. You are now updating the hours.
+                </Box>
+              )}
+            </Grid>
           </Grid>
           <Divider sx={{borderStyle:'dashed', color: '#000'}} variant="fullWidth" />
         { /* ============== HOURS CONTROLLER ================ */}
@@ -246,13 +273,18 @@ export function CalendarForm({events, currentEvent, onClose }: Props) {
               value={values.hours}
               handleChange={handleHourChange}
               increment={0.5}
+              error={errors?.hours?.message || ""}
 
             />
           </Stack>
-          <Typography
-          sx={{color: 'error.main', fontSize: '12px', textAlign: 'end'}}>
-            {errors?.hours?.message}
-          </Typography>
+          {
+            errors.hours && (
+              <Typography
+                sx={{color: 'error.main', fontSize: '12px', textAlign: 'end'}}>
+                {errors?.hours?.message}
+              </Typography>
+            )
+          }
 
         </Stack>
 
@@ -285,7 +317,7 @@ type SelectedValuesProps = {
 
 const SelectedValues = ({processName, subprocessName, taskName}: SelectedValuesProps) => (
     <Stack flexDirection="row">
-      <Box sx={{fontSize: '12px'}} component="p">
+      <Box sx={{fontSize: '12px', marginBottom: 0}} component="p">
         You have selected the task:
         <Box component="span"  sx={{color: "primary.main"}}> {taskName} </Box>
         from the sub-process:

@@ -6,6 +6,7 @@ import type { ICalendarView, ICalendarRange, ICalendarEvent } from 'src/types/ca
 import { useRef, useState, useCallback } from 'react';
 
 import { useResponsive } from 'src/hooks/use-responsive';
+import useCalendarStore from "../../../store/calendarStore";
 
 // ----------------------------------------------------------------------
 
@@ -25,6 +26,11 @@ export function useCalendar(events: ICalendarEvent[]) {
   const [selectedRange, setSelectedRange] = useState<ICalendarRange>(null);
 
   const [view, setView] = useState<ICalendarView>(smUp ? 'dayGridMonth' : 'listWeek');
+
+  // zustand state:
+  const setCurrentEvent = useCalendarStore((state) => state.setCurrentEvent);
+  const setActiveEvent = useCalendarStore((state) => state.setActiveEvent);
+  const setClickedDate = useCalendarStore((state) => state.setClickedDate);
 
   const onOpenForm = useCallback(() => {
     setOpenForm(true);
@@ -106,10 +112,16 @@ export function useCalendar(events: ICalendarEvent[]) {
       const { event } = arg;
       const filteredEvents = events.filter((evt) => evt.start === event.startStr);
       setDayEvents(filteredEvents)
+      setClickedDate(event.startStr);
       setSelectEventId(event.id);
+      // update zustand:
+      const find = events.find((evt) => evt.id === event.id);
+      setCurrentEvent(find as ICalendarEvent);
+      setActiveEvent(find as ICalendarEvent);
       onOpenForm();
 
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [onOpenForm, events]
   );
 

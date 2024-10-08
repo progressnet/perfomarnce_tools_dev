@@ -36,6 +36,7 @@ export function RHFSelectTask(
   const {tasks, error: taskError} = useGetTaskByParent(subprocessID);
   return (
     <Autocomplete
+
       sx={{width: '100%'}}
       id={`rhf-autocomplete-${name}`}
       value={tasks.find((item) => item.taskID === value) || null}
@@ -50,7 +51,7 @@ export function RHFSelectTask(
             variant={variant}
             error={!!error || !!taskError}
             helperText={ taskError || error || helperText}
-            inputProps={{ ...params.inputProps, autoComplete: 'task' }}
+            // inputProps={{ ...params.inputProps, autoComplete: 'new-password' }}
           />
 
       )}

@@ -68,6 +68,8 @@ export function useGetEvents() {
   );
   const totalHoursPerDay = calculateTotalHoursPerDay(data || []);
   // ============================================================
+
+  console.log('totalHoursPerDay', totalHoursPerDay);
   const transformData = data && data.map((ts) => {
     const start_date = dayjs(ts.timesheetdate).format('YYYY-MM-DD');
     const dayHours = totalHoursPerDay[start_date];
@@ -91,6 +93,8 @@ export function useGetEvents() {
       },
     }
   })
+
+
   return useMemo(() => ({
     events: transformData || [],
     eventsLoading: isLoading,
@@ -101,30 +105,6 @@ export function useGetEvents() {
 }
 
 
-export async function createEvent(eventData: ICalendarEvent) {
-  /**
-   * Work on server
-   */
-  if (enableServer) {
-    const data = { eventData };
-    await axios.post(ENDPOINT, data);
-  }
-
-  /**
-   * Work in local
-   */
-  await mutate(
-    ENDPOINT,
-    (currentData: any) => {
-      const currentEvents: ICalendarEvent[] = currentData?.events;
-
-      const events = [...currentEvents, eventData];
-
-      return { ...currentData, events };
-    },
-    false
-  );
-}
 
 // ----------------------------------------------------------------------
 

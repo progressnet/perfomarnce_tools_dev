@@ -66,7 +66,7 @@ export function RHFNumericIncremental(
             event.preventDefault();
           }
         }}
-        error={Boolean(error)}
+        error={!!error}
         value={value !== null ? value : ''}
         onChange={(e) => onChange(e.target.value)}
         sx={{
@@ -91,21 +91,6 @@ export function RHFNumericIncremental(
       >
         <Iconify  icon="mdi:plus" fontSize={24} />
       </IconButton>
-
-      {/* Error Message */}
-      {error && (
-        <Stack>
-          <Typography
-            sx={{
-              color: 'error.main',
-              fontSize: 12,
-              marginTop: 1
-            }}
-          >
-            {error}
-          </Typography>
-        </Stack>
-      )}
     </Stack>
   );
 }

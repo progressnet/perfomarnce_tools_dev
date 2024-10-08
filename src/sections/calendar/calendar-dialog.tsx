@@ -1,6 +1,6 @@
 import type {ICalendarEvent} from "src/types/calendar";
 
-import {useCallback, useEffect, useState} from "react";
+import {useCallback} from "react";
 
 import Stack from "@mui/material/Stack";
 import Dialog from "@mui/material/Dialog";
@@ -8,13 +8,13 @@ import {useTheme} from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 
-import {Iconify} from "../../components/iconify";
 import {CalendarForm} from "./calendar-form";
+import {Iconify} from "../../components/iconify";
 import {Scrollbar} from "../../components/scrollbar";
+import useCalendarStore from "../../store/calendarStore";
 
 type DialogProps = {
   events: ICalendarEvent[];
-  currentEvent: ICalendarEvent;
   onCloseForm: () => void;
   openForm: boolean;
 };
@@ -22,23 +22,17 @@ type DialogProps = {
 export const CalendarDialog = (
   {
     events,
-    currentEvent,
     onCloseForm,
     openForm,
   }: DialogProps) => {
   const theme = useTheme();
-
-  const [eventActive, setEventActive] = useState<ICalendarEvent>();
-
-
-  useEffect(() => {
-    if(!currentEvent) return;
-    setEventActive(currentEvent)
-  }, [currentEvent])
-
+  const setActiveEvent = useCalendarStore((state) => state.setActiveEvent);
+  const clearCurrentEvent = useCalendarStore((state) => state.clearCurrentEvent);
 
   const handleAddNewTask = () => {
-    console.log('add new task')
+    setActiveEvent(null)
+    clearCurrentEvent()
+
   }
   return (
     <Dialog
@@ -96,9 +90,7 @@ export const CalendarDialog = (
             <Stack >
               {/* DISPLAY LIST OF CURRENT TASKS */}
               <ListOfCurrentEvents
-                eventActive={eventActive}
                 events={events}
-                setEventActive={setEventActive}
               />
             </Stack>
           </Stack>
@@ -130,11 +122,10 @@ export const CalendarDialog = (
             <Stack
               sx={{padding: 2, paddingX: 3}}
             >
-              <CalendarForm
+               <CalendarForm
                 events={events}
-                currentEvent={eventActive}
                 onClose={onCloseForm}
-              />
+               />
             </Stack>
           </Stack>
         </Stack>
@@ -147,12 +138,12 @@ export const CalendarDialog = (
 
 type ListOfCurrentEventsProps = {
   events: ICalendarEvent[];
-  eventActive: ICalendarEvent | undefined;
-  setEventActive: (event: ICalendarEvent) => void;
+
 }
 
 
-const ListOfCurrentEvents = ({events, eventActive, setEventActive}: ListOfCurrentEventsProps) => {
+const ListOfCurrentEvents = ({events}: ListOfCurrentEventsProps) => {
+
   const initialTime = 0;
   const time = events.reduce((acc, event) => acc + event.extendedProps.hours, initialTime)
   const color = time >= 8 ? 'green' : 'red';
@@ -168,10 +159,8 @@ const ListOfCurrentEvents = ({events, eventActive, setEventActive}: ListOfCurren
       <Stack sx={{overflow: 'auto'}} spacing={2}>
         {events.map((event) => (
           <EventListItem
-            eventActive={eventActive}
             event={event}
             key={event.id}
-            setEventActive={setEventActive}
           />
         ))}
       </Stack>
@@ -183,24 +172,27 @@ const ListOfCurrentEvents = ({events, eventActive, setEventActive}: ListOfCurren
 
 type EventListItemProps = {
   event: ICalendarEvent;
-  eventActive: ICalendarEvent | undefined;
-  setEventActive: (event: ICalendarEvent) => void;
+
 }
 
 export function EventListItem(
   {
     event,
-    eventActive,
-    setEventActive
   }: EventListItemProps)  {
 
 
-  const condition = eventActive?.id === event.id;
+  const activeEvent =  useCalendarStore((state) => state.activeEvent)
+  const setActiveEvent = useCalendarStore((state) => state.setActiveEvent);
+  const setCurrentEvent = useCalendarStore((state) => state.setCurrentEvent);
 
+
+  const condition = activeEvent?.id === event.id;
 
   const handleActive = useCallback(() => {
-    setEventActive(event)
-  }, [event, setEventActive])
+    setActiveEvent(event)
+    setCurrentEvent(event)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [event ])
 
 
   return (
