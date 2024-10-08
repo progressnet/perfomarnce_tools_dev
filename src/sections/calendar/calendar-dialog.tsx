@@ -131,6 +131,7 @@ export const CalendarDialog = (
               sx={{padding: 2, paddingX: 3}}
             >
               <CalendarForm
+                events={events}
                 currentEvent={eventActive}
                 onClose={onCloseForm}
               />

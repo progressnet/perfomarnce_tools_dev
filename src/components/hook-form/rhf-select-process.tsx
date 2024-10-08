@@ -15,11 +15,11 @@ export type RHFAutocompleteProps =  {
   name:  keyof EventSchemaType;
   label?: string;
   placeholder?: string;
-  value: number;
+  value: number | null;
   helperText?: React.ReactNode;
   variant?: TextFieldProps['variant'];
   error?: string;
-  handleValue: (value: {id: number, name: string} ) => void;
+  handleValue: (value: {id: number | null, name: string | null} ) => void;
 };
 
 export function RHFSelectProcess(
@@ -41,7 +41,7 @@ export function RHFSelectProcess(
     <Autocomplete
       sx={{width: '100%'}}
       id={`rhf-autocomplete-${name}`}
-      onChange={(event, newValue) => handleValue({id: newValue?.id || 0, name: newValue?.processName || ""} )}
+      onChange={(event, newValue) => handleValue({id: newValue?.id || null, name: newValue?.processName || null} )}
       options={processes}
       getOptionLabel={(option) => option.processName}
       value={processes.find((process) => process.id === value) || null}

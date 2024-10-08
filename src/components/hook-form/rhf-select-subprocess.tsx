@@ -13,12 +13,12 @@ export type RHFAutocompleteProps = {
   name: string;
   label?: string;
   placeholder?: string;
-  value: number;
+  value: number | null;
   helperText?: React.ReactNode;
   variant?: TextFieldProps['variant'];
   error?: string;
-  handleValue: (value: {id: number, name: string}) => void;
-  processID: number;
+  handleValue: (value: {id: number | null, name: string | null}) => void;
+  processID: number | null;
 };
 
 export function RHFSelectSubProcess(
@@ -40,7 +40,7 @@ export function RHFSelectSubProcess(
       sx={{ width: '100%' }}
       id={`rhf-autocomplete-${name}`}
       value={subprocesses.find((subprocess) => subprocess.id === value) || null}
-      onChange={(event, newValue) => handleValue({id: newValue?.id || 0, name: newValue?.subProcess || ""})}
+      onChange={(event, newValue) => handleValue({id: newValue?.id || null, name: newValue?.subProcess || null})}
       options={subprocesses}
       getOptionLabel={(option) => option.subProcess}
       renderInput={(params) => (

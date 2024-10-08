@@ -42,7 +42,7 @@ export function useGetTask() {
 
 const ENDPOINT_BY_SUBPROCESS = endpoints.taskBySubProcess
 
-export function useGetTaskByParent(id: number | undefined) {
+export function useGetTaskByParent(id: number | null) {
   const { data, isLoading, error, isValidating } = useSWR<EventsData[]>(
     id ?ENDPOINT_BY_SUBPROCESS.concat(`/${id}`) : null,
     fetcher,

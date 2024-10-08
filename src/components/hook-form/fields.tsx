@@ -15,6 +15,7 @@ import {RHFSelectSubProcess} from "./rhf-select-subprocess";
 import { RHFCheckbox, RHFMultiCheckbox } from './rhf-checkbox';
 import { RHFUpload, RHFUploadBox, RHFUploadAvatar } from './rhf-upload';
 import { RHFDatePicker, RHFMobileDateTimePicker } from './rhf-date-picker';
+import {RHFNumericIncremental} from "./rhf-numeric-incremental";
 
 // ----------------------------------------------------------------------
 
@@ -43,4 +44,5 @@ export const Field = {
   SelectProcess: RHFSelectProcess,
   SelectSubProcess: RHFSelectSubProcess,
   SelectTask: RHFSelectTask,
+  NumericIncremental: RHFNumericIncremental,
 };

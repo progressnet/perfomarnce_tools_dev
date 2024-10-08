@@ -12,12 +12,12 @@ export type RHFAutocompleteProps =  {
   name: string;
   label?: string;
   placeholder?: string;
-  value: number;
+  value: number | null;
   helperText?: React.ReactNode;
   variant?: TextFieldProps['variant'];
   error?: string;
-  handleValue: ( newValue: {id: number, name: string}) => void;
-  subprocessID: number;
+  handleValue: ( newValue: {id: number | null, name: string | null}) => void;
+  subprocessID: number | null;
 
 };
 
@@ -39,7 +39,7 @@ export function RHFSelectTask(
       sx={{width: '100%'}}
       id={`rhf-autocomplete-${name}`}
       value={tasks.find((item) => item.taskID === value) || null}
-      onChange={(event, newValue) => handleValue({id: newValue?.taskID || 0, name: newValue?.taskName || ""})}
+      onChange={(event, newValue) => handleValue({id: newValue?.taskID || null, name: newValue?.taskName || null})}
       options={tasks}
       getOptionLabel={(option) => option.taskName}
       renderInput={(params) => (

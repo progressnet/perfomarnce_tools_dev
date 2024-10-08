@@ -99,7 +99,6 @@ export function useCalendar(events: ICalendarEvent[]) {
     [calendarEl, onOpenForm]
   );
 
-  console.log({dayEvents})
 
   // on click event
   const onClickEvent = useCallback(

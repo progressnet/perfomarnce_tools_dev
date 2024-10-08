@@ -47,7 +47,9 @@ export function CalendarView() {
     //
     selectEventId,
     selectedRange,
+
     //
+    setDayEvents,
     dayEvents,
   } = useCalendar(events);
 
@@ -56,7 +58,6 @@ export function CalendarView() {
     onInitialView();
   }, [onInitialView]);
 
-
   const flexProps = { flex: '1 1 auto', display: 'flex', flexDirection: 'column' };
   const currentEvent = useEvent(events, selectEventId, selectedRange, openForm);
   const [currentDate, setCurrentDate] = useState(new Date()); // Start from today's date
@@ -64,7 +65,7 @@ export function CalendarView() {
   const handleDayClick = (e: any) => {
     const day = e.dateStr;
     const filteredEvents = events.filter((event) => event.start === day);
-    // setDayEvents(filteredEvents)
+    setDayEvents(filteredEvents)
   }
 
   const handleDatesSet = (dateInfo: any) => {

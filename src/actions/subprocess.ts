@@ -39,7 +39,7 @@ export function useGetSubProcess() {
 
 const ENDPOINT_BY_PROCESS = endpoints.subprocessByProcess
 
-export function useGetSubProcessByProcess(id: number | undefined) {
+export function useGetSubProcessByProcess(id: number | null) {
   const { data, isLoading, error, isValidating } = useSWR<EventsData[]>(
     id ? ENDPOINT_BY_PROCESS.concat(`/${id}`) : null,
     fetcher,

@@ -37,22 +37,7 @@ const swrOptions = {
 
 // ----------------------------------------------------------------------
 
-type EventsData = {
-    id: number;
-    process: {
-      id: string;
-      title: string;
-    };
-    subprocess: {
-      id: string;
-      title: string;
-    };
-    hours: number,
-    task: string;
-    start_date: string;
-    end_date: string;
-    color: string;
-};
+
 
 type HoursPerDay = {
   [key: string]: number;
@@ -71,44 +56,7 @@ const calculateTotalHoursPerDay = (events: Timesheet[]) => {
   return hoursPerDay;
 }
 
-// export function useGetEvents() {
-//   const { data, isLoading, error, isValidating } = useSWR<EventsData[]>(
-//     ENDPOINT,
-//     fetcher,
-//     swrOptions
-//   );
-//
-//   return useMemo(() => {
-//     const totalHoursPerDay = calculateTotalHoursPerDay(data || []);
-//     const events = data?.map((event) => {
-//
-//       const dayHours = totalHoursPerDay[event.start_date];
-//       const title =  event.task;
-//
-//       return {
-//         id: event.id.toString(),
-//         title: `${title} - ${event.hours}h`,
-//         start: event.start_date,
-//         end: event.start_date,
-//         color: dayHours >= 8 ? "green" : "red",
-//         extendedProps: {
-//           process: event.process,
-//           subprocess: event.subprocess,
-//           hours: event.hours,
-//           task: event.task,
-//         },
-//       }
-//     });
-//
-//     return {
-//       events: events || [],
-//       eventsLoading: isLoading,
-//       eventsError: error,
-//       eventsValidating: isValidating,
-//       eventsEmpty: !isLoading && !data?.length,
-//     };
-//   }, [data, error, isLoading, isValidating]);
-// }
+
 
 // ----------------------------------------------------------------------
 
@@ -138,6 +86,8 @@ export function useGetEvents() {
         taskID: ts.taskID,
         taskName: ts.taskName,
         hours: ts.hours,
+        timesheetID: ts.id,
+        timesheetdate: ts.timesheetdate,
       },
     }
   })
@@ -207,30 +157,32 @@ export async function updateEvent(eventData: Partial<ICalendarEvent>) {
 
 // ----------------------------------------------------------------------
 
-export async function deleteEvent(eventId: string) {
-  /**
-   * Work on server
-   */
-  if (enableServer) {
-    const data = { eventId };
-    await axios.patch(ENDPOINT, data);
-  }
 
-  /**
-   * Work in local
-   */
- await mutate(
-    ENDPOINT,
-    (currentData: any) => {
-      const currentEvents: ICalendarEvent[] = currentData?.events;
-
-      const events = currentEvents.filter((event) => event.id !== eventId);
-
-      return { ...currentData, events };
-    },
-    false
-  );
+export type TimesheetApiProps = {
+  id?: number;
+  employeeID: number;
+  timesheetdate: string;
+  hours: number;
+  assignmentID: number;
+  taskID: number;
+}
+export async function handleTimesheetUpdate(data: TimesheetApiProps) {
+  const res = await axios.put(ENDPOINT, data);
+  await mutate(ENDPOINT);
+  return {
+    success: true,
+    data: res,
+  };
 }
 
+
+export async function handleTimesheetCreate( data: TimesheetApiProps) {
+  const res = await axios.post(ENDPOINT, data);
+  await mutate(ENDPOINT);
+  return {
+    success: true,
+    data: res,
+  };
+}
 
 
