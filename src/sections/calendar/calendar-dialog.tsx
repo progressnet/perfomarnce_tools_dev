@@ -1,6 +1,7 @@
 import type {ICalendarEvent} from "src/types/calendar";
 
 import {useCallback} from "react";
+import {useShallow} from "zustand/shallow";
 
 import Stack from "@mui/material/Stack";
 import Dialog from "@mui/material/Dialog";
@@ -8,10 +9,11 @@ import {useTheme} from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 
+import dayjs from "dayjs";
 import {CalendarForm} from "./calendar-form";
 import {Iconify} from "../../components/iconify";
 import {Scrollbar} from "../../components/scrollbar";
-import useCalendarStore from "../../store/calendarStore";
+import useCalendarStore, {type CalendarStoreState} from "../../store/calendarStore";
 
 type DialogProps = {
   events: ICalendarEvent[];
@@ -26,8 +28,17 @@ export const CalendarDialog = (
     openForm,
   }: DialogProps) => {
   const theme = useTheme();
-  const setActiveEvent = useCalendarStore((state) => state.setActiveEvent);
-  const clearCurrentEvent = useCalendarStore((state) => state.clearCurrentEvent);
+
+  const {
+    clearCurrentEvent,
+    setActiveEvent,
+    clickedDate,
+  } = useCalendarStore(useShallow((state:CalendarStoreState) => ({
+    currentEvent: state.currentEvent,
+    clickedDate: state.clickedDate,
+    clearCurrentEvent: state.clearCurrentEvent,
+    setActiveEvent: state.setActiveEvent,
+  })));
 
   const handleAddNewTask = () => {
     setActiveEvent(null)
@@ -103,15 +114,18 @@ export const CalendarDialog = (
               boxShadow: '0px 0px 20px 0px rgba(0,0,0,0.1)'
             }}
           >
-            <Stack sx={{
+            <Stack
+              flexDirection="row"
+              alignItems="center"
+              justifyContent="space-between"
+              sx={{
               height: '80px',
-              p:1,
+              px:3,
               borderBottom: '1px dashed',
               borderColor: 'grey.300',
-              alignItems: 'flex-end',
-              justifyContent: 'center'
             }}
             >
+              <Typography variant="subtitle2">{dayjs(clickedDate).format('DD-MM-YYYY')}</Typography>
               <IconButton
                 aria-label="close"
                 onClick={onCloseForm}
@@ -145,7 +159,10 @@ type ListOfCurrentEventsProps = {
 const ListOfCurrentEvents = ({events}: ListOfCurrentEventsProps) => {
 
   const initialTime = 0;
-  const time = events.reduce((acc, event) => acc + event.extendedProps.hours, initialTime)
+  const time = events.reduce((acc, event) => {
+    if(!event.extendedProps.clickable) return acc;
+    return acc + event.extendedProps.hours;
+  }, initialTime);
   const color = time >= 8 ? 'green' : 'red';
   return (
     <Stack>
@@ -157,12 +174,15 @@ const ListOfCurrentEvents = ({events}: ListOfCurrentEventsProps) => {
         </Typography>
       </Stack>
       <Stack sx={{overflow: 'auto'}} spacing={2}>
-        {events.map((event) => (
-          <EventListItem
-            event={event}
-            key={event.id}
-          />
-        ))}
+        {events.map((event) => {
+          if(!event.extendedProps.clickable) return null;
+          return (
+            <EventListItem
+              key={event.id}
+              event={event}
+            />
+          )
+        })}
       </Stack>
     </Stack>
 

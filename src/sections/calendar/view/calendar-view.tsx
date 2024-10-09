@@ -1,3 +1,5 @@
+import type {EventContentArg} from "@fullcalendar/core";
+
 import { useEffect} from 'react';
 import Calendar from '@fullcalendar/react';
 import listPlugin from '@fullcalendar/list';
@@ -7,6 +9,9 @@ import timelinePlugin from '@fullcalendar/timeline';
 import interactionPlugin from '@fullcalendar/interaction';
 
 import Card from '@mui/material/Card';
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import LinearProgress from '@mui/material/LinearProgress';
 
 import { fDate } from 'src/utils/format-time';
 
@@ -69,8 +74,58 @@ export function CalendarView() {
     return [];
   };
 
-  console.log('view', view)
 
+  const renderContent = (eventInfo: EventContentArg) => {
+    const {clickable, totalHours } = eventInfo.event.extendedProps;
+    const progress = Math.min((totalHours / 8) * 100, 100);
+
+    const eventContentStyle = {
+      whiteSpace: 'normal',
+      wordWrap: 'break-word',
+      overflowWrap: 'break-word',
+      fontSize: '13px'
+    };
+    if(!clickable) {
+      return (
+        <Stack
+          flexDirection="row"
+          alignItems="center"
+          spacing={1}
+          sx={{
+            width: '100%',
+            color: totalHours > 8 ? 'rgb(4,171,4)' : 'rgb(255,0,0)', // Conditional text color
+            backgroundColor: totalHours > 8 ? 'rgba(229,247,241,0.73)' : 'rgba(254,233,233,0.63)', // Conditional background color
+            px: 1,
+            py: 0.4,
+            borderRadius: '4px'
+        }}
+        >
+          <Typography sx={{fontWeight: 'bold', display: 'inline-flex', fontSize: '12px'}}>
+            {`${totalHours} / 8`}
+          </Typography>
+          <LinearProgress
+            sx={{
+              backgroundColor: 'rgba(234,34,34,0.19)',
+              '& .MuiLinearProgress-bar': {
+                backgroundColor: 'rgb(4,171,4)',
+              },
+              width: '100%', color: 'green'
+            }}
+            variant="determinate"
+            value={progress}
+          />
+        </Stack>
+      )
+    }
+      return (
+        <Typography  sx={eventContentStyle}>
+          {eventInfo.event.title}
+        </Typography>
+      )
+
+
+
+  }
   return (
     <>
       <DashboardContent maxWidth="xl" sx={{ ...flexProps }}>
@@ -87,7 +142,7 @@ export function CalendarView() {
             />
             <Calendar
               locale='en-gb'
-
+              eventContent={renderContent}
               eventClassNames={getEventClassNames} // Apply the class based on clickable property
               eventOrder="order"
               weekends

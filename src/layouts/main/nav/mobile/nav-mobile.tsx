@@ -2,9 +2,7 @@ import { useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
 
-import { paths } from 'src/routes/paths';
 import { usePathname } from 'src/routes/hooks';
 
 import { Logo } from 'src/components/logo';
@@ -50,11 +48,11 @@ export function NavMobile({ data, open, onClose, slots, sx }: NavMobileProps) {
         },
       }}
     >
-      {slots?.topArea ?? (
-        <Box display="flex" sx={{ pt: 3, pb: 2, pl: 2.5 }}>
-          <Logo />
-        </Box>
-      )}
+      {/* {slots?.topArea ?? (* /}
+      {/*  <Box display="flex" sx={{ pt: 3, pb: 2, pl: 2.5 }}> */}
+      {/*    <Logo /> */}
+      {/*  </Box> */}
+      {/* )} */}
 
       <Scrollbar fillContent>
         <Box component="nav" display="flex" flexDirection="column" flex="1 1 auto" sx={{ pb: 3 }}>
@@ -69,16 +67,6 @@ export function NavMobile({ data, open, onClose, slots, sx }: NavMobileProps) {
       {slots?.bottomArea ?? (
         <Box gap={1.5} display="flex" sx={{ px: 2.5, py: 3 }}>
           <SignInButton fullWidth />
-
-          <Button
-            fullWidth
-            variant="contained"
-            rel="noopener"
-            target="_blank"
-            href={paths.minimalStore}
-          >
-            Purchase
-          </Button>
         </Box>
       )}
     </Drawer>

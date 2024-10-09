@@ -77,7 +77,8 @@ export function useGetEvents() {
       title: `${title} - ${ts.hours}h`,
       start: start_date,
       end: start_date,
-      color: dayHours >= 8 ? "green" : "red",
+      color: 'white',
+      textColor: 'black',
       extendedProps: {
         clickable: true,
         processID: ts.processID,

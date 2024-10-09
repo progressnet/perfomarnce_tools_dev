@@ -60,9 +60,6 @@ export function DashboardLayout({ sx, children, header, data }: DashboardLayoutP
 
   return (
     <LayoutSection
-      /** **************************************
-       * Header
-       *************************************** */
       headerSection={
         <HeaderSection
           layoutQuery={layoutQuery}

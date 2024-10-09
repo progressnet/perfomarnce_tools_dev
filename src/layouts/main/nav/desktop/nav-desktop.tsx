@@ -19,9 +19,9 @@ export function NavDesktop({ data, sx }: NavMainProps) {
           alignItems: 'center',
         }}
       >
-        {data.map((list) => (
+         {data.map((list) => (
           <NavList key={list.title} data={list} />
-        ))}
+         ))}
       </NavUl>
     </Stack>
   );

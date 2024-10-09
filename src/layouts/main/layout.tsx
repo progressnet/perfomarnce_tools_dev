@@ -102,18 +102,6 @@ export function MainLayout({ sx, data, children, header }: MainLayoutProps) {
                   {/* -- Sign in button -- */}
                   <SignInButton />
                   {/* -- Purchase button -- */}
-                  <Button
-                    variant="contained"
-                    rel="noopener"
-                    target="_blank"
-                    href={paths.minimalStore}
-                    sx={{
-                      display: 'none',
-                      [theme.breakpoints.up(layoutQuery)]: { display: 'inline-flex' },
-                    }}
-                  >
-                    Purchase
-                  </Button>
                 </Box>
               </>
             ),
