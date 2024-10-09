@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import {toast} from "sonner";
 import { z as zod } from 'zod';
 import { useForm } from 'react-hook-form';
+import {shallow, useShallow} from 'zustand/shallow'
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo, useEffect, useCallback} from "react";
 
@@ -19,8 +20,10 @@ import DialogActions from '@mui/material/DialogActions';
 
 import { Form, Field } from 'src/components/hook-form';
 
-import {handleTimesheetCreate, handleTimesheetUpdate} from "../../actions/calendar";
 import useCalendarStore from "../../store/calendarStore";
+import {handleTimesheetCreate, handleTimesheetUpdate} from "../../actions/calendar";
+
+import type {CalendarStoreState} from "../../store/calendarStore";
 
 
 // ----------------------------------------------------------------------
@@ -80,14 +83,19 @@ export function CalendarForm(
   {
     events,
     onClose,
-
   }: Props) {
-  const currentEvent = useCalendarStore((state) => state.currentEvent);
-  const setCurrentEvent = useCalendarStore((state) => state.setCurrentEvent);
-  const setActiveEvent = useCalendarStore((state) => state.setActiveEvent);
-  const activeEvent = useCalendarStore((state) => state.activeEvent);
-  const clickedDate = useCalendarStore((state) => state.clickedDate);
 
+  const {
+    currentEvent,
+    setCurrentEvent,
+    setActiveEvent,
+    clickedDate,
+  } = useCalendarStore(useShallow((state:CalendarStoreState) => ({
+    currentEvent: state.currentEvent,
+    setCurrentEvent: state.setCurrentEvent,
+    setActiveEvent: state.setActiveEvent,
+    clickedDate: state.clickedDate,
+  })));
   const defaultValues = useMemo(
     () => ({
       process: {

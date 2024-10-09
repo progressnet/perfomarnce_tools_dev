@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import { useEffect} from 'react';
 import Calendar from '@fullcalendar/react';
 import listPlugin from '@fullcalendar/list';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -62,7 +62,14 @@ export function CalendarView() {
     setDayEvents(filteredEvents)
     handleDayPress(day)
   }
+  const getEventClassNames = (eventInfo: any) => {
+    if (!eventInfo.event.extendedProps.clickable) {
+      return ['non-clickable-event'];
+    }
+    return [];
+  };
 
+  console.log('view', view)
 
   return (
     <>
@@ -79,6 +86,10 @@ export function CalendarView() {
               onChangeView={onChangeView}
             />
             <Calendar
+              locale='en-gb'
+
+              eventClassNames={getEventClassNames} // Apply the class based on clickable property
+              eventOrder="order"
               weekends
               editable
               droppable
@@ -90,7 +101,7 @@ export function CalendarView() {
               initialDate={date}
               dateClick={handleDayClick}
               initialView={view}
-              dayMaxEventRows={3}
+              dayMaxEventRows={view === "dayGridWeek" ? false : 4}
               eventDisplay="block"
               events={events}
               headerToolbar={false}

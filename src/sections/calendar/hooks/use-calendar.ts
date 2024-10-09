@@ -110,6 +110,7 @@ export function useCalendar(events: ICalendarEvent[]) {
   const onClickEvent = useCallback(
     (arg: EventClickArg) => {
       const { event } = arg;
+      if(!event.extendedProps.clickable) return;
       const filteredEvents = events.filter((evt) => evt.start === event.startStr);
       setDayEvents(filteredEvents)
       setClickedDate(event.startStr);

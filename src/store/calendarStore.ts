@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 import type { ICalendarEvent } from "../types/calendar";
 
-interface CalendarStoreState {
+export interface CalendarStoreState {
   currentEvent: ICalendarEvent | null;
   setCurrentEvent: (event: ICalendarEvent) => void;
   clearCurrentEvent: () => void;

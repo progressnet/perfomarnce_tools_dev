@@ -27,7 +27,6 @@ export type Timesheet = {
 const enableServer = false;
 
 const ENDPOINT = endpoints.timesheet;
-// const ENDPOINT = "https://mocki.io/v1/4f628224-ecab-4b26-8ff7-becf1216c54a";
 
 const swrOptions = {
   revalidateIfStale: enableServer,
@@ -44,7 +43,6 @@ type HoursPerDay = {
 }
 
 const calculateTotalHoursPerDay = (events: Timesheet[]) => {
-
   const hoursPerDay: HoursPerDay = {};
   events.forEach((event) => {
     const date = dayjs(event.timesheetdate).format('YYYY-MM-DD');
@@ -69,18 +67,19 @@ export function useGetEvents() {
   const totalHoursPerDay = calculateTotalHoursPerDay(data || []);
   // ============================================================
 
-  console.log('totalHoursPerDay', totalHoursPerDay);
-  const transformData = data && data.map((ts) => {
+  const transformData = data?.map((ts) => {
     const start_date = dayjs(ts.timesheetdate).format('YYYY-MM-DD');
     const dayHours = totalHoursPerDay[start_date];
     const title =  ts.taskName;
     return {
+      order: 2,
       id: ts.id.toString(),
       title: `${title} - ${ts.hours}h`,
       start: start_date,
       end: start_date,
       color: dayHours >= 8 ? "green" : "red",
       extendedProps: {
+        clickable: true,
         processID: ts.processID,
         processName: ts.processName,
         subprocessID: ts.subProcessID,
@@ -90,18 +89,36 @@ export function useGetEvents() {
         hours: ts.hours,
         timesheetID: ts.id,
         timesheetdate: ts.timesheetdate,
+
       },
     }
-  })
+  }) || [];
 
+  const totalHoursEvents = Object.entries(totalHoursPerDay).map(
+    ([date, totalHours], index) => ({
+        order: 1,
+        id: `total-${index}`,
+        title: `Total: ${totalHours}h`,
+        start:date,
+        end: date,
+        color: 'transparent',
+        textColor: 'black',
+        extendedProps: {
+          clickable: false,
+          totalHours,
+        },
+      })
+  );
+  const allEvents = [...totalHoursEvents, ...transformData];
 
   return useMemo(() => ({
-    events: transformData || [],
+    events: allEvents || [],
     eventsLoading: isLoading,
     error,
     isValidating,
     empty: !isLoading && !data?.length,
-  }), [data, transformData, error, isLoading, isValidating]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }), [ data,  error, isLoading, isValidating]);
 }
 
 
