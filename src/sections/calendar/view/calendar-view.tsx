@@ -93,7 +93,7 @@ export function CalendarView() {
           spacing={1}
           sx={{
             width: '100%',
-            color: totalHours > 8 ? 'rgb(4,171,4)' : 'rgb(255,0,0)', // Conditional text color
+            color: totalHours > 8 ? 'rgb(4,171,4)' : 'rgb(208,17,17)', // Conditional text color
             backgroundColor: totalHours > 8 ? 'rgba(229,247,241,0.73)' : 'rgba(254,233,233,0.63)', // Conditional background color
             px: 1,
             py: 0.4,

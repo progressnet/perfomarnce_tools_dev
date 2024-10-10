@@ -18,6 +18,7 @@ export const Scrollbar = forwardRef<HTMLDivElement, ScrollbarProps>(
       className={scrollbarClasses.root}
       sx={{
         minWidth: 0,
+        zIndex: 10,
         minHeight: 0,
         flexGrow: 1,
         display: 'flex',

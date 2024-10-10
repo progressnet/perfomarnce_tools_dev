@@ -3,20 +3,24 @@ import type { ICalendarEvent } from 'src/types/calendar';
 
 import dayjs from "dayjs";
 import {toast} from "sonner";
-import { z as zod } from 'zod';
+import { z as zod} from 'zod';
 import { useForm } from 'react-hook-form';
-import {shallow, useShallow} from 'zustand/shallow'
+import { useShallow} from 'zustand/shallow'
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo, useEffect, useCallback} from "react";
 
 import Box from "@mui/material/Box";
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
+import Radio from "@mui/material/Radio";
 import Button from '@mui/material/Button';
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
+import RadioGroup from "@mui/material/RadioGroup";
 import LoadingButton from '@mui/lab/LoadingButton';
+import FormControl from "@mui/material/FormControl";
 import DialogActions from '@mui/material/DialogActions';
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 import { Form, Field } from 'src/components/hook-form';
 
@@ -43,6 +47,7 @@ type Event = {
   };
   hours: number | null;
   exists: boolean;
+  isCompleted: boolean;
 };
 export type EventSchemaType = zod.infer<typeof EventSchema>;
 
@@ -69,6 +74,7 @@ export const EventSchema = zod.object({
   hours: zod.number().nullable().refine((value) => value !== null &&  value > 0, {
     message: 'Hours is a required and must be greater than 0',
   }),
+  isCompleted: zod.boolean().optional()
 })
 
 // ----------------------------------------------------------------------
@@ -96,6 +102,8 @@ export function CalendarForm(
     setActiveEvent: state.setActiveEvent,
     clickedDate: state.clickedDate,
   })));
+  const stringDateVariant = dayjs(clickedDate).format('MMMM D YYYY');
+
   const defaultValues = useMemo(
     () => ({
       process: {
@@ -112,6 +120,7 @@ export function CalendarForm(
       },
       timesheetID: currentEvent?.extendedProps.timesheetID,
       hours: currentEvent?.extendedProps?.hours || 0,
+      isCompleted: currentEvent?.extendedProps?.isCompleted || false,
       exists: false,
     }),
     [currentEvent]
@@ -135,6 +144,7 @@ export function CalendarForm(
   useEffect(() => {
     reset(defaultValues);
   }, [defaultValues, currentEvent, reset]);
+
 
   const onSubmit = handleSubmit(async (submitData) => {
     if (!submitData.hours || !submitData.task?.id ) return;
@@ -213,7 +223,10 @@ export function CalendarForm(
       setValue('hours', hourVal)
   }, [setValue]);
 
-
+  const handleIsCompleted = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value === 'true';
+    setValue('isCompleted', value)
+  }, [setValue]);
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Stack spacing={2}>
@@ -239,12 +252,28 @@ export function CalendarForm(
           />
         </HorizontalInputContainer>
         { /* ============== TASK ================ */}
-          <Typography sx={{mb:1}} variant="h6">Choose the task that you have been working on</Typography>
+          <Typography
+            sx={{
+              mb:1,
+              '@media (max-width: 897px)': {
+                fontSize: '0.92rem'
+              },
+          }}
+            variant="h6"
+          >
+            Choose the task that you have been working on
+          </Typography>
           <Grid spacing={0} container justifyContent="end">
-            <Grid alignContent="center" item xs={4} >
+            <Grid alignContent="center" item xs={4}
+              sx={{
+                '@media (max-width: 897px)': {
+                  display: 'none',
+                },
+              }}
+            >
               <Typography variant="body2" sx={{fontWeight: 'medium'}}>Task</Typography>
             </Grid>
-            <Grid item xs={8}>
+            <Grid item xs={12} md={8}>
               <Field.SelectTask
                 subprocessID={values.subprocess.id}
                 name="task"
@@ -255,7 +284,7 @@ export function CalendarForm(
               />
             </Grid>
             { /* ============== TEXT DISPLAY ================ */}
-            <Grid item xs={8}>
+            <Grid item xs={12} md={8} >
               {values.process?.name && values.subprocess?.name && values.task?.name ? (
                 <SelectedValues
                   processName={values?.process?.name}
@@ -273,30 +302,22 @@ export function CalendarForm(
             </Grid>
           </Grid>
           <Divider sx={{borderStyle:'dashed', color: '#000'}} variant="fullWidth" />
-        { /* ============== HOURS CONTROLLER ================ */}
-        <Stack  sx={{mt: 1, mb: 4}} >
-          <Stack  flexDirection="row" alignItems="center" spacing={3}>
-            <Typography variant="h6">How many hours did you work on this task today?</Typography>
-            <Field.NumericIncremental
-              value={values.hours}
-              handleChange={handleHourChange}
-              increment={0.5}
-              error={errors?.hours?.message || ""}
-
-            />
-          </Stack>
-          {
-            errors.hours && (
-              <Typography
-                sx={{color: 'error.main', fontSize: '12px', textAlign: 'end'}}>
-                {errors?.hours?.message}
-              </Typography>
-            )
-          }
-
+        <Stack spacing={1}>
+          { /* ============== HOURS CONTROLLER ================ */}
+          <HoursController
+            value={values.hours}
+            increment={0.5}
+            handleValue={handleHourChange}
+            error={errors?.hours?.message || ""}
+            date={stringDateVariant}
+          />
         </Stack>
-
-      </Stack>
+        { /* ============== IS COMPLETED  ================ */}
+           <RadioCompletionButtons
+            value={values.isCompleted}
+            handleChange={handleIsCompleted}
+           />
+        </Stack>
       { /* ============== DIALOG ACTIONS ================ */}
       <DialogActions
         sx={{ flexShrink: 0 }}
@@ -323,9 +344,11 @@ type SelectedValuesProps = {
   taskName:string | null;
 }
 
+
+// ============== SELECTION TEXT DISPLAY ================
 const SelectedValues = ({processName, subprocessName, taskName}: SelectedValuesProps) => (
-    <Stack flexDirection="row">
-      <Box sx={{fontSize: '12px', marginBottom: 0}} component="p">
+    <Stack flexDirection="row" sx={{minHeight: 70,   width: '100%'}}>
+      <Box sx={{fontSize: '12px', marginBottom: 0, width: '100%'}} component="p">
         You have selected the task:
         <Box component="span"  sx={{color: "primary.main"}}> {taskName} </Box>
         from the sub-process:
@@ -336,19 +359,154 @@ const SelectedValues = ({processName, subprocessName, taskName}: SelectedValuesP
     </Stack>
   )
 
-
+// ============== GRID CONTAINER FOR PROCESS / SUBPROCESS / TASK ================
 export type HorizontalInputProps = {
   children: ReactNode;
   label: string;
 }
 
 export const HorizontalInputContainer = ({children, label}:  HorizontalInputProps) => (
-    <Grid container>
-      <Grid item sm={4}>
-        <Typography variant="body2" sx={{fontWeight: 'medium'}}>{label}</Typography>
-      </Grid>
-      <Grid item sm={8}>
-        {children}
-      </Grid>
+  <Grid container sx={{
+    width: '100%',
+    alignItems: 'space-between',
+  }}>
+    <Grid item sm={4} xs={false} sx={{
+      '@media (max-width: 897px)': {
+        display: 'none',
+      },
+    }}>
+      <Typography variant="body2" sx={{ fontWeight: 'medium' }}>{label}</Typography>
     </Grid>
+
+    <Grid item md={8} xs={12} sx={{
+      width: { xs: '100%' }, // take full width on xs screens
+    }}>
+      {children}
+    </Grid>
+  </Grid>
   )
+
+
+// ============== HOURS CONTROLLER ================
+
+export type HoursControllerProps = {
+  value: number | null;
+  handleValue: (value: number | null) => void;
+  error: string;
+  date: string;
+  increment: number;
+}
+export const HoursController = (
+  {
+    value,
+    handleValue,
+    error,
+    date,
+    increment,
+  }: HoursControllerProps) => (
+    <Stack>
+      <Stack
+        flexDirection="row"
+        alignItems="center"
+        spacing={3}
+        sx={{
+          '@media (max-width: 897px)': {
+            flexDirection: 'column',
+            alignItems: 'flex-start'
+          }
+        }}
+      >
+        <Typography
+          sx={{
+            '@media (max-width: 897px)': {
+              fontSize: '0.92rem',
+            },
+            fontSize: '1.15rem',
+            fontWeight: 'medium',
+          }}
+        >{`How many hours did you work on this task on ${ date} ?`}</Typography>
+        <Field.NumericIncremental
+
+          value={value}
+          handleChange={handleValue}
+          increment={increment}
+          error={error}
+        />
+      </Stack>
+      {
+        error && (
+          <Typography
+            sx={{color: 'error.main', fontSize: '12px', textAlign: 'end'}}>
+            {error}
+          </Typography>
+        )
+      }
+
+    </Stack>
+  )
+
+
+// ============== IS COMPLETED RADIO BUTTONS ================
+export type RadioCompletionButtonProps = {
+  value: boolean ;
+  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+export function RadioCompletionButtons(
+  {
+    value,
+    handleChange,
+  }: RadioCompletionButtonProps) {
+  return (
+    <FormControl sx={{
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      '@media (max-width: 897px)': {
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+      },
+    }}>
+      <Typography
+        sx={{
+          '@media (max-width: 897px)': {
+            fontSize: '0.92rem',
+          },
+          fontSize: '1.15rem',
+          fontWeight: 'medium',
+        }}
+        id="is-completed-input"
+        >Is this task completed
+      </Typography>
+      <RadioGroup
+        sx={{display: 'flex', gap: 3}}
+        row
+        name="is-completed-input"
+        value={String(value)}
+        onChange={handleChange}
+      >
+        <FormControlLabel
+          value="true"
+          control={
+            <Radio
+              sx={{
+            '& .MuiSvgIcon-root': {
+              fontSize: 25,
+            },
+          }}/>}
+          label="Yes"
+        />
+        <FormControlLabel
+          value="false"
+          control={
+            <Radio
+              sx={{
+            '& .MuiSvgIcon-root': {
+              fontSize: 25,
+            },
+          }}/>}
+          label="No"
+        />
+      </RadioGroup>
+    </FormControl>
+  );
+}

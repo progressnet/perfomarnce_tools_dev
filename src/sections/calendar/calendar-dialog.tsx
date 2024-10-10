@@ -1,19 +1,17 @@
-import type {ICalendarEvent} from "src/types/calendar";
-
-import {useCallback} from "react";
-import {useShallow} from "zustand/shallow";
-
-import Stack from "@mui/material/Stack";
-import Dialog from "@mui/material/Dialog";
-import {useTheme} from "@mui/material/styles";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
+import type { ICalendarEvent } from "src/types/calendar";
 
 import dayjs from "dayjs";
-import {CalendarForm} from "./calendar-form";
-import {Iconify} from "../../components/iconify";
-import {Scrollbar} from "../../components/scrollbar";
-import useCalendarStore, {type CalendarStoreState} from "../../store/calendarStore";
+import { useCallback } from "react";
+import { useShallow } from "zustand/shallow";
+
+import Dialog from "@mui/material/Dialog";
+import { useTheme } from "@mui/material/styles";
+import {Stack, IconButton, Typography} from "@mui/material";
+
+import { CalendarForm } from "./calendar-form";
+import { Iconify } from "../../components/iconify";
+import { Scrollbar } from "../../components/scrollbar";
+import useCalendarStore, { type CalendarStoreState } from "../../store/calendarStore";
 
 type DialogProps = {
   events: ICalendarEvent[];
@@ -29,22 +27,22 @@ export const CalendarDialog = (
   }: DialogProps) => {
   const theme = useTheme();
 
-  const {
-    clearCurrentEvent,
-    setActiveEvent,
-    clickedDate,
-  } = useCalendarStore(useShallow((state:CalendarStoreState) => ({
-    currentEvent: state.currentEvent,
-    clickedDate: state.clickedDate,
-    clearCurrentEvent: state.clearCurrentEvent,
-    setActiveEvent: state.setActiveEvent,
-  })));
+  const { clearCurrentEvent, setActiveEvent, clickedDate } = useCalendarStore(
+    useShallow((state: CalendarStoreState) => ({
+      currentEvent: state.currentEvent,
+      clickedDate: state.clickedDate,
+      clearCurrentEvent: state.clearCurrentEvent,
+      setActiveEvent: state.setActiveEvent,
+    }))
+  );
+
+  const stringDate = dayjs(clickedDate).format('D MMMM YYYY'); // "2 October 2024"
 
   const handleAddNewTask = () => {
-    setActiveEvent(null)
-    clearCurrentEvent()
+    setActiveEvent(null);
+    clearCurrentEvent();
+  };
 
-  }
   return (
     <Dialog
       fullWidth
@@ -57,7 +55,8 @@ export const CalendarDialog = (
       }}
       PaperProps={{
         sx: {
-          minHeight:'300px',
+          minHeight: '300px',
+          height: '92vh',
           display: 'flex',
           position: 'relative',
           overflow: 'hidden',
@@ -65,206 +64,200 @@ export const CalendarDialog = (
         },
       }}
     >
-      <Scrollbar fillContent>
+      <Stack
+        spacing={1}
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          '@media (max-width: 600px)': {
+            flexDirection: 'column'
+          },
+          height: '100%',
+          padding: '12px',
+          backgroundColor: 'rgba(246,246,246,0.99)',
+          borderRadius: '15px',
+          overflow: 'hidden',
+        }}
+      >
+        {/* LEFT SIDE (Event List) */}
         <Stack
-          flexDirection={{ xs: 'column', md: 'row' }} // 'column' for mobile, 'row' for desktop
-          spacing={1}
           sx={{
-            flexGrow: 1,
-            padding: '12px',
-            backgroundColor: 'rgba(246,246,246,0.99)',
-            borderRadius: '15px',
-          }}
-        >
-          {/* LEFT SIDE */}
-          <Stack sx={{
+            '@media (max-width: 600px)': {
+              display: 'none'
+            },
+            maxWidth: '300px',
             flex: 1,
             backgroundColor: '#fbfbfb',
             borderRadius: 1,
             boxShadow: '0px 0px 20px 0px rgba(0,0,0,0.1)',
+            display: 'flex',
+            flexDirection: 'column',
 
           }}
-          >
-            <Stack
-              alignItems="flex-end"
-              justifyContent="center"
-              sx={{
-                height: '80px',
-                p:2,
-                borderBottom: '1px dashed',
-                borderColor: 'grey.300',
-              }}
-            >
-              {/* NEW TASK */}
-              <AddTaskBtn onClick={handleAddNewTask} />
-            </Stack>
-            <Stack >
-              {/* DISPLAY LIST OF CURRENT TASKS */}
-              <ListOfCurrentEvents
-                events={events}
-              />
-            </Stack>
-          </Stack>
-          {/* RIGHT SIDE */}
+        >
           <Stack
+            alignItems="flex-end"
+            justifyContent="center"
             sx={{
-              flex: 2,
-              backgroundColor: '#fff',
-              borderRadius: 1,
-              boxShadow: '0px 0px 20px 0px rgba(0,0,0,0.1)'
-            }}
-          >
-            <Stack
-              flexDirection="row"
-              alignItems="center"
-              justifyContent="space-between"
-              sx={{
               height: '80px',
-              px:3,
+              minHeight: '80px',
+              paddingX: 2,
               borderBottom: '1px dashed',
               borderColor: 'grey.300',
             }}
-            >
-              <Typography variant="subtitle2">{dayjs(clickedDate).format('DD-MM-YYYY')}</Typography>
-              <IconButton
-                aria-label="close"
-                onClick={onCloseForm}
-              >
-                <Iconify icon="material-symbols:close" sx={{width: 25, height: 25,}} />
-              </IconButton>
-            </Stack>
-            <Stack
-              sx={{padding: 2, paddingX: 3}}
-            >
-               <CalendarForm
-                events={events}
-                onClose={onCloseForm}
-               />
-            </Stack>
+          >
+            {/* NEW TASK BUTTON */}
+            <AddTaskBtn onClick={handleAddNewTask} />
           </Stack>
+            {/* LIST OF CURRENT EVENTS */}
+            <ListOfCurrentEvents events={events} />
         </Stack>
-      </Scrollbar>
 
+        {/* RIGHT SIDE (Form) */}
+        <Stack
+          sx={{
+            overflow: 'hidden',
+            flex: 2,
+            backgroundColor: '#fff',
+            borderRadius: 1,
+            boxShadow: '0px 0px 20px 0px rgba(0,0,0,0.1)',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{
+              minHeight: '80px',
+              paddingX: 3,
+              borderBottom: '1px dashed',
+              borderColor: 'grey.300',
+            }}
+          >
+            <Typography variant="subtitle2">{stringDate}</Typography>
+            <IconButton aria-label="close" onClick={onCloseForm}>
+              <Iconify icon="material-symbols:close" sx={{ width: 25, height: 25 }} />
+            </IconButton>
+          </Stack>
+
+          <Scrollbar
+            sx={{
+              // flexGrow: 1, // The form scrolls when content is larger
+              padding: 2,
+              paddingX: 3,
+              overflowY: 'auto',
+            }}
+          >
+            <CalendarForm events={events} onClose={onCloseForm} />
+          </Scrollbar>
+        </Stack>
+      </Stack>
     </Dialog>
-  )
-}
-
+  );
+};
 
 type ListOfCurrentEventsProps = {
   events: ICalendarEvent[];
+};
 
-}
-
-
-const ListOfCurrentEvents = ({events}: ListOfCurrentEventsProps) => {
-
+const ListOfCurrentEvents = ({ events }: ListOfCurrentEventsProps) => {
   const initialTime = 0;
   const time = events.reduce((acc, event) => {
-    if(!event.extendedProps.clickable) return acc;
+    if (!event.extendedProps.clickable) return acc;
     return acc + event.extendedProps.hours;
   }, initialTime);
+
   const color = time >= 8 ? 'green' : 'red';
+
   return (
-    <Stack>
-      <Stack
-        sx={{p: 2}}
-      >
-        <Typography  sx={{fontSize: '14px'}} color={color}>
+    <Stack sx={{ height: '100%', overflow:'hidden' }}>
+      <Stack sx={{padding: 2}}>
+        <Typography sx={{ fontSize: '14px' }} color={color}>
           {time} out of 8 hours have been added
         </Typography>
       </Stack>
-      <Stack sx={{overflow: 'auto'}} spacing={2}>
-        {events.map((event) => {
-          if(!event.extendedProps.clickable) return null;
-          return (
-            <EventListItem
-              key={event.id}
-              event={event}
-            />
-          )
-        })}
-      </Stack>
+      <Scrollbar
+        sx={{
+          flex: 1,
+          overflowY: 'auto',
+          maxHeight: '100%',
+          '@media (max-width: 600px)': {
+            maxHeight: '108px',
+          },
+        }}
+      >
+      {events.map((event) => {
+        if (!event.extendedProps.clickable) return null;
+        return <EventListItem key={event.id} event={event} />;
+      })}
+      </Scrollbar>
     </Stack>
-
-  )
-}
-
+  );
+};
 
 type EventListItemProps = {
   event: ICalendarEvent;
+};
 
-}
-
-export function EventListItem(
-  {
-    event,
-  }: EventListItemProps)  {
-
-
-  const activeEvent =  useCalendarStore((state) => state.activeEvent)
+export function EventListItem({ event }: EventListItemProps) {
+  const activeEvent = useCalendarStore((state) => state.activeEvent);
   const setActiveEvent = useCalendarStore((state) => state.setActiveEvent);
   const setCurrentEvent = useCalendarStore((state) => state.setCurrentEvent);
-
 
   const condition = activeEvent?.id === event.id;
 
   const handleActive = useCallback(() => {
-    setActiveEvent(event)
-    setCurrentEvent(event)
+    setActiveEvent(event);
+    setCurrentEvent(event);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [event ])
-
+  }, [event]);
 
   return (
     <Stack
       onClick={handleActive}
       sx={{
+        marginBottom: 0.5,
         cursor: 'pointer',
         padding: 1,
-        border: `1px solid transparent`,
+        minHeight: '100px',
+        border: '1px solid transparent',
         borderLeft: '6px solid transparent',
         ...(condition && {
           borderColor: 'blue',
         }),
         overflow: 'hidden',
       }}
-      flexDirection="row"
-        alignItems="center"
-        >
-      <Stack sx={{ width: '100%'}}>
-        <Typography sx={{width: '200px', textWrap: 'wrap', lineHeight: 1.2, mb: 0.4}} variant="subtitle2">
+      direction="row"
+      alignItems="center"
+    >
+      <Stack sx={{ width: '100%' }}>
+        <Typography sx={{ width: '200px', lineHeight: 1.2, mb: 0.4 }} variant="subtitle2">
           {event.extendedProps?.taskName}
-        </Typography >
-        <Typography sx={{width: '200px', textWrap: 'wrap'}} variant="caption" color="primary">
+        </Typography>
+        <Typography sx={{ width: '200px' }} variant="caption" color="primary">
           {event.extendedProps?.subprocessName}
-        </Typography >
-        <Typography sx={{width: '200px', textWrap: 'wrap', marginTop: 1}} variant="subtitle2" color="primary">
-          {`${event.extendedProps?.hours  } hours`}
-        </Typography >
+        </Typography>
+        <Typography sx={{ width: '200px', marginTop: 1 }} variant="subtitle2" color="primary">
+          {`${event.extendedProps?.hours} hours`}
+        </Typography>
       </Stack>
-      <Stack sx={{width: '40px'}}>
-        <IconButton>
-          <Iconify icon="mingcute:right-fill" sx={{width: 18, height: 18,}} />
-        </IconButton>
-      </Stack>
+      <IconButton>
+        <Iconify icon="mingcute:right-fill" sx={{ width: 18, height: 18 }} />
+      </IconButton>
     </Stack>
-  )
+  );
 }
 
 type AddTaskBtnProps = {
   onClick: () => void;
+};
 
-}
-
-
-// --- ADD NEW TASK BUTTON:
-const AddTaskBtn = ({onClick}: AddTaskBtnProps) => (
-  <Stack  flexDirection="row" spacing={1} justifyContent="flex-end" alignItems="center">
-    <Typography>
-      Add New Task
-    </Typography>
+const AddTaskBtn = ({ onClick }: AddTaskBtnProps) => (
+  <Stack direction="row" spacing={1} justifyContent="flex-end" alignItems="center">
+    <Typography>Add New Task</Typography>
     <IconButton
-
       onClick={onClick}
       size="small"
       aria-label="new task"
@@ -272,11 +265,10 @@ const AddTaskBtn = ({onClick}: AddTaskBtnProps) => (
         width: '25px',
         height: '25px',
         backgroundColor: 'primary.main',
-        color: '#fff'
+        color: '#fff',
       }}
     >
-      <Iconify icon="mdi:plus" sx={{width: 25, height: 25,}} />
+      <Iconify icon="mdi:plus" sx={{ width: 25, height: 25 }} />
     </IconButton>
   </Stack>
-)
-
+);
