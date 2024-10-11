@@ -2,7 +2,6 @@ import { paths } from 'src/routes/paths';
 
 import { CONFIG } from 'src/config-global';
 
-
 import { SvgColor } from 'src/components/svg-color';
 
 // ----------------------------------------------------------------------
@@ -48,7 +47,6 @@ export const navData = [
     subheader: 'MANAGEMENT',
     items: [
       { title: 'My Timesheet', path: paths.dashboard.calendar, icon: ICONS.calendar },
-
     ],
   },
 ];

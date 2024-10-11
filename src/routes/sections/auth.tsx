@@ -9,13 +9,16 @@ import { GuestGuard } from 'src/auth/guard';
 
 // ----------------------------------------------------------------------
 
-/** **************************************
- * Jwt
- *************************************** */
+
 const Jwt = {
   SignInPage: lazy(() => import('src/pages/auth/jwt/sign-in')),
   SignUpPage: lazy(() => import('src/pages/auth/jwt/sign-up')),
 };
+
+const SSO = {
+  SignInPage: lazy(() => import('src/pages/auth/sso/sign-in')),
+};
+
 
 const authJwt = {
   path: 'jwt',
@@ -43,6 +46,20 @@ const authJwt = {
   ],
 };
 
+
+const authSSO = {
+  path: 'sso',
+  children: [
+    {
+      path: 'sign-in',
+      element: (
+        <AuthSplitLayout section={{ title: 'Hi, Welcome back' }}>
+          <SSO.SignInPage />
+        </AuthSplitLayout>
+      ),
+    },
+  ]
+}
 export const authRoutes = [
   {
     path: 'auth',
@@ -51,6 +68,9 @@ export const authRoutes = [
         <Outlet />
       </Suspense>
     ),
-    children: [authJwt],
+    children: [
+      // authJwt,
+      authSSO,
+    ],
   },
 ];

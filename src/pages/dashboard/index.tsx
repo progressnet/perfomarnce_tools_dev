@@ -6,6 +6,7 @@ import  {paths} from "src/routes/paths";
 
 
 export default function OverviewAppPage() {
-  redirect(paths.dashboard.calendar);
+  // redirect(paths.dashboard.calendar);
+  return null;
 
 }

@@ -17,6 +17,8 @@ import { SettingsDrawer, defaultSettings, SettingsProvider } from 'src/component
 
 import { AuthProvider as JwtAuthProvider } from 'src/auth/context/jwt';
 
+import {SSOProvider} from "./auth/context/sso/sso-provider";
+
 
 // ----------------------------------------------------------------------
 
@@ -28,18 +30,20 @@ export default function App() {
   return (
     <I18nProvider>
       <LocalizationProvider>
-        <AuthProvider>
-          <SettingsProvider settings={defaultSettings}>
-            <ThemeProvider>
-              <MotionLazy>
+        <SSOProvider>
+           {/* <AuthProvider> */}
+            <SettingsProvider settings={defaultSettings}>
+              <ThemeProvider>
+                <MotionLazy>
                   <Snackbar />
                   <ProgressBar />
                   <SettingsDrawer />
                   <Router />
-              </MotionLazy>
-            </ThemeProvider>
-          </SettingsProvider>
-        </AuthProvider>
+                </MotionLazy>
+              </ThemeProvider>
+            </SettingsProvider>
+           {/* </AuthProvider> */}
+        </SSOProvider>
       </LocalizationProvider>
     </I18nProvider>
   );
