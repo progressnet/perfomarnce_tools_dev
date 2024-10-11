@@ -370,7 +370,7 @@ export const HorizontalInputContainer = ({children, label}:  HorizontalInputProp
     width: '100%',
     alignItems: 'space-between',
   }}>
-    <Grid item sm={4} xs={false} sx={{
+    <Grid item xs={4}   sx={{
       '@media (max-width: 897px)': {
         display: 'none',
       },

@@ -56,7 +56,7 @@ export const CalendarDialog = (
       PaperProps={{
         sx: {
           minHeight: '300px',
-          height: '92vh',
+          height: '75vh',
           display: 'flex',
           position: 'relative',
           overflow: 'hidden',
