@@ -26,7 +26,7 @@ export const dashboardRoutes = [
     // element: CONFIG.auth.skip ? <>{layoutContent}</> : <AuthGuard>{layoutContent}</AuthGuard>,
     element: <SSOGuard>{layoutContent}</SSOGuard>,
     children: [
-      { element: <TestPage/>, index: true },
+      { element:<CalendarPage />, index: true },
       { path: 'calendar', element: <CalendarPage /> },
       { path: 'test', element: <TestPage /> },
     ],

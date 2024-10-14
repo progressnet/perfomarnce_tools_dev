@@ -10,6 +10,8 @@ export type IUser = {
 export type SSOContextValue = {
   user: IUser | null;
   setUser: React.Dispatch<React.SetStateAction<IUser | null>>;
+  email: string;
+  setEmail: React.Dispatch<React.SetStateAction<string>>;
 };
 
 

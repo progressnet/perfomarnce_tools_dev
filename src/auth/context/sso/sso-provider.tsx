@@ -29,9 +29,7 @@ export function SSOProvider({ children }: Props) {
 
 
   const checkAuthenticated = () => {
-    console.log('test')
     const storageEmail = localStorage.getItem('email');
-    console.log({storageEmail})
     if (!storageEmail) {
       navigate("/auth/sso/sign-in");
     }
@@ -43,7 +41,8 @@ export function SSOProvider({ children }: Props) {
       email,
       setEmail,
     }),
-    [user, setUser]
+
+    [user, setUser, email, setEmail]
   );
   return <SSOContext.Provider value={memoizedValue}>{children}</SSOContext.Provider>;
 }

@@ -1,6 +1,6 @@
 {
-  "name": "@minimal-kit/vite-ts",
-  "author": "Minimals",
+  "name": "performancetools",
+  "author": "ProgressNet",
   "version": "6.1.0",
   "description": "Vite & TypeScript",
   "private": true,
