@@ -10,8 +10,9 @@ type Props = {
 };
 
 export function SSOGuard({ children }: Props) {
-  // const { email } = useSSOContext();
+  const { email } = useSSOContext();
 
+  console.log({email})
   useEffect(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -23,3 +24,5 @@ export function SSOGuard({ children }: Props) {
 
   return <>{children}</>;
 }
+
+

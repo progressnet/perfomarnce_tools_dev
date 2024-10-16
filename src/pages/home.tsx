@@ -1,7 +1,7 @@
 import { redirect } from "react-router-dom";
 
 
-export default function Page() {
+export default function HomePage() {
     // redirect("/auth/jwt/sign-in")
-  return null;
+  return <div>Test 2</div>;
 }
