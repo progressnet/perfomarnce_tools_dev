@@ -32,5 +32,8 @@ export const dashboardRoutes = [
       { path: 'calendar', element: <CalendarPage /> },
       { path: 'test', element: <TestPage /> },
     ],
+  },  {
+    path: 'FinanceFactoryTimesheet',
+    element: <HomePage />,
   },
 ];
