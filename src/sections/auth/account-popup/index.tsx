@@ -25,7 +25,9 @@ export function AccountPopup() {
   }
   return (
     <>
-      <Avatar onClick={popover.onOpen}>
+      <Avatar
+        sx={{ cursor: 'pointer', width: 32, height: 32 }}
+        onClick={popover.onOpen}>
         {email ? email[0].toUpperCase(): ""}
       </Avatar>
       <CustomPopover

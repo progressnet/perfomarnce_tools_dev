@@ -21,20 +21,20 @@ export function SSOProvider({ children }: Props) {
 
 
 
-  useEffect(() => {
-    const locationSearchEmail = location.search.split('email=')[1];
-    const userEmail = localStorage.getItem('email');
-
-    if(locationSearchEmail && !userEmail) {
-      fetchEmail(locationSearchEmail ).then(r => r);
-      return;
-    }
-    if(location.pathname !== paths.auth.sso.signIn) {
-      console.log('fetch params email', userEmail)
-      checkIsAuthenticated(userEmail).then(r => r);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname, location.search]);
+  // useEffect(() => {
+  //   const locationSearchEmail = location.search.split('email=')[1];
+  //   const userEmail = localStorage.getItem('email');
+  //
+  //   if(locationSearchEmail && !userEmail) {
+  //     fetchEmail(locationSearchEmail ).then(r => r);
+  //     return;
+  //   }
+  //   if(location.pathname !== paths.auth.sso.signIn) {
+  //     console.log('fetch params email', userEmail)
+  //     checkIsAuthenticated(userEmail).then(r => r);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [location.pathname, location.search]);
 
   const fetchEmail = async (locationSearchEmail: string) => {
     const decryptedEmail = await handleGetAuthEmail(locationSearchEmail);
