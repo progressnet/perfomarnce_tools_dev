@@ -3,9 +3,9 @@ import Link from "@mui/material/Link";
 
 export function SSOSignInView() {
 
-  const href = import.meta.env.MODE === 'development'
+  const href = import.meta.env.VITE_SERVER_MODE === 'development'
     ? import.meta.env.VITE_SERVER_SSO_LOGIN_DEV
-    : import.meta.env.SSO_LOGIN_PROD;
+    : import.meta.env.VITE_SERVER_SSO_LOGIN_PROD;
 
   return (
         <Link

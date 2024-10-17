@@ -41,9 +41,10 @@ export const endpoints = {
   task: '/Task',
   taskBySubProcess: '/TaskBySubProcessID',
   auth: {
-    me: '/api/auth/me',
-    signIn: '/api/auth/sign-in',
-    signUp: '/api/auth/sign-up',
+    me: '/auth/me',
+    email: '/auth/email',
+    signIn: '/auth/sign-in',
+    signUp: '/auth/sign-up',
   },
 
 };

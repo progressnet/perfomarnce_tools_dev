@@ -20,31 +20,31 @@ const SSO = {
 };
 
 
-const authJwt = {
-  path: 'jwt',
-  children: [
-    {
-      path: 'sign-in',
-      element: (
-        <GuestGuard>
-          <AuthSplitLayout section={{ title: 'Hi, Welcome back' }}>
-            <Jwt.SignInPage />
-          </AuthSplitLayout>
-        </GuestGuard>
-      ),
-    },
-    {
-      path: 'sign-up',
-      element: (
-        <GuestGuard>
-          <AuthSplitLayout>
-            <Jwt.SignUpPage />
-          </AuthSplitLayout>
-        </GuestGuard>
-      ),
-    },
-  ],
-};
+// const authJwt = {
+//   path: 'jwt',
+//   children: [
+//     {
+//       path: 'sign-in',
+//       element: (
+//         <GuestGuard>
+//           <AuthSplitLayout section={{ title: 'Hi, Welcome back' }}>
+//             <Jwt.SignInPage />
+//           </AuthSplitLayout>
+//         </GuestGuard>
+//       ),
+//     },
+//     {
+//       path: 'sign-up',
+//       element: (
+//         <GuestGuard>
+//           <AuthSplitLayout>
+//             <Jwt.SignUpPage />
+//           </AuthSplitLayout>
+//         </GuestGuard>
+//       ),
+//     },
+//   ],
+// };
 
 
 const authSSO = {
@@ -62,14 +62,13 @@ const authSSO = {
 }
 export const authRoutes = [
   {
-    path: 'auth',
+    path: '/FinanceFactoryTimesheet/auth',
     element: (
       <Suspense fallback={<SplashScreen />}>
         <Outlet />
       </Suspense>
     ),
     children: [
-      // authJwt,
       authSSO,
     ],
   },

@@ -2,6 +2,8 @@
 import {useEffect} from "react";
 
 import {useSSOContext} from "../context/sso/sso-context";
+import axios from "../../utils/axios";
+import {paths} from "../../routes/paths";
 
 // ----------------------------------------------------------------------
 
@@ -12,10 +14,7 @@ type Props = {
 export function SSOGuard({ children }: Props) {
   const { email } = useSSOContext();
 
-  console.log({email})
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
 
 
   // if (isChecking) {

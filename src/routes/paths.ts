@@ -1,7 +1,7 @@
 
 
 const ROOTS = {
-  AUTH: '/auth',
+  AUTH: '/FinanceFactoryTimesheet/auth',
   DASHBOARD: '/FinanceFactoryTimesheet/dashboard',
 };
 
