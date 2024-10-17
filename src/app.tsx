@@ -26,12 +26,10 @@ const AuthProvider = JwtAuthProvider;
 
 export default function App() {
   useScrollToTop();
-
   return (
     <I18nProvider>
       <LocalizationProvider>
         <SSOProvider>
-           {/* <AuthProvider> */}
             <SettingsProvider settings={defaultSettings}>
               <ThemeProvider>
                 <MotionLazy>
@@ -42,7 +40,6 @@ export default function App() {
                 </MotionLazy>
               </ThemeProvider>
             </SettingsProvider>
-           {/* </AuthProvider> */}
         </SSOProvider>
       </LocalizationProvider>
     </I18nProvider>

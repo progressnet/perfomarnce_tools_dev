@@ -2,15 +2,15 @@
 
 const ROOTS = {
   AUTH: '/auth',
-  DASHBOARD: '/dashboard',
+  DASHBOARD: '/FinanceFactoryTimesheet/dashboard',
 };
 
 // ----------------------------------------------------------------------
 
 export const paths = {
-  page403: '/error/403',
-  page404: '/error/404',
-  page500: '/error/500',
+  page403: '/FinanceFactoryTimesheet/error/403',
+  page404: '/FinanceFactoryTimesheet/error/404',
+  page500: '/FinanceFactoryTimesheet/error/500',
   // AUTH
   auth: {
     sso: {
@@ -24,6 +24,6 @@ export const paths = {
   dashboard: {
     root: ROOTS.DASHBOARD,
     test: `${ROOTS.DASHBOARD}/test`,
-    calendar: `${ROOTS.DASHBOARD}/calendar`,
+    calendar: `${ROOTS.DASHBOARD}`,
   }
 };
