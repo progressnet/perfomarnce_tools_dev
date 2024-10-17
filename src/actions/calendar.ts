@@ -1,10 +1,12 @@
 import type {ICalendarEvent} from 'src/types/calendar';
 
+import dayjs from "dayjs";
 import {useMemo} from 'react';
 import useSWR, {mutate} from 'swr';
 
-import axios, {endpoints, fetcher} from 'src/utils/axios';
-import dayjs from "dayjs";
+import axios, {fetcher, endpoints} from 'src/utils/axios';
+
+import type {ApiData} from "./_types";
 
 // ----------------------------------------------------------------------
 export type Timesheet = {
@@ -24,6 +26,8 @@ export type Timesheet = {
   subProcessID: number;
   subProcessName: string;
 };
+
+
 const enableServer = false;
 
 const ENDPOINT = endpoints.timesheet;
@@ -42,8 +46,9 @@ type HoursPerDay = {
   [key: string]: number;
 }
 
-const calculateTotalHoursPerDay = (events: Timesheet[]) => {
+const calculateTotalHoursPerDay = (events:  Timesheet[]) => {
   const hoursPerDay: HoursPerDay = {};
+  // if(!events.length) return hoursPerDay ;
   events.forEach((event) => {
     const date = dayjs(event.timesheetdate).format('YYYY-MM-DD');
     if(!hoursPerDay[date]){
@@ -59,17 +64,18 @@ const calculateTotalHoursPerDay = (events: Timesheet[]) => {
 // ----------------------------------------------------------------------
 
 export function useGetEvents() {
-  const { data, isLoading, error, isValidating } = useSWR<Timesheet[]>(
+  const { data, isLoading, error, isValidating } = useSWR<ApiData<Timesheet>>(
     ENDPOINT,
     fetcher,
     swrOptions
   );
-  const totalHoursPerDay = calculateTotalHoursPerDay(data || []);
+
+
+  const totalHoursPerDay = calculateTotalHoursPerDay(data?.data || []);
   // ============================================================
 
-  const transformData = data?.map((ts) => {
+  const transformData = data?.data?.map((ts) => {
     const start_date = dayjs(ts.timesheetdate).format('YYYY-MM-DD');
-    const dayHours = totalHoursPerDay[start_date];
     const title =  ts.taskName;
     return {
       order: 2,
@@ -117,7 +123,7 @@ export function useGetEvents() {
     eventsLoading: isLoading,
     error,
     isValidating,
-    empty: !isLoading && !data?.length,
+    empty: !isLoading && !data?.data.length,
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [ data,  error, isLoading, isValidating]);
 }

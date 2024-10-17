@@ -23,17 +23,15 @@ const layoutContent = (
 
 export const dashboardRoutes = [
   {
-    path: 'dashboard',
+    path: `/dashboard`,
     // element: CONFIG.auth.skip ? <>{layoutContent}</> : <AuthGuard>{layoutContent}</AuthGuard>,
-    // element: <SSOGuard>{layoutContent}</SSOGuard>,
-    element: <HomePage />,
+    element: <SSOGuard>{layoutContent}</SSOGuard>,
     children: [
-      { element:<HomePage />, index: true },
-      { path: 'calendar', element: <CalendarPage /> },
+      { element:  <CalendarPage />,  index: true },
       { path: 'test', element: <TestPage /> },
     ],
   },  {
     path: 'FinanceFactoryTimesheet',
-    element: <HomePage />,
+    element: <CalendarPage/>,
   },
 ];

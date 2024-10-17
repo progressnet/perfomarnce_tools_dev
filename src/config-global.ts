@@ -17,6 +17,7 @@ export type ConfigValue = {
   mapboxApiKey: string;
 };
 
+
 // ----------------------------------------------------------------------
 
 export const CONFIG: ConfigValue = {
@@ -28,6 +29,7 @@ export const CONFIG: ConfigValue = {
     method: 'jwt',
     skip: false,
     redirectPath: paths.dashboard.root,
+    // redirectPath: '/FinanceFactoryTimesheet',
   },
   mapboxApiKey: import.meta.env.VITE_MAPBOX_API_KEY ?? '',
 };
