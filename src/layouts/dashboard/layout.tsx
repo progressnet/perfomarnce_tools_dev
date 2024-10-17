@@ -25,6 +25,7 @@ import { LayoutSection } from '../core/layout-section';
 import { HeaderSection } from '../core/header-section';
 import { StyledDivider, useNavColorVars } from './styles';
 import { AccountDrawer } from '../components/account-drawer';
+import {AccountPopup} from "../../sections/auth/account-popup";
 import { LanguagePopover } from '../components/language-popover';
 import { navData as dashboardNavData } from '../config-nav-dashboard';
 
@@ -138,8 +139,9 @@ export function DashboardLayout({ sx, children, header, data }: DashboardLayoutP
               <Box display="flex" alignItems="center" gap={{ xs: 0, sm: 0.75 }}>
                 {/* -- Searchbar -- */}
                 <Searchbar data={navData} />
-                <LanguagePopover data={allLangs} />
-                <AccountDrawer data={_account} />
+                {/* <LanguagePopover data={allLangs} /> */}
+                {/* <AccountDrawer data={_account} /> */}
+                <AccountPopup  />
               </Box>
             ),
           }}

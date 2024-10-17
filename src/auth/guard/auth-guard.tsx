@@ -46,7 +46,6 @@ export function AuthGuard({ children }: Props) {
       };
 
       const href = `${signInPath}?${createQueryString('returnTo', pathname)}`;
-      console.log({href})
       router.replace(href);
       return;
     }
@@ -55,7 +54,6 @@ export function AuthGuard({ children }: Props) {
   };
 
   useEffect(() => {
-    console.log('here')
     checkPermissions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authenticated, loading]);

@@ -16,7 +16,7 @@ export function useMockedUser() {
   const user = {
     id: '8864c717-587d-472a-929a-8e5f298024da-0',
     displayName: 'Jaydon Frankie',
-    email: 'demo@minimals.cc',
+    email: 'demo@test.cc',
     phoneNumber: _mock.phoneNumber(1),
     photoURL: 'public/assets',
     country: _mock.countryNames(1),

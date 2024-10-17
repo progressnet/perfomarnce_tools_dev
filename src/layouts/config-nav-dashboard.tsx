@@ -47,6 +47,7 @@ export const navData = [
     subheader: 'MANAGEMENT',
     items: [
       { title: 'My Timesheet', path: paths.dashboard.calendar, icon: ICONS.calendar },
+      { title: 'Test Route', path: paths.dashboard.test, icon: ICONS.menuItem },
     ],
   },
 ];
