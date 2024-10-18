@@ -6,6 +6,7 @@ import {paths} from "../../../routes/paths";
 import axios, { endpoints } from "../../../utils/axios";
 
 import type { IUser } from "./sso-context";
+import {setEmailSession} from "../jwt";
 
 type Props = {
   children: React.ReactNode;
@@ -24,12 +25,11 @@ export function SSOProvider({ children }: Props) {
 
 
   useEffect(() => {
-
     const handleUserLogin = async () => {
-      console.log('location email: ', location.search.split('email=')[1])
-      console.log('storage email: ', localStorage.getItem("email"))
       const locationSearchEmail = location.search.split('email=')[1] || localStorage.getItem("email");
+      await setEmailSession(locationSearchEmail)
 
+      // Redirect to sign-in page if email is not present in query or local storage
       if(!locationSearchEmail) {
         navigate(paths.auth.sso.signIn)
         return;

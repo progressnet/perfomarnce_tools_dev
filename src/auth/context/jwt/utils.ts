@@ -76,7 +76,7 @@ export async function setSession(accessToken: string | null) {
 
       axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 
-      const decodedToken = jwtDecode(accessToken); 
+      const decodedToken = jwtDecode(accessToken);
 
       if (decodedToken && 'exp' in decodedToken) {
         tokenExpired(decodedToken.exp);
@@ -91,4 +91,14 @@ export async function setSession(accessToken: string | null) {
     console.error('Error during set session:', error);
     throw error;
   }
+}
+
+
+export async function setEmailSession(encryptedEmail: string | null) {
+  if(encryptedEmail) {
+    axios.defaults.headers.common.Authorization = `Bearer ${encryptedEmail}`;
+  } else {
+    delete axios.defaults.headers.common.Authorization;
+  }
+
 }

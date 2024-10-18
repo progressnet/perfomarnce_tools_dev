@@ -1,21 +1,51 @@
 
+import useSWR from "swr";
 import {useMemo} from "react";
-import {endpoints} from "../utils/axios";
+
+import {fetcher, endpoints} from "../utils/axios";
+
+import type {ApiData} from "./_types";
+
+const enableServer = false;
+const swrOptions = {
+  revalidateIfStale: enableServer,
+  revalidateOnFocus: enableServer,
+  revalidateOnReconnect: enableServer,
+};
+
+type TasksProps = {
+  id: number;
+  status: string | null;
+  subProcess: string;
+  taskID: number;
+  taskName: string;
+};
 
 
-// const ENDPOINT = endpoints.task
+const TASK_ENDPOINT = endpoints.task
 
 export function useGetTotal() {
-  // const { data, isLoading, error, isValidating } = useSWR<ApiData<EventsData>>(
-  //   ENDPOINT_BY_SUBPROCESS,
-  //   fetcher,
-  //   swrOptions
-  // );
+  const { data, isLoading, error, isValidating } = useSWR<ApiData<TasksProps>>(
+    `${TASK_ENDPOINT}?PageNumber=1&PageSize=1000`,
+    fetcher,
+    swrOptions
+  );
 
+
+  const {
+    data: totalProcesses,
+    isLoading: processLoading,
+    error:proccessError,
+    isValidating: processValidating
+  } = useSWR<ApiData<TasksProps>>(
+    `${TASK_ENDPOINT}?PageNumber=1&PageSize=1000`,
+    fetcher,
+    swrOptions
+  );
   return useMemo(() => ({
-    totalTasks: 30,
-    isLoading: false,
-    error: null,
-    isValidating: false,
-  }), []);
+    totalTasks: data?.data.length || 0,
+    isLoading,
+    error,
+    isValidating,
+  }), [data?.data,isLoading, error, isValidating ]);
 }
