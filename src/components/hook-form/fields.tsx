@@ -13,9 +13,9 @@ import { RHFSwitch, RHFMultiSwitch } from './rhf-switch';
 import { RHFSelect, RHFMultiSelect } from './rhf-select';
 import {RHFSelectSubProcess} from "./rhf-select-subprocess";
 import { RHFCheckbox, RHFMultiCheckbox } from './rhf-checkbox';
+import {RHFNumericIncremental} from "./rhf-numeric-incremental";
 import { RHFUpload, RHFUploadBox, RHFUploadAvatar } from './rhf-upload';
 import { RHFDatePicker, RHFMobileDateTimePicker } from './rhf-date-picker';
-import {RHFNumericIncremental} from "./rhf-numeric-incremental";
 
 // ----------------------------------------------------------------------
 

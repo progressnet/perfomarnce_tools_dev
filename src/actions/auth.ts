@@ -2,7 +2,6 @@ import useSWR from "swr";
 import {useMemo} from "react";
 
 import {fetcher,endpoints} from "../utils/axios";
-import {ApiData} from "./_types";
 
 const enableServer = false;
 const swrOptions = {

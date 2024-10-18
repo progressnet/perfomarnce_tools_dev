@@ -2,10 +2,10 @@ import { useMemo, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { SSOContext } from "./sso-context";
+import {paths} from "../../../routes/paths";
 import axios, { endpoints } from "../../../utils/axios";
 
 import type { IUser } from "./sso-context";
-import {paths} from "../../../routes/paths";
 
 type Props = {
   children: React.ReactNode;
@@ -24,6 +24,8 @@ export function SSOProvider({ children }: Props) {
 
 
   useEffect(() => {
+    console.log('location.search', location.search)
+
     const handleUserLogin = async () => {
       const locationSearchEmail = location.search.split('email=')[1];
       console.log({locationSearchEmail})
@@ -44,7 +46,6 @@ export function SSOProvider({ children }: Props) {
   }, [location.search, navigate]);
 
 
-  console.log({email})
   const memoizedValue = useMemo(
     () => ({
       user,

@@ -1,9 +1,7 @@
 import type { TextFieldProps } from '@mui/material/TextField';
 
-import { useEffect, useCallback } from "react";
-
 import TextField from '@mui/material/TextField';
-import Autocomplete, {AutocompleteValue} from '@mui/material/Autocomplete';
+import Autocomplete from '@mui/material/Autocomplete';
 
 import { useGetSubProcessByProcess } from "../../actions/subprocess";
 

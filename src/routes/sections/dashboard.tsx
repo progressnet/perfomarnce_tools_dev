@@ -7,7 +7,6 @@ import { LoadingScreen } from 'src/components/loading-screen';
 
 import TestPage from "../../pages/dashboard/test";
 import {SSOGuard} from "../../auth/guard/sso-guard";
-import HomePage from "../../pages/home";
 
 // ----------------------------------------------------------------------
 const CalendarPage = lazy(() => import('src/pages/dashboard/calendar'));
@@ -24,7 +23,6 @@ const layoutContent = (
 export const dashboardRoutes = [
   {
     path: `/FinanceFactoryTimesheet/dashboard`,
-    // element: CONFIG.auth.skip ? <>{layoutContent}</> : <AuthGuard>{layoutContent}</AuthGuard>,
     element: <SSOGuard>{layoutContent}</SSOGuard>,
     children: [
       { element:  <CalendarPage />,  index: true },

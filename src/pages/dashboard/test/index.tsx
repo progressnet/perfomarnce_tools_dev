@@ -1,11 +1,9 @@
 
-import { CONFIG } from 'src/config-global';
-import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
 // ----------------------------------------------------------------------
 
-const metadata = { title: `My Timesheet - ${CONFIG.appName}` };
 
 export default function TestPage() {
   return (

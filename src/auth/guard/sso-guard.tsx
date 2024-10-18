@@ -2,9 +2,9 @@
 import {useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 
+import {paths} from "../../routes/paths";
 import {useSSOContext} from "../context/sso/sso-context";
 import {handleGetAuthEmail} from "../context/sso/sso-provider";
-import {paths} from "../../routes/paths";
 
 // ----------------------------------------------------------------------
 
@@ -13,7 +13,7 @@ type Props = {
 };
 
 export function SSOGuard({ children }: Props) {
-  const { email, setEmail, error, setError, } = useSSOContext();
+  const { email, setEmail, setError} = useSSOContext();
 
 
   const navigate = useNavigate();
