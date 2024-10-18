@@ -12,6 +12,8 @@ export type SSOContextValue = {
   setUser: React.Dispatch<React.SetStateAction<IUser | null>>;
   email: string;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
+  error: string | null;
+  setError: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
 
