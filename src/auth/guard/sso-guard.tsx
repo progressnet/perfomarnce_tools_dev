@@ -19,35 +19,36 @@ export function SSOGuard({ children }: Props) {
   const navigate = useNavigate();
 
 
-  useEffect(() => {
-    console.log('email in SSO GUARD: ', {email})
-    // first time login:
-    const storageEmail = localStorage.getItem("email");
-    if(email) {
-      localStorage.setItem("email", email)
-    }
-    console.log({storageEmail})
-    if(!storageEmail) {
-
-      const checkAuthenticated = async () => {
-
-        if(!storageEmail ) {
-          navigate(paths.auth.sso.signIn)
-          return;
-        }
-
-        const res = await handleGetAuthEmail(storageEmail as string)
-        if(!res.success) {
-          setError("Error fetching email");
-        }
-        if(res.success) {
-          setEmail(res.data);
-        }
-      }
-      checkAuthenticated().then(r=> r)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [email, navigate]);
+  // useEffect(() => {
+  //   console.log({email})
+  //
+  //   // console.log('SSO GUARD EMAIL:', email)
+  //   // // first time login:
+  //   // const storageEmail = localStorage.getItem("email");
+  //   // console.log({storageEmail})
+  //   // if(email) {
+  //   //   localStorage.setItem("email", email)
+  //   // }
+  //   //
+  //   // if(!storageEmail && !email) {
+  //   //   const checkAuthenticated = async () => {
+  //   //     if(!storageEmail ) {
+  //   //       navigate(paths.auth.sso.signIn)
+  //   //       return;
+  //   //     }
+  //   //
+  //   //     const res = await handleGetAuthEmail(storageEmail as string)
+  //   //     if(!res.success) {
+  //   //       setError("Error fetching email");
+  //   //     }
+  //   //     if(res.success) {
+  //   //       setEmail(res.data);
+  //   //     }
+  //   //   }
+  //   //   checkAuthenticated().then(r=> r)
+  //   // }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [email, navigate]);
 
 
   // if (isChecking) {

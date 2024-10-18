@@ -36,7 +36,6 @@ export function SignOutButton({ onClose, ...other }: Props) {
     try {
       await signOut();
       await checkUserSession?.();
-
       onClose?.();
       router.refresh();
     } catch (error) {

@@ -97,7 +97,7 @@ export function DashboardLayout({ sx, children, header, data }: DashboardLayoutP
             ) : null,
             leftArea: (
               <>
-                {/* -- Nav mobile -- */}
+                { /* -- Nav mobile -- */ }
                 <MenuButton
                   onClick={mobileNavOpen.onTrue}
                   sx={{

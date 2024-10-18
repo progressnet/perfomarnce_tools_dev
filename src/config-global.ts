@@ -24,7 +24,7 @@ export const CONFIG: ConfigValue = {
   appName: 'Allianz Performance Tool',
   appVersion: packageJson.version,
   serverUrl: import.meta.env.VITE_SERVER_URL ?? '',
-  assetsDir: import.meta.env.VITE_ASSETS_DIR ?? '',
+  assetsDir: import.meta.env.MODE !== 'development' ? import.meta.env.VITE_ASSETS_DIR_PROD : "",
   auth: {
     method: 'jwt',
     skip: false,

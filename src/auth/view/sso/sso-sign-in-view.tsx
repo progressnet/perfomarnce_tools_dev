@@ -1,4 +1,5 @@
 import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
 
 
 export function SSOSignInView() {
@@ -7,13 +8,14 @@ export function SSOSignInView() {
     ? import.meta.env.VITE_SERVER_SSO_LOGIN_DEV
     : import.meta.env.VITE_SERVER_SSO_LOGIN_PROD;
 
-  return (
+  if(import.meta.env.VITE_SERVER_MODE === 'development') {
+    return (
         <Link
           sx={{
             display: 'block',
             mt: 3,
             textAlign: 'center',
-            backgroundColor: 'black',
+            backgroundColor: 'primary.dark',
             color: 'white',
             padding: '10px',
             borderRadius: '5px',
@@ -24,5 +26,18 @@ export function SSOSignInView() {
             },
           }}
           href={href}>Sign in</Link>
-  );
+    );
+  }
+  if(import.meta.env.VITE_SERVER_MODE !== 'development') {
+    return (
+      <Stack sx={{height: '100vh'}}>
+        <iframe
+          src={import.meta.env.VITE_SERVER_SSO_LOGIN_PROD}
+          style={{height: '100%', width: '100%', border: 'none'}}
+          title="Web View"
+        />
+      </Stack>
+    )
+  }
+
 }

@@ -10,6 +10,8 @@ import { navSectionCssVars } from '../css-vars';
 import { NavUl, NavLi, Subheader } from '../styles';
 
 import type { NavGroupProps, NavSectionProps } from '../types';
+import {useGetTotal} from "../../../actions/sidebarQueries";
+import {Label} from "../../label";
 
 // ----------------------------------------------------------------------
 
@@ -21,6 +23,7 @@ export function NavSectionVertical({
   enabledRootRedirect,
   cssVars: overridesVars,
 }: NavSectionProps) {
+  const {totalTasks} = useGetTotal();
   const theme = useTheme();
 
   const cssVars = {
@@ -28,10 +31,31 @@ export function NavSectionVertical({
     ...overridesVars,
   };
 
+
+  // fetch and pass the total number of tasks to the sidebar:
+  const newSidebarData = data.map((section) => ({
+      ...section,
+      items: section.items.map((item) => {
+        if (item.title === "My Tasks") {
+          return {
+            ...item,
+            info: (
+              <Label color="error" variant="inverted">
+                {totalTasks > 99 ? `+ ${totalTasks}` : totalTasks}
+              </Label>
+            ),
+          };
+        }
+        return item;
+      }),
+    }));
+
+
+
   return (
     <Stack component="nav" className={navSectionClasses.vertical.root} sx={{ ...cssVars, ...sx }}>
       <NavUl sx={{ flex: '1 1 auto', gap: 'var(--nav-item-gap)' }}>
-        {data.map((group) => (
+        {newSidebarData.map((group) => (
           <Group
             key={group.subheader ?? group.items[0].title}
             subheader={group.subheader}

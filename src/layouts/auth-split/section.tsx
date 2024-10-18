@@ -11,6 +11,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { CONFIG } from 'src/config-global';
 import { varAlpha, bgGradient } from 'src/theme/styles';
+import Stack from "@mui/material/Stack";
 
 // ----------------------------------------------------------------------
 
@@ -64,18 +65,14 @@ export function Section({
       }}
       {...other}
     >
-      <div>
-        <Typography variant="h3" sx={{ textAlign: 'center' }}>
-          {title}
-        </Typography>
-
-        {subtitle && (
-          <Typography sx={{ color: 'text.secondary', textAlign: 'center', mt: 2 }}>
-            {subtitle}
-          </Typography>
-        )}
-      </div>
-
+      <Stack alignItems="center">
+        <Box
+          component="img"
+          alt="Dashboard illustration"
+          src={`${CONFIG.assetsDir}/logo/logo-full.png`}
+          sx={{ width: 0.7, objectFit: 'cover' }}
+        />
+      </Stack>
       <Box
         component="img"
         alt="Dashboard illustration"

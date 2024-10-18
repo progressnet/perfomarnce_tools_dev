@@ -24,19 +24,24 @@ export function SSOProvider({ children }: Props) {
 
 
   useEffect(() => {
-    console.log('location.search', location.search)
 
     const handleUserLogin = async () => {
-      const locationSearchEmail = location.search.split('email=')[1];
-      console.log({locationSearchEmail})
+      console.log('location email: ', location.search.split('email=')[1])
+      console.log('storage email: ', localStorage.getItem("email"))
+      const locationSearchEmail = location.search.split('email=')[1] || localStorage.getItem("email");
+
+      if(!locationSearchEmail) {
+        navigate(paths.auth.sso.signIn)
+        return;
+      }
       // Fetch email from query if not present in local storage
       if (locationSearchEmail) {
         const res = await handleGetAuthEmail(locationSearchEmail)
-        console.log('res', res)
         if(!res.success) {
           setError("Error fetching email");
         }
         if(res.success) {
+          localStorage.setItem("email",locationSearchEmail)
           setEmail(res.data);
           navigate(paths.dashboard.root)
         }

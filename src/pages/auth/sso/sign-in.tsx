@@ -6,7 +6,7 @@ import {SSOSignInView} from "../../../auth/view/sso";
 
 // ----------------------------------------------------------------------
 
-const metadata = { title: `Sign in | Jwt - ${CONFIG.appName}` };
+const metadata = { title: `Sign in - ${CONFIG.appName}` };
 
 export default function Page() {
   return (

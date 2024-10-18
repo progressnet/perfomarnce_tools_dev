@@ -17,15 +17,29 @@ const SSO = {
 
 // ----------------------------------------------------------------------
 
+const mode = import.meta.env.VITE_SERVER_MODE;
+
+const SSOElement = () => {
+  if(mode === 'development') {
+    return (
+      <AuthSplitLayout section={{ title: 'Hi, Welcome back' }}>
+        <SSO.SignInPage />
+      </AuthSplitLayout>
+    );
+  }
+    return (
+      <SSO.SignInPage />
+    )
+
+
+}
 const authSSO = {
   path: 'sso',
   children: [
     {
       path: 'sign-in',
       element: (
-        <AuthSplitLayout section={{ title: 'Hi, Welcome back' }}>
-          <SSO.SignInPage />
-        </AuthSplitLayout>
+       <SSOElement />
       ),
     },
   ]
