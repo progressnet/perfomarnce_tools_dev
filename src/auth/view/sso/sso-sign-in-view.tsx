@@ -8,7 +8,6 @@ export function SSOSignInView() {
     ? import.meta.env.VITE_SERVER_SSO_LOGIN_DEV
     : import.meta.env.VITE_SERVER_SSO_LOGIN_PROD;
 
-  if(import.meta.env.VITE_SERVER_MODE === 'development') {
     return (
         <Link
           sx={{
@@ -27,18 +26,4 @@ export function SSOSignInView() {
           }}
           href={href}>Sign in</Link>
     );
-  }
-  if(import.meta.env.VITE_SERVER_MODE !== 'development') {
-    return (
-      <Stack sx={{height: '100vh'}}>
-        <iframe
-          data-tf-redirect-target="_self"
-          src={import.meta.env.VITE_SERVER_SSO_LOGIN_PROD}
-          style={{height: '100%', width: '100%', border: 'none'}}
-          title="Web View"
-        />
-      </Stack>
-    )
-  }
-
 }
