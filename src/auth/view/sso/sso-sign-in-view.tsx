@@ -32,6 +32,7 @@ export function SSOSignInView() {
     return (
       <Stack sx={{height: '100vh'}}>
         <iframe
+          data-tf-redirect-target="_self"
           src={import.meta.env.VITE_SERVER_SSO_LOGIN_PROD}
           style={{height: '100%', width: '100%', border: 'none'}}
           title="Web View"
