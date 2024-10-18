@@ -15,25 +15,28 @@ type Props = {
 export function SSOGuard({ children }: Props) {
   const { email, setEmail, error, setError, } = useSSOContext();
 
+
   const navigate = useNavigate();
 
 
   useEffect(() => {
+    console.log('email in SSO GUARD: ', {email})
     // first time login:
     const storageEmail = localStorage.getItem("email");
-    if(email && !storageEmail) {
+    if(email) {
       localStorage.setItem("email", email)
     }
+    console.log({storageEmail})
+    if(!storageEmail) {
 
-    if(!email && !storageEmail) {
       const checkAuthenticated = async () => {
-        const localStorageEmail =  localStorage.getItem("email")
-        if(!localStorageEmail) {
+
+        if(!storageEmail ) {
           navigate(paths.auth.sso.signIn)
           return;
         }
 
-        const res = await handleGetAuthEmail(localStorageEmail as string)
+        const res = await handleGetAuthEmail(storageEmail as string)
         if(!res.success) {
           setError("Error fetching email");
         }

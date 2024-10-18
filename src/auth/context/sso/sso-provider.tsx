@@ -26,14 +26,17 @@ export function SSOProvider({ children }: Props) {
   useEffect(() => {
     const handleUserLogin = async () => {
       const locationSearchEmail = location.search.split('email=')[1];
+      console.log({locationSearchEmail})
       // Fetch email from query if not present in local storage
       if (locationSearchEmail) {
         const res = await handleGetAuthEmail(locationSearchEmail)
+        console.log('res', res)
         if(!res.success) {
           setError("Error fetching email");
         }
         if(res.success) {
           setEmail(res.data);
+          navigate(paths.dashboard.root)
         }
       }
     }
@@ -41,8 +44,7 @@ export function SSOProvider({ children }: Props) {
   }, [location.search, navigate]);
 
 
-
-
+  console.log({email})
   const memoizedValue = useMemo(
     () => ({
       user,
