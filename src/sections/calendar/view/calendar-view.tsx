@@ -1,6 +1,6 @@
 import type {EventContentArg} from "@fullcalendar/core";
 
-import { useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import Calendar from '@fullcalendar/react';
 import listPlugin from '@fullcalendar/list';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -28,7 +28,11 @@ import useCalendarStore from "../../../store/calendarStore";
 // ----------------------------------------------------------------------
 
 export function CalendarView() {
-  const { events, eventsLoading } = useGetEvents();
+  const [dates, setDates] = useState({
+    start: '',
+    end: ''
+  })
+  const { events, eventsLoading } = useGetEvents(dates.start, dates.end);
 
   const {
     calendarRef,
@@ -74,6 +78,13 @@ export function CalendarView() {
     return [];
   };
 
+  const handleDatesSet = (dateInfo: any) => {
+    console.log({dateInfo})
+    setDates({
+      start: dateInfo.startStr,
+      end: dateInfo.endStr
+    })
+  }
 
   const renderContent = (eventInfo: EventContentArg) => {
     const {clickable, totalHours } = eventInfo.event.extendedProps;
@@ -93,14 +104,14 @@ export function CalendarView() {
           spacing={1}
           sx={{
             width: '100%',
-            color: totalHours > 8 ? 'rgb(4,171,4)' : 'rgb(208,17,17)', // Conditional text color
-            backgroundColor: totalHours > 8 ? 'rgba(229,247,241,0.73)' : 'rgba(254,233,233,0.63)', // Conditional background color
+            color: totalHours > 8 ? 'rgb(4,171,4)' : 'rgb(208,17,17)',
+            backgroundColor: totalHours > 8 ? 'rgba(229,247,241,0.73)' : 'rgba(254,233,233,0.63)',
             px: 1,
             py: 0.4,
             borderRadius: '4px'
         }}
         >
-          <Typography sx={{fontWeight: 'bold', display: 'inline-flex', fontSize: '12px'}}>
+          <Typography sx={{fontWeight: 'bold', minWidth: '30px', fontSize: '12px'}}>
             {`${totalHours} / 8`}
           </Typography>
           <LinearProgress
@@ -149,6 +160,7 @@ export function CalendarView() {
               editable
               droppable
               selectable
+              datesSet={handleDatesSet}
               rerenderDelay={10}
               allDayMaintainDuration
               eventResizableFromStart

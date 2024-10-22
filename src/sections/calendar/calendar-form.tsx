@@ -424,7 +424,11 @@ export const HoursController = (
             fontSize: '1.15rem',
             fontWeight: 'medium',
           }}
-        >{`How many hours did you work on this task on ${ date} ?`}</Typography>
+        >
+          How many hours did you work on this task on
+           <Box sx={{fontWeight: '800'}} component="span"> {date}</Box>
+          ?
+        </Typography>
         <Field.NumericIncremental
 
           value={value}

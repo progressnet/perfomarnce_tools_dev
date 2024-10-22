@@ -18,6 +18,10 @@ export default axiosInstance;
 // ----------------------------------------------------------------------
 
 export const fetcher = async (args: string | [string, AxiosRequestConfig]) => {
+  const email =  localStorage.getItem("email");
+  if (email) {
+    axiosInstance.defaults.headers.common.Authorization = `Bearer ${email}`;
+  }
   try {
     const [url, config] = Array.isArray(args) ? args : [args];
 
@@ -35,6 +39,7 @@ export const fetcher = async (args: string | [string, AxiosRequestConfig]) => {
 export const endpoints = {
   calendar: '/calendar',
   timesheet: '/TimesheetEntries',
+  timesheetDateRange: '/TimesheetEntriesByDateRange',
   process: '/Process',
   subprocess: '/SubProcess',
   subprocessByProcess: '/SubProcessByProcessID',

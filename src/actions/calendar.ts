@@ -30,7 +30,7 @@ export type Timesheet = {
 
 const enableServer = false;
 
-const ENDPOINT = endpoints.timesheet;
+const ENDPOINT = endpoints.timesheetDateRange;
 
 const swrOptions = {
   revalidateIfStale: enableServer,
@@ -63,9 +63,14 @@ const calculateTotalHoursPerDay = (events:  Timesheet[]) => {
 
 // ----------------------------------------------------------------------
 
-export function useGetEvents() {
+
+export function useGetEvents(start:string, end:string) {
+  // =================================================
+  const startDate = dayjs(start).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+  const endDate = dayjs(end).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+  // =================================================
   const { data, isLoading, error, isValidating } = useSWR<ApiData<Timesheet>>(
-    ENDPOINT,
+    start && end ? [ENDPOINT, { params: { startDate, endDate } }] : null,
     fetcher,
     swrOptions
   );

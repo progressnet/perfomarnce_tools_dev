@@ -136,7 +136,7 @@ export const CalendarDialog = (
               borderColor: 'grey.300',
             }}
           >
-            <Typography variant="subtitle2">{stringDate}</Typography>
+            <Typography sx={{fontWeight: 'bold', fontSize: '18px'}}>{stringDate}</Typography>
             <IconButton aria-label="close" onClick={onCloseForm}>
               <Iconify icon="material-symbols:close" sx={{ width: 25, height: 25 }} />
             </IconButton>
