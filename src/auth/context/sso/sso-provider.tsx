@@ -7,6 +7,7 @@ import {paths} from "../../../routes/paths";
 import axios, { endpoints } from "../../../utils/axios";
 
 import type { IUser } from "./sso-context";
+import {usePathname} from "../../../routes/hooks";
 
 type Props = {
   children: React.ReactNode;
@@ -14,53 +15,45 @@ type Props = {
 
 export function SSOProvider({ children }: Props) {
   // state:
-  const [user, setUser] = useState<IUser | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [email, setEmail] = useState<string>("");
-  const [error, setError] = useState<string | null>(null); // New state for errors
-
   // hooks:
   const location = useLocation();
+  const pathname = usePathname();
   const navigate = useNavigate(); // Use useNavigate for redirection
 
 
 
   useEffect(() => {
     const handleUserLogin = async () => {
-      const locationSearchEmail = location.search.split('email=')[1] || localStorage.getItem("email");
-      // await setEmailSession(locationSearchEmail)
-
-      // Redirect to sign-in page if email is not present in query or local storage
+      if(pathname !== "/FinanceFactoryTimesheet") return;
+      const locationSearchEmail = location.search.split('email=')[1] ;
       if(!locationSearchEmail) {
         navigate(paths.auth.sso.signIn)
         return;
       }
-      // Fetch email from query if not present in local storage
-      if (locationSearchEmail) {
         const res = await handleGetAuthEmail(locationSearchEmail)
         if(!res.success) {
           setError("Error fetching email");
         }
         if(res.success) {
+          // setEmail(res.data)
           localStorage.setItem("email",locationSearchEmail)
-          setEmail(res.data);
           navigate(paths.dashboard.root)
         }
       }
-    }
       handleUserLogin().then(r => r)
-  }, [location.search, navigate]);
+  }, [location.search, navigate, pathname]);
 
 
   const memoizedValue = useMemo(
     () => ({
-      user,
-      setUser,
       email,
       setEmail,
       error,
       setError,
     }),
-    [user, setUser, email, setEmail, error]
+    [ email, setEmail, error]
   );
 
   return <SSOContext.Provider value={memoizedValue}>{children}</SSOContext.Provider>;

@@ -74,7 +74,9 @@ export const EventSchema = zod.object({
   hours: zod.number().nullable().refine((value) => value !== null &&  value > 0, {
     message: 'Hours is a required and must be greater than 0',
   }),
-  isCompleted: zod.boolean().optional()
+  isCompleted: zod.boolean().nullable().refine((value) => value !== null, {
+    message: 'Is completed is required',
+  })
 })
 
 // ----------------------------------------------------------------------
@@ -120,7 +122,7 @@ export function CalendarForm(
       },
       timesheetID: currentEvent?.extendedProps.timesheetID,
       hours: currentEvent?.extendedProps?.hours || 0,
-      isCompleted: currentEvent?.extendedProps?.isCompleted || false,
+      isCompleted: currentEvent?.extendedProps?.isCompleted || null,
       exists: false,
     }),
     [currentEvent]
@@ -147,6 +149,7 @@ export function CalendarForm(
 
 
   const onSubmit = handleSubmit(async (submitData) => {
+
     if (!submitData.hours || !submitData.task?.id ) return;
 
     const processedData = {
@@ -154,15 +157,12 @@ export function CalendarForm(
       employeeID: 1,
       hours: submitData.hours,
       taskID: submitData.task.id,
-      assignmentID: submitData.task.id
+      isCompleted: submitData.isCompleted,
     };
-
 
 
     const isEdit = Boolean(currentEvent?.id);
     const exists = events.find(item => item.extendedProps.taskID === values.task.id);
-
-
     try {
       if ( isEdit || exists) {
         // Update existing timesheet
@@ -316,6 +316,7 @@ export function CalendarForm(
            <RadioCompletionButtons
             value={values.isCompleted}
             handleChange={handleIsCompleted}
+            error={errors?.isCompleted?.message || ""}
            />
         </Stack>
       { /* ============== DIALOG ACTIONS ================ */}
@@ -430,7 +431,6 @@ export const HoursController = (
           ?
         </Typography>
         <Field.NumericIncremental
-
           value={value}
           handleChange={handleValue}
           increment={increment}
@@ -454,63 +454,70 @@ export const HoursController = (
 export type RadioCompletionButtonProps = {
   value: boolean ;
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  error: string;
 }
 export function RadioCompletionButtons(
   {
+    error,
     value,
     handleChange,
   }: RadioCompletionButtonProps) {
   return (
-    <FormControl sx={{
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      '@media (max-width: 897px)': {
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-      },
-    }}>
-      <Typography
-        sx={{
-          '@media (max-width: 897px)': {
-            fontSize: '0.92rem',
-          },
-          fontSize: '1.15rem',
-          fontWeight: 'medium',
-        }}
-        id="is-completed-input"
+    <Stack >
+      <FormControl sx={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        '@media (max-width: 897px)': {
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+        },
+      }}>
+        <Typography
+          sx={{
+            '@media (max-width: 897px)': {
+              fontSize: '0.92rem',
+            },
+            fontSize: '1.15rem',
+            fontWeight: 'medium',
+          }}
+          id="is-completed-input"
         >Is this task completed
-      </Typography>
-      <RadioGroup
-        sx={{display: 'flex', gap: 3}}
-        row
-        name="is-completed-input"
-        value={String(value)}
-        onChange={handleChange}
-      >
-        <FormControlLabel
-          value="true"
-          control={
-            <Radio
-              sx={{
-            '& .MuiSvgIcon-root': {
-              fontSize: 25,
-            },
-          }}/>}
-          label="Yes"
-        />
-        <FormControlLabel
-          value="false"
-          control={
-            <Radio
-              sx={{
-            '& .MuiSvgIcon-root': {
-              fontSize: 25,
-            },
-          }}/>}
-          label="No"
-        />
-      </RadioGroup>
-    </FormControl>
+        </Typography>
+        <RadioGroup
+
+          sx={{display: 'flex', gap: 3}}
+          row
+          name="is-completed-input"
+          value={String(value)}
+          onChange={handleChange}
+        >
+          <FormControlLabel
+            value="true"
+            control={
+              <Radio
+                sx={{
+                  '& .MuiSvgIcon-root': {
+                    fontSize: 25,
+                  },
+                }}/>}
+            label="Yes"
+          />
+          <FormControlLabel
+            value="false"
+            control={
+              <Radio
+                sx={{
+                  '& .MuiSvgIcon-root': {
+                    fontSize: 25,
+                  },
+                }}/>}
+            label="No"
+          />
+        </RadioGroup>
+
+      </FormControl>
+      {error && <Typography sx={{fontSize: '12px', color: 'error.main' }} textAlign="end">{error}</Typography>}
+    </Stack>
   );
 }

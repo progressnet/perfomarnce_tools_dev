@@ -35,7 +35,6 @@ export function RHFSelectProcess(
   }: RHFAutocompleteProps) {
   const {processes, error: processError} = useGetProcess();
 
-  console.log({processes})
 
   return (
     <Autocomplete

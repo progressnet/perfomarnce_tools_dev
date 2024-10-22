@@ -37,9 +37,8 @@ export function RHFSelectTask(
 
   return (
     <Autocomplete
-
       sx={{width: '100%'}}
-      id={`rhf-autocomplete-${name}`}
+      id={`rhf-autocomplete-${name}-${Math.random()}`}
       value={tasks.find((item) => item?.taskID === value) || null}
       onChange={(event, newValue) => handleValue({id: newValue?.taskID || null, name: newValue?.taskName || null})}
       options={tasks}
@@ -52,7 +51,7 @@ export function RHFSelectTask(
             variant={variant}
             error={!!error || !!taskError?.errors[0]}
             helperText={ taskError?.errors.map((er: string ) => er).join(", ") || error || helperText}
-            inputProps={{ ...params.inputProps, autoComplete: 'new-password' }}
+            // inputProps={{ ...params.inputProps, autoComplete: 'new-password' }}
           />
 
       )}

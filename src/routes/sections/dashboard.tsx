@@ -6,6 +6,7 @@ import { DashboardLayout } from 'src/layouts/dashboard';
 import { LoadingScreen } from 'src/components/loading-screen';
 
 import TestPage from "../../pages/dashboard/test";
+import MyTasks from "../../pages/dashboard/my-tasks";
 import {SSOGuard} from "../../auth/guard/sso-guard";
 
 // ----------------------------------------------------------------------
@@ -23,9 +24,10 @@ const layoutContent = (
 export const dashboardRoutes = [
   {
     path: `/FinanceFactoryTimesheet/dashboard`,
-    element: layoutContent,
+    element: <SSOGuard>{layoutContent}</SSOGuard>,
     children: [
       { element:  <CalendarPage />,  index: true },
+      { path: 'my-tasks', element:  <MyTasks /> },
       { path: 'test', element: <TestPage /> },
     ],
   },

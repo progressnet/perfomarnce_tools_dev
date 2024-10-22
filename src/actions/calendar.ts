@@ -30,7 +30,8 @@ export type Timesheet = {
 
 const enableServer = false;
 
-const ENDPOINT = endpoints.timesheetDateRange;
+const ENDPOINT_CALENDAR = endpoints.timesheetDateRange;
+const ENDPOINT = endpoints.timesheet;
 
 const swrOptions = {
   revalidateIfStale: enableServer,
@@ -70,7 +71,7 @@ export function useGetEvents(start:string, end:string) {
   const endDate = dayjs(end).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
   // =================================================
   const { data, isLoading, error, isValidating } = useSWR<ApiData<Timesheet>>(
-    start && end ? [ENDPOINT, { params: { startDate, endDate } }] : null,
+    start && end ? [ENDPOINT_CALENDAR, { params: { startDate, endDate } }] : null,
     fetcher,
     swrOptions
   );
@@ -172,7 +173,7 @@ export type TimesheetApiProps = {
   employeeID: number;
   timesheetdate: string;
   hours: number;
-  assignmentID: number;
+  // assignmentID: number;
   taskID: number;
 }
 export async function handleTimesheetUpdate(data: TimesheetApiProps) {
