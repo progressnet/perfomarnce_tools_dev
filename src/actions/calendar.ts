@@ -170,10 +170,9 @@ export async function updateEvent(eventData: Partial<ICalendarEvent>) {
 
 export type TimesheetApiProps = {
   id?: number;
-  employeeID: number;
   timesheetdate: string;
+  isCompleted: boolean;
   hours: number;
-  // assignmentID: number;
   taskID: number;
 }
 export async function handleTimesheetUpdate(data: TimesheetApiProps) {

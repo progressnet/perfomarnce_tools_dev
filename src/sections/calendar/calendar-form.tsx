@@ -154,7 +154,6 @@ export function CalendarForm(
 
     const processedData = {
       timesheetdate: dayjs(clickedDate).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),
-      employeeID: 1,
       hours: submitData.hours,
       taskID: submitData.task.id,
       isCompleted: submitData.isCompleted,
