@@ -34,24 +34,25 @@ export function RHFSelectTask(
     placeholder,
   }: RHFAutocompleteProps) {
   const {tasks, error: taskError} = useGetTaskByParent(subprocessID);
+
   return (
     <Autocomplete
 
       sx={{width: '100%'}}
       id={`rhf-autocomplete-${name}`}
-      value={tasks.find((item) => item.taskID === value) || null}
+      value={tasks.find((item) => item?.taskID === value) || null}
       onChange={(event, newValue) => handleValue({id: newValue?.taskID || null, name: newValue?.taskName || null})}
       options={tasks}
-      getOptionLabel={(option) => option.taskName}
+      getOptionLabel={(option) => option?.taskName}
       renderInput={(params) => (
           <TextField
             {...params}
             label={label}
             placeholder={placeholder}
             variant={variant}
-            error={!!error || !!taskError}
-            helperText={ taskError || error || helperText}
-            // inputProps={{ ...params.inputProps, autoComplete: 'new-password' }}
+            error={!!error || !!taskError?.errors[0]}
+            helperText={ taskError?.errors.map((er: string ) => er).join(", ") || error || helperText}
+            inputProps={{ ...params.inputProps, autoComplete: 'new-password' }}
           />
 
       )}

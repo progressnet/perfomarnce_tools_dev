@@ -35,7 +35,7 @@ export function RHFSelectProcess(
   }: RHFAutocompleteProps) {
   const {processes, error: processError} = useGetProcess();
 
-
+  console.log({processes})
 
   return (
     <Autocomplete
@@ -43,8 +43,8 @@ export function RHFSelectProcess(
       id={`rhf-autocomplete-${name}`}
       onChange={(event, newValue) => handleValue({id: newValue?.id || null, name: newValue?.processName || null} )}
       options={processes}
-      getOptionLabel={(option) => option.processName}
-      value={processes.find((process) => process.id === value) || null}
+      getOptionLabel={(option) => option?.processName}
+      value={processes.find((process) => process?.id === value) || null}
       renderInput={(params) => (
         <TextField
           {...params}

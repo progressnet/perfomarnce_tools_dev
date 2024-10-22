@@ -100,5 +100,4 @@ export async function setEmailSession(encryptedEmail: string | null) {
   } else {
     delete axios.defaults.headers.common.Authorization;
   }
-
 }
