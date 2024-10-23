@@ -35,7 +35,7 @@ export function useGetTotal() {
   const {
     data: totalProcesses,
     isLoading: processLoading,
-    error:proccessError,
+    error:processError,
     isValidating: processValidating
   } = useSWR<ApiData<TasksProps>>(
     `${TASK_ENDPOINT}?PageNumber=1&PageSize=1000`,
@@ -43,9 +43,9 @@ export function useGetTotal() {
     swrOptions
   );
   return useMemo(() => ({
-    totalTasks: data?.data.length || 0,
-    isLoading,
-    error,
-    isValidating,
-  }), [data?.data,isLoading, error, isValidating ]);
+    totalTasks: totalProcesses?.data.length || 0,
+    isLoading: processLoading,
+    error: processError,
+    isValidating: processValidating,
+  }), [totalProcesses?.data, processValidating, processError, processLoading ]);
 }

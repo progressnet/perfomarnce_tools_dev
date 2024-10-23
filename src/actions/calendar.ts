@@ -131,7 +131,7 @@ export function useGetEvents(start:string, end:string) {
     eventsLoading: isLoading,
     error,
     isValidating,
-    empty: !isLoading && !data?.data.length,
+    empty: !isLoading && !data?.data?.length,
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [ data,  error, isLoading, isValidating]);
 }

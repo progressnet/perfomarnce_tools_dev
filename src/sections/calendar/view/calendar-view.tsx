@@ -79,7 +79,6 @@ export function CalendarView() {
   };
 
   const handleDatesSet = (dateInfo: any) => {
-    console.log({dateInfo})
     setDates({
       start: dateInfo.startStr,
       end: dateInfo.endStr
