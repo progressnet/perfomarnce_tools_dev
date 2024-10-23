@@ -25,6 +25,7 @@ export type Timesheet = {
   processName: string;
   subProcessID: number;
   subProcessName: string;
+  isCompleted: boolean;
 };
 
 
@@ -102,6 +103,7 @@ export function useGetEvents(start:string, end:string) {
         hours: ts.hours,
         timesheetID: ts.id,
         timesheetdate: ts.timesheetdate,
+        isCompleted: ts.isCompleted
 
       },
     }

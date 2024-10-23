@@ -47,8 +47,8 @@ export const navData = [
     subheader: 'MANAGEMENT',
     items: [
       { title: 'My Timesheet', path: paths.dashboard.calendar, icon: ICONS.calendar },
-      { title: 'Test Route', path: paths.dashboard.test, icon: ICONS.menuItem },
-      { title: 'My Tasks', path: paths.dashboard.test, icon: ICONS.kanban,   },
+      // { title: 'Test Route', path: paths.dashboard.test, icon: ICONS.menuItem },
+      // { title: 'My Tasks', path: paths.dashboard.test, icon: ICONS.kanban,   },
     ],
   },
 ];
