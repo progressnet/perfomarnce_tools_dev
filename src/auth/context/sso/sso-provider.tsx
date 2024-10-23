@@ -26,13 +26,16 @@ export function SSOProvider({ children }: Props) {
 
   useEffect(() => {
     const handleUserLogin = async () => {
+      console.log({pathname})
       if(pathname !== "/FinanceFactoryTimesheet") return;
       const locationSearchEmail = location.search.split('email=')[1] ;
+      console.log({locationSearchEmail})
       if(!locationSearchEmail) {
         navigate(paths.auth.sso.signIn)
         return;
       }
         const res = await handleGetAuthEmail(locationSearchEmail)
+      console.log({res})
         if(!res.success) {
           setError("Error fetching email");
         }
