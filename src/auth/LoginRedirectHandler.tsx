@@ -18,6 +18,7 @@ export function LoginRedirectHandler() {
   useEffect(() => {
     const locationSearchEmail = location.search.split('email=')[1];
     if (locationSearchEmail) {
+      localStorage.setItem('email', locationSearchEmail);
       const handleEmail = async () => {
         try {
           const { data } = await axios.get(`${endpoints.auth.email}?email=${encodeURIComponent(locationSearchEmail)}`);
@@ -26,7 +27,10 @@ export function LoginRedirectHandler() {
             setError('Error decrypting email');
             return;
           }
-          localStorage.setItem('email', data.email);
+          localStorage.setItem("user", JSON.stringify({
+            email: data.email,
+            role: "employee",
+          }));
           navigate(paths.dashboard.root);
         } catch(e) {
           setError(e?.message || 'E: Error decrypting email');
@@ -36,7 +40,6 @@ export function LoginRedirectHandler() {
       }
       handleEmail().then(r => r);
     } else {
-      // Redirect to login if email is missing
       navigate(paths.auth.sso.signIn);
     }
   }, [location, navigate]);
@@ -61,4 +64,3 @@ export function LoginRedirectHandler() {
 
 
 
-export default LoginRedirectHandler;
