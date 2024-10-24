@@ -26,6 +26,7 @@ export function LoginRedirectHandler() {
       const handleEmail = async () => {
         try {
           const { data } = await axios.get(`${endpoints.auth.email}?email=${encodeURIComponent(locationSearchEmail)}`);
+          console.log({data})
           if (!data.email) {
             console.error(data.error);
             setError('Error decrypting email');

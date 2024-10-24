@@ -18,36 +18,14 @@ export function SSOProvider({ children }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [email, setEmail] = useState<string>("");
   // hooks:
-  const location = useLocation();
   const pathname = usePathname();
-  const navigate = useNavigate(); // Use useNavigate for redirection
-
 
 
   useEffect(() => {
-    const handleUserLogin = async () => {
-      if (pathname !== "/FinanceFactoryTimesheet/" ) {
-        return;
-      }
+     console.log("provider pathname", pathname )
+  }, [pathname])
 
-      const locationSearchEmail = location.search.split('email=')[1] ;
-      if(!locationSearchEmail) {
-        navigate(paths.auth.sso.signIn)
-        return;
-      }
-        const res = await handleGetAuthEmail(locationSearchEmail)
-      console.log({res})
-        if(!res.success) {
-          setError("Error fetching email");
-        }
-        if(res.success) {
-          // setEmail(res.data)
-          localStorage.setItem("email",locationSearchEmail)
-          navigate(paths.dashboard.root)
-        }
-      }
-      handleUserLogin().then(r => r)
-  }, [location.search, navigate, pathname]);
+
 
 
   const memoizedValue = useMemo(
@@ -63,17 +41,4 @@ export function SSOProvider({ children }: Props) {
   return <SSOContext.Provider value={memoizedValue}>{children}</SSOContext.Provider>;
 }
 
-export const handleGetAuthEmail = async (encryptedEmail: string) => {
-  try {
-    const { data } = await axios.get(`${endpoints.auth.email}?email=${encodeURIComponent(encryptedEmail)}`);
-    return {
-      success: true,
-      data: data.email || "",
-    };
-  } catch (e) {
-    return {
-      success: false,
-      error: e,
-    };
-  }
-};
+

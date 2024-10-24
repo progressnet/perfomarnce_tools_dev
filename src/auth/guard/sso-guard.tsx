@@ -50,7 +50,6 @@ type Props = {
 export function SSOGuard({ children }: Props) {
   const email = localStorage.getItem('email');
 
-  console.log({email})
   if (!email) {
     // Redirect to login if no email in localStorage
     return <Navigate to={paths.auth.sso.signIn} />;
