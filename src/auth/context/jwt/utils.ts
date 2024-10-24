@@ -95,7 +95,6 @@ export async function setSession(accessToken: string | null) {
 
 
 export async function setEmailSession(encryptedEmail: string | null) {
-  console.log({encryptedEmail})
   if(encryptedEmail) {
     axios.defaults.headers.common.Authorization = `Bearer ${encryptedEmail}`;
   }

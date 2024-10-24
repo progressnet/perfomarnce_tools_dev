@@ -10,11 +10,10 @@ import { Iconify } from "src/components/iconify";
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 import {paths} from "../../../routes/paths";
-import { useSSOContext } from "../../../auth/context/sso/sso-context";
 
 export function AccountPopup() {
   const popover = usePopover();
-  const { email } = useSSOContext();
+  // const { email } = useSSOContext();
   const navigate = useNavigate(); // Use useNavigate for redirection
 
   const handleLogout = () => {
@@ -28,7 +27,7 @@ export function AccountPopup() {
       <Avatar
         sx={{ cursor: 'pointer', width: 32, height: 32 }}
         onClick={popover.onOpen}>
-        {email ? email[0].toUpperCase(): ""}
+        {/* {email ? email[0].toUpperCase(): ""} */}
       </Avatar>
       <CustomPopover
         open={popover.open}
@@ -45,7 +44,7 @@ export function AccountPopup() {
               sx={{ fontSize: '11px', color: 'text.secondary' }}
               variant="body2"
             >
-              {email}
+              {/* {email} */}
             </Typography>
           </Stack>
           <MenuList >

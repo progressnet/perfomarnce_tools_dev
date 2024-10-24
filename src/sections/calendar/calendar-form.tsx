@@ -106,7 +106,6 @@ export function CalendarForm(
   })));
   const stringDateVariant = dayjs(clickedDate).format('MMMM D YYYY');
 
-  console.log({currentEvent})
   const defaultValues = useMemo(
     () => ({
       process: {
@@ -228,7 +227,6 @@ export function CalendarForm(
     setValue('isCompleted', value)
   }, [setValue]);
 
-  console.log({values})
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Stack spacing={2}>

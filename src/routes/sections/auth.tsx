@@ -5,6 +5,8 @@ import { AuthSplitLayout } from 'src/layouts/auth-split';
 
 import { SplashScreen } from 'src/components/loading-screen';
 
+import {LoginRedirectHandler} from "../../auth/LoginRedirectHandler";
+
 
 // ----------------------------------------------------------------------
 
@@ -29,8 +31,17 @@ const authSSO = {
         </AuthSplitLayout>
       ),
     },
+    // Add the route that will handle the redirect from the external SSO
+    {
+      path: 'login-redirect',
+      element: (
+        <Suspense fallback={<SplashScreen />}>
+          <LoginRedirectHandler />
+        </Suspense>
+      ),
+    },
   ]
-}
+};
 export const authRoutes = [
   {
     path: '/FinanceFactoryTimesheet/auth',
@@ -43,4 +54,5 @@ export const authRoutes = [
       authSSO,
     ],
   },
+
 ];

@@ -56,3 +56,59 @@ export function useGetSubProcessByProcess(id: number | null) {
     empty: !isLoading && !data?.data.length,
   }), [data, error, isLoading, isValidating]);
 }
+
+
+const PROCESSES = [
+  {
+    id: 1,
+    subProcessName: 'sub Process 1',
+    notStarted: 10,
+    ongoing: 1,
+    completed: 2,
+  }, {
+    id: 2,
+    subProcessName: 'sub Process 2',
+    notStarted: 10,
+    ongoing: 1,
+    completed: 2,
+  },
+  {
+    id: 3,
+    subProcessName: 'sub Process 3',
+    notStarted: 10,
+    ongoing: 1,
+    completed: 2,
+  },
+ {
+   id: 4,
+   subProcessName: 'sub Process 4',
+   notStarted: 10,
+   ongoing: 1,
+   completed: 2,
+  },{
+    id: 5,
+    subProcessName: 'sub Process 5',
+    notStarted: 10,
+    ongoing: 1,
+    completed: 2,
+  },{
+    id: 6,
+    subProcessName: 'sub Process 6',
+    notStarted: 10,
+    ongoing: 1,
+    completed: 2,
+  },{
+    id: 7,
+    subProcessName: 'sub Process 7',
+    notStarted: 10,
+    ongoing: 1,
+    completed: 2,
+  },
+]
+
+
+export function useGetMyTasksSubProcesses(id: number | null) {
+  return {
+    subProcesses: PROCESSES,
+  }
+}
