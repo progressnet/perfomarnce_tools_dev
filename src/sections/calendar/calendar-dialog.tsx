@@ -17,6 +17,7 @@ type DialogProps = {
   events: ICalendarEvent[];
   onCloseForm: () => void;
   openForm: boolean;
+  URL: string;
 };
 
 export const CalendarDialog = (
@@ -24,6 +25,7 @@ export const CalendarDialog = (
     events,
     onCloseForm,
     openForm,
+    URL,
   }: DialogProps) => {
   const theme = useTheme();
 
@@ -150,7 +152,7 @@ export const CalendarDialog = (
               overflowY: 'auto',
             }}
           >
-            <CalendarForm events={events} onClose={onCloseForm} />
+            <CalendarForm URL={URL} events={events} onClose={onCloseForm} />
           </Scrollbar>
         </Stack>
       </Stack>

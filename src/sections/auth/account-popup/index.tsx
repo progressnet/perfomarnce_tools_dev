@@ -13,12 +13,14 @@ import {paths} from "../../../routes/paths";
 
 export function AccountPopup() {
   const popover = usePopover();
-  // const { email } = useSSOContext();
+  const user = JSON.parse( localStorage.getItem("user") || "");
+  console.log({user})
   const navigate = useNavigate(); // Use useNavigate for redirection
 
   const handleLogout = () => {
     // remove usr from localstorage
     localStorage.removeItem("email");
+    localStorage.removeItem("user")
     navigate(paths.auth.sso.signIn);
     popover.onClose();
   }
@@ -27,7 +29,7 @@ export function AccountPopup() {
       <Avatar
         sx={{ cursor: 'pointer', width: 32, height: 32 }}
         onClick={popover.onOpen}>
-        {/* {email ? email[0].toUpperCase(): ""} */}
+         {user?.email ? user?.email[0].toUpperCase(): ""}
       </Avatar>
       <CustomPopover
         open={popover.open}
@@ -44,7 +46,7 @@ export function AccountPopup() {
               sx={{ fontSize: '11px', color: 'text.secondary' }}
               variant="body2"
             >
-              {/* {email} */}
+               {user?.email}
             </Typography>
           </Stack>
           <MenuList >

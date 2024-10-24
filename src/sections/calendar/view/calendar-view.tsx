@@ -32,7 +32,7 @@ export function CalendarView() {
     start: '',
     end: ''
   })
-  const { events, eventsLoading } = useGetEvents(dates.start, dates.end);
+  const { events, eventsLoading, URL } = useGetEvents(dates.start, dates.end);
 
   const {
     calendarRef,
@@ -193,6 +193,7 @@ export function CalendarView() {
         </Card>
       </DashboardContent>
        <CalendarDialog
+         URL={URL}
         onCloseForm={onCloseForm}
         openForm={openForm }
         events={dayEvents}

@@ -56,7 +56,7 @@ export function useGetTaskByParent(id: number | null) {
     isLoading,
     error,
     isValidating,
-    empty: !isLoading && !data?.data.length,
+    empty: !isLoading && !data?.data?.length,
   }), [data, error, isLoading, isValidating]);
 }
 

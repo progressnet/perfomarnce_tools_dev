@@ -71,8 +71,9 @@ export function useGetEvents(start:string, end:string) {
   const startDate = dayjs(start).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
   const endDate = dayjs(end).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
   // =================================================
+  const URL = `${ENDPOINT_CALENDAR}?startDate=${startDate}&endDate=${endDate}`
   const { data, isLoading, error, isValidating } = useSWR<ApiData<Timesheet>>(
-    start && end ? [ENDPOINT_CALENDAR, { params: { startDate, endDate } }] : null,
+    start && end ? URL: null,
     fetcher,
     swrOptions
   );
@@ -131,6 +132,7 @@ export function useGetEvents(start:string, end:string) {
     eventsLoading: isLoading,
     error,
     isValidating,
+    URL,
     empty: !isLoading && !data?.data?.length,
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [ data,  error, isLoading, isValidating]);
@@ -177,9 +179,9 @@ export type TimesheetApiProps = {
   hours: number;
   taskID: number;
 }
-export async function handleTimesheetUpdate(data: TimesheetApiProps) {
+export async function handleTimesheetUpdate(data: TimesheetApiProps, URL: string) {
   const res = await axios.put(ENDPOINT, data);
-  await mutate(ENDPOINT);
+  await mutate(URL);
   return {
     success: true,
     data: res,
@@ -187,9 +189,9 @@ export async function handleTimesheetUpdate(data: TimesheetApiProps) {
 }
 
 
-export async function handleTimesheetCreate( data: TimesheetApiProps) {
+export async function handleTimesheetCreate( data: TimesheetApiProps, URL: string) {
   const res = await axios.post(ENDPOINT, data);
-  await mutate(ENDPOINT);
+  await mutate(URL);
   return {
     success: true,
     data: res,

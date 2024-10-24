@@ -7,16 +7,20 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
 import {paths} from "../routes/paths";
+import {usePathname} from "../routes/hooks";
 import axios, {endpoints} from "../utils/axios";
 import {SplashScreen} from "../components/loading-screen";
 
 export function LoginRedirectHandler() {
   const [error, setError] = useState("")
   const navigate = useNavigate();
+  const pathname = usePathname();
   const location = useLocation();
 
   useEffect(() => {
+    console.log({pathname})
     const locationSearchEmail = location.search.split('email=')[1];
+    console.log({locationSearchEmail})
     if (locationSearchEmail) {
       localStorage.setItem('email', locationSearchEmail);
       const handleEmail = async () => {
@@ -42,6 +46,7 @@ export function LoginRedirectHandler() {
     } else {
       navigate(paths.auth.sso.signIn);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location, navigate]);
 
   if(error) {

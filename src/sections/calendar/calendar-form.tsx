@@ -84,11 +84,13 @@ export const EventSchema = zod.object({
 type Props = {
   onClose: () => void;
   events: ICalendarEvent[];
+  URL: string;
 
 };
 
 export function CalendarForm(
   {
+    URL,
     events,
     onClose,
   }: Props) {
@@ -165,19 +167,14 @@ export function CalendarForm(
     try {
       if ( isEdit || exists) {
         // Update existing timesheet
-        const res=  await handleTimesheetUpdate({
+         await handleTimesheetUpdate({
           ...processedData,
           id: isEdit ? Number(currentEvent?.id) : Number(exists?.id),
-        });
-        if(res.data.status === 204) {
+        }, URL);
           toast.success('Timesheet updated successfully');
-        } else {
-          toast.error('An error occurred');
-        }
-
       } else {
         // Create new timesheet
-        await handleTimesheetCreate(processedData);
+        await handleTimesheetCreate(processedData, URL);
         toast.success('Timesheet created successfully');
       }
       onClose();
@@ -243,11 +240,11 @@ export function CalendarForm(
         { /* ============== SUB-PROCESS ================ */}
          <HorizontalInputContainer label="Sub-process">
            <Field.SelectSubProcess
-            processID={values.process.id}
+            processID={values.process?.id}
             name="subprocess"
             error={errors?.subprocess?.message || ""}
             label="Sub-process"
-            value={values.subprocess.id}
+            value={values.subprocess?.id}
             handleValue={handleSubProcessChange}
            />
          </HorizontalInputContainer>
@@ -275,11 +272,11 @@ export function CalendarForm(
             </Grid>
             <Grid item xs={12} md={8}>
                <Field.SelectTask
-                subprocessID={values?.subprocess.id}
+                subprocessID={values?.subprocess?.id}
                 name="task"
                 error={errors?.task?.message || ""}
                 label="Task"
-                value={values.task.id}
+                value={values?.task?.id}
                 handleValue={handleTaskChange}
                />
             </Grid>
