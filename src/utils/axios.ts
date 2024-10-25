@@ -45,6 +45,7 @@ export const endpoints = {
   subprocessByProcess: '/SubProcessByProcessID',
   task: '/Tasks',
   taskBySubProcess: '/TaskBySubProcessID',
+  legalEntity: '/LegalEntity',
   auth: {
     me: '/auth/me',
     email: '/auth/email',

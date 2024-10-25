@@ -14,7 +14,7 @@ import {paths} from "../../../routes/paths";
 export function AccountPopup() {
   const popover = usePopover();
   const user = JSON.parse( localStorage.getItem("user") || "");
-  const navigate = useNavigate(); // Use useNavigate for redirection
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     // remove usr from localstorage

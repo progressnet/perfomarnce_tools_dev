@@ -42,7 +42,7 @@ export function MyTasksLayout() {
           flex: 3,
           height: '100%',
           borderRadius: 2,
-          backgroundColor: 'white',
+          backgroundColor: subprocessId ? 'white' : 'transparent',
           p: 1,
         }}>
           {subprocessId && <MyTasksTasksView id={subprocessId} />}
