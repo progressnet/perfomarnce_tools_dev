@@ -4,8 +4,8 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
 import Stack from "@mui/material/Stack";
-import { useGetLegalEntity } from "../../actions/legalEntity";
-import {FlagIcon} from "../iconify";
+import { useGetLegalEntity } from "../../../actions/legalEntity";
+import {FlagIcon} from "../../iconify";
 
 export function CustomCountrySelect(
   {

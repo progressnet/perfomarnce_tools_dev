@@ -17,7 +17,6 @@ import { countries } from 'src/assets/data';
 import { FlagIcon, iconifyClasses } from 'src/components/iconify';
 
 import { getCountry, displayValueByCountryCode } from './utils';
-
 // ----------------------------------------------------------------------
 
 type Value = string;

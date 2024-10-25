@@ -10,42 +10,57 @@ import Typography from "@mui/material/Typography";
 import {paths} from "../../routes/paths";
 import {DashboardContent} from "../../layouts/dashboard";
 import {MyTasksTasksView} from "./tasks";
+import {useResponsiveWidth} from "../../hooks/use-resize";
+import {useResponsive} from "../../hooks/use-responsive";
 
 const flexProps = { flex: '1 1 auto', display: 'flex', flexDirection: 'column' };
 
 
 export function MyTasksLayout() {
+  const width = useResponsiveWidth();
+  const responsive = useResponsive("only", "md", "xl");
   const [tabsValue, setTabsValue] = useState<string>('processes');
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const subprocessId = Number(searchParams.get('subprocessId'));
 
 
+  console.log('width', width)
+  console.log('responsive', responsive)
+  const condition = responsive && subprocessId && subprocessId !== 0
   return (
     <DashboardContent maxWidth="xl" sx={{ ...flexProps }}>
-      <Stack spacing={1} flexDirection="row"  sx={{height: 'calc(100vh - 140px)', borderRadius: 2, backgroundColor: 'grey.200', p: 1}}>
+      <Stack
+        spacing={1}
+        flexDirection="row"
+        sx={{height: 'calc(100vh - 140px)',
+          borderRadius: 2,
+          backgroundColor: 'grey.200',
+          p: 1,
+          overflow: "hidden"
+      }}>
         <Stack sx={{
           flex: 2,
+          overflow: "hidden",
           borderRadius: 2,
           backgroundColor: 'white',
         }}>
+
           <FilterTabs
             value={tabsValue}
             setValue={setTabsValue}
           />
           <Divider/>
-          <Outlet
-
-          />
+          <Outlet />
         </Stack>
         <Stack sx={{
+          display: { xs: 'none', lg: 'flex' },
           flex: 3,
           height: '100%',
           borderRadius: 2,
           backgroundColor: subprocessId ? 'white' : 'transparent',
-          p: 1,
         }}>
-          {subprocessId && <MyTasksTasksView id={subprocessId} />}
+          {(subprocessId && subprocessId > 0) ? <MyTasksTasksView id={subprocessId} /> : null}
         </Stack>
       </Stack>
     </DashboardContent>
@@ -80,14 +95,14 @@ export const FilterTabs = (
       <Tabs
         sx={{
           "& .MuiTab-root": {
-            fontSize: '20px',
+            fontSize: '18px',
             color: 'gray',
             "&.Mui-selected": {
               color: 'blue',
-            }
+            },
           },
           "& .MuiTabs-indicator": {
-            bottom: 5,
+            bottom: 9,
             backgroundColor: 'blue',
           }
         }}

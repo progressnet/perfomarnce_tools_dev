@@ -13,7 +13,7 @@ import {paths} from "../../../routes/paths";
 
 export function AccountPopup() {
   const popover = usePopover();
-  const user = JSON.parse( localStorage.getItem("user") || "");
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
   const navigate = useNavigate();
 
   const handleLogout = () => {
