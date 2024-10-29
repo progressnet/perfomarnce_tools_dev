@@ -89,7 +89,6 @@ export type SubProcessesProps = {
   data: any;
 }
 const SubProcesses = ({data}: SubProcessesProps) => {
-  console.log({data})
   // hooks:
   const location = useLocation();
   const navigate = useNavigate();
@@ -124,10 +123,9 @@ const SubProcesses = ({data}: SubProcessesProps) => {
       <Stack spacing={0.8}  sx={{overflowY: "auto"}}>
         {
           data.map((subprocess: any, index: number) => (
-          <>
+          <Stack key={`${subprocess.id}-${index}`}>
             <Stack
               onClick={() => handleNavigate(subprocess)}
-              key={index}
               flexDirection="row"
               width="100%"
               alignItems="center"
@@ -153,7 +151,7 @@ const SubProcesses = ({data}: SubProcessesProps) => {
               </Stack>
             </Stack>
             <Divider  sx={{width: '100%', height: 1 }} />
-          </>
+          </Stack>
 
       ))
         }

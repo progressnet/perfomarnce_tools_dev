@@ -34,7 +34,6 @@ export function RHFSelectTask(
     placeholder,
   }: RHFAutocompleteProps) {
   const {tasks, error: taskError} = useGetTaskByParent(subprocessID);
-  console.log({tasks})
   return (
     <Autocomplete
       sx={{width: '100%'}}

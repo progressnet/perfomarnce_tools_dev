@@ -58,7 +58,7 @@ export const CalendarDialog = (
       PaperProps={{
         sx: {
           minHeight: '300px',
-          height: '75vh',
+          height: '85vh',
           display: 'flex',
           position: 'relative',
           overflow: 'hidden',
@@ -146,7 +146,6 @@ export const CalendarDialog = (
 
           <Scrollbar
             sx={{
-              // flexGrow: 1, // The form scrolls when content is larger
               padding: 2,
               paddingX: 3,
               overflowY: 'auto',
