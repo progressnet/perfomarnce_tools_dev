@@ -1,5 +1,5 @@
 import { useState} from "react";
-import {Outlet, useLocation, useNavigate} from "react-router-dom";
+import { useLocation} from "react-router-dom";
 
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
@@ -7,33 +7,41 @@ import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 
-import {paths} from "../../routes/paths";
-import {DashboardContent} from "../../layouts/dashboard";
 import {MyTasksTasksView} from "./tasks";
+import {MyTasksProcessView} from "./processes";
+import {MyTasksEntitiesView} from "./entities";
+import {MyTasksSubProcessView} from "./subProcesses";
+import {DashboardContent} from "../../layouts/dashboard";
 import {useResponsiveWidth} from "../../hooks/use-resize";
-import {useResponsive} from "../../hooks/use-responsive";
 
 const flexProps = { flex: '1 1 auto', display: 'flex', flexDirection: 'column' };
 
 
 export function MyTasksLayout() {
   const width = useResponsiveWidth();
-  const responsive = useResponsive("only", "md", "xl");
   const [tabsValue, setTabsValue] = useState<string>('processes');
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const subprocessId = Number(searchParams.get('subprocessId'));
+  const processId = Number(searchParams.get('id'));
 
 
-  console.log('width', width)
-  console.log('responsive', responsive)
-  const condition = responsive && subprocessId && subprocessId !== 0
+  const renderMainView = () => {
+    if (tabsValue === 'entities') return <MyTasksEntitiesView />;
+    if (tabsValue === 'processes') {
+      if (processId) return <MyTasksSubProcessView />;
+      if (!processId && width <= 1179 && subprocessId > 0) return <MyTasksTasksView />;
+      return <MyTasksProcessView />;
+    }
+    return null;
+  };
+
   return (
     <DashboardContent maxWidth="xl" sx={{ ...flexProps }}>
       <Stack
         spacing={1}
         flexDirection="row"
-        sx={{height: 'calc(100vh - 140px)',
+        sx={{height: 'calc(100vh - 150px)',
           borderRadius: 2,
           backgroundColor: 'grey.200',
           p: 1,
@@ -51,7 +59,7 @@ export function MyTasksLayout() {
             setValue={setTabsValue}
           />
           <Divider/>
-          <Outlet />
+          {renderMainView()}
         </Stack>
         <Stack sx={{
           display: { xs: 'none', lg: 'flex' },
@@ -60,7 +68,7 @@ export function MyTasksLayout() {
           borderRadius: 2,
           backgroundColor: subprocessId ? 'white' : 'transparent',
         }}>
-          {(subprocessId && subprocessId > 0) ? <MyTasksTasksView id={subprocessId} /> : null}
+          {subprocessId > 0 && <MyTasksTasksView />}
         </Stack>
       </Stack>
     </DashboardContent>
@@ -79,14 +87,10 @@ export const FilterTabs = (
     value,
     setValue,
   }: FilterTabsProps) => {
-  const navigate = useNavigate()
 
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-
     setValue(newValue);
-    if(newValue === 'processes') navigate(paths.dashboard.myTasks.process)
-    if(newValue === 'entities') navigate(paths.dashboard.myTasks.entities)
   };
 
   return (

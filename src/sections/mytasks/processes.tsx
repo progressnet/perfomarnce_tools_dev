@@ -26,9 +26,10 @@ export function MyTasksProcessView() {
     setFilter(event.target.value)
   }
   return (
-    <Stack sx={{p:2, overflow: "hidden"}} spacing={2}>
-      <Typography variant="h5">Select Process:</Typography>
+    <Stack sx={{p:2, overflow: "hidden"}} spacing={1}>
+      <Typography variant="h6">Select Process:</Typography>
       <TextField
+        size="small"
         value={filter}
         onChange={handleFilter}
         placeholder="Search Process..."
@@ -45,13 +46,16 @@ export function MyTasksProcessView() {
   )
 }
 
+
+// ===============================================================================
 export type ProcessesListProps = {
   data: any;
 
 }
-const ProcessesList = ({data}: ProcessesListProps) => {
 
+const ProcessesList = ({data}: ProcessesListProps) => {
   const navigate = useNavigate();
+  // =============================================
   const handleNavigate = (currentProcess: any) => {
     if(!currentProcess) return;
     navigate(getSubProcessUrl(currentProcess));
@@ -73,7 +77,7 @@ const ProcessesList = ({data}: ProcessesListProps) => {
               alignItems="center"
               sx={{cursor: "pointer",borderBottom: "1.4px dashed", borderColor: "grey.400"}}
             >
-              <Stack sx={{flex: 1, p: 2, justifyContent: "center"   }}>
+              <Stack sx={{flex: 1, p: 1, justifyContent: "center"   }}>
                 <Typography sx={{fontSize: '16px'}} variant="subtitle1">{process.processName}</Typography>
                 <Stack spacing={1} flexDirection="row" alignItems="center">
                   <SubTitle text={`${process.subProcesses} Sub-Processes`}/>

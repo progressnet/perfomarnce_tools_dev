@@ -2,12 +2,15 @@
 
 
 import {useState} from "react";
+import { useLocation } from "react-router";
+import {useNavigate} from "react-router-dom";
 
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 
 import {Iconify} from "../../components/iconify";
+import {getSubProcessUrl} from "../../utils/buildURLparams";
 import {SearchInput} from "../../components/_local/custom-search-input";
 import {usePopover, CustomPopover} from "../../components/custom-popover";
 import {ENTITY_OPTIONS, FilterByEntity} from "./components/filterByEntity";
@@ -16,17 +19,12 @@ import {FilterByStatus, STATUS_OPTIONS} from "./components/filterByStatus";
 import type { StatusProps} from "./components/filterByStatus";
 import type { EntityProps} from "./components/filterByEntity";
 
-const TASKS = [
-    {
-      name: "task name 1",
-      status: "Completed",
-      entity: "greece",
-      assignee: "John Doe",
-    }
-  ]
 
 
-export function MyTasksTasksView({id}: {id: number}) {
+export function MyTasksTasksView() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { id, processName, subProcesses: subProcessLength, done, subprocessId } = Object.fromEntries(new URLSearchParams(location.search));
   // ========================================
   const [state, setState] = useState({
     entity: ENTITY_OPTIONS[1],
@@ -43,13 +41,33 @@ export function MyTasksTasksView({id}: {id: number}) {
   const handleEntity = (val: EntityProps) => {
     setState(prev => ({...prev, entity: val}))
   }
+
+  const handleNavigateBack = () => {
+    console.log('navigate back')
+    const url = getSubProcessUrl({
+      id,
+      processName,
+      subProcesses: subProcessLength,
+      done
+    })
+    navigate(url)
+  }
   // ========================================
   return (
     <Stack  sx={{p: 2}} spacing={0.6}>
-      <Stack >
-        <Typography variant="h3">Tasks</Typography>
+      { /* ================= tasks header =========================== */ }
+      <Stack  flexDirection="row" alignItems="center" justifyContent="space-between" spacing={1}>
+        <Stack flexDirection="row" alignItems="center" spacing={1}>
+          <IconButton
+            onClick={handleNavigateBack}
+            sx={{display: "inline-flex", width: 35, height: 35}}>
+            <Iconify icon="ion:chevron-back-outline" width={20}/>
+          </IconButton>
+          <Typography variant="h3">Tasks</Typography>
+        </Stack>
       </Stack>
-       <Stack alignItems="center" flexDirection="row" spacing={3}>
+      { /* ================= filters =========================== */ }
+      <Stack alignItems="center" flexDirection="row" spacing={3}>
          <Stack spacing={1} flexDirection="row" alignItems="center">
             <Typography sx={{fontSize: '16px', fontWeight: "bold"}}>Filter:</Typography>
             <FilterByEntity value={state.entity} handleValue={handleEntity} />
@@ -60,6 +78,10 @@ export function MyTasksTasksView({id}: {id: number}) {
            <SearchIcon handleValue={handleSearch}  value={state.search} />
          </Stack>
        </Stack>
+      { /* ================= tasks  =========================== */ }
+      <Stack>
+        {subprocessId}
+      </Stack>
     </Stack>
   )
 }

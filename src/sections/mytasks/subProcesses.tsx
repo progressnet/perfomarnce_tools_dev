@@ -37,7 +37,7 @@ export function MyTasksSubProcessView() {
   return (
     <Stack sx={{p:2, overflow: "hidden"}} spacing={2}>
       <Stack
-        onClick={() => navigate(paths.dashboard.myTasks.process)}
+        onClick={() => navigate(paths.dashboard.myTasks)}
         flexDirection="row"
         width="100%"
         alignItems="center"
@@ -66,7 +66,7 @@ export function MyTasksSubProcessView() {
         </Stack>
       </Stack>
       {/* SUB PROCESS TEXT & SEARCH INPUT */}
-      <Typography variant="h5">Select Sub Process:</Typography>
+      <Typography variant="h6">Select Sub Process:</Typography>
       <TextField
         value={filter}
         onChange={handleFilter}
@@ -89,16 +89,18 @@ export type SubProcessesProps = {
   data: any;
 }
 const SubProcesses = ({data}: SubProcessesProps) => {
+  console.log({data})
   // hooks:
   const location = useLocation();
   const navigate = useNavigate();
-  // get params:
+  // ======================= get params ===========================:
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get('id');
   const processName = searchParams.get('processName');
   const subProcessLength = searchParams.get('subProcesses');
   const done = searchParams.get('done');
-  // navigate to:
+  const subprocessId = Number(searchParams.get('subprocessId'));
+  // ======================= navigateTo ===========================:
   const handleNavigate = (currentSubProcess: any) => {
     const url = getTaskURL({
       id,
@@ -119,18 +121,24 @@ const SubProcesses = ({data}: SubProcessesProps) => {
         overflowY: 'auto',
       }}
     >
-      <Stack sx={{overflowY: "auto"}}>
+      <Stack spacing={0.8}  sx={{overflowY: "auto"}}>
         {
           data.map((subprocess: any, index: number) => (
+          <>
             <Stack
               onClick={() => handleNavigate(subprocess)}
               key={index}
               flexDirection="row"
               width="100%"
               alignItems="center"
-              sx={{cursor: "pointer",borderBottom: "1.4px dashed", borderColor: "grey.400"}}
+              sx={{
+                cursor: "pointer",
+                borderColor: "grey.400",
+                borderRadius: 1,
+                backgroundColor: subprocessId === subprocess.id ? 'grey.200' : 'white'
+              }}
             >
-              <Stack sx={{flex: 1, p: 2, justifyContent: "center"   }}>
+              <Stack sx={{flex: 1, p: 1, justifyContent: "center"   }}>
                 <Typography sx={{fontSize: '16px'}} variant="subtitle1">{subprocess.subProcessName}</Typography>
                 <Stack spacing={1} flexDirection="row" alignItems="center">
                   <SubTitle text={`${subprocess.notStarted} Not Started`}/>
@@ -140,11 +148,14 @@ const SubProcesses = ({data}: SubProcessesProps) => {
                   <SubTitle text={` ${subprocess.completed} Completed`}/>
                 </Stack>
               </Stack>
-              <Stack sx={{minWidth: '40px'}}>
+              <Stack sx={{minWidth: '30px'}}>
                 <Iconify icon="mingcute:right-fill" color="grey.500" />
               </Stack>
             </Stack>
-          ))
+            <Divider  sx={{width: '100%', height: 1 }} />
+          </>
+
+      ))
         }
       </Stack>
     </Scrollbar>

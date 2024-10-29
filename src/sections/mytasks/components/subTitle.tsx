@@ -6,6 +6,6 @@ type SubTitleProps = {
 }
 
 export const SubTitle = ({text}: SubTitleProps) => (
-  <Typography sx={{color: "grey.500", fontSize: '14px', fontWeight: 'medium'}} >{text}</Typography>
+  <Typography sx={{textWrap: 'no-wrap', color: "grey.500", fontSize: '13px', fontWeight: 'medium'}} >{text}</Typography>
 
 )
