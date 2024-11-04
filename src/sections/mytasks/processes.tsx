@@ -18,7 +18,7 @@ import {getSubProcessUrl} from "../../utils/buildURLparams";
 
 
 export function MyTasksProcessView() {
-  const {processes} = useGetMyTasksProcesses();
+  const {processes} = useGetProcess();
 
 
   const [filter, setFilter] = useState('');
@@ -80,9 +80,9 @@ const ProcessesList = ({data}: ProcessesListProps) => {
               <Stack sx={{flex: 1, p: 1, justifyContent: "center"   }}>
                 <Typography sx={{fontSize: '16px'}} variant="subtitle1">{process.processName}</Typography>
                 <Stack spacing={1} flexDirection="row" alignItems="center">
-                  <SubTitle text={`${process.subProcesses} Sub-Processes`}/>
+                  <SubTitle text={`${process?.numberOfSubprocesses} Sub-Processes`}/>
                   <Divider orientation="vertical"  sx={{ height: '15px'}}/>
-                  <SubTitle text={` ${process.tasks} Done`}/>
+                  <SubTitle text={` ${process?.done ? process?.done : 0} Done`}/>
                 </Stack>
               </Stack>
               <Stack sx={{minWidth: '40px'}}>

@@ -151,6 +151,9 @@ export function CalendarView() {
               onChangeView={onChangeView}
             />
             <Calendar
+              validRange={{
+                end: new Date().toISOString().split("T")[0], // Disable dates after today
+              }}
               locale='en-gb'
               eventContent={renderContent}
               eventClassNames={getEventClassNames} // Apply the class based on clickable property

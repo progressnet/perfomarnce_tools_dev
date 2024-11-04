@@ -8,10 +8,7 @@ import { LoadingScreen } from 'src/components/loading-screen';
 
 import TestPage from "../../pages/dashboard/test";
 import {SSOGuard} from "../../auth/guard/sso-guard";
-import {MyTasksLayout} from "../../sections/mytasks/layout";
-import MyTasksProcess from "../../pages/dashboard/my-tasks/process";
-import MyTasksEntities from "../../pages/dashboard/my-tasks/entities";
-import {MyTasksSubProcessView} from "../../sections/mytasks/subProcesses";
+
 // ----------------------------------------------------------------------
 const CalendarPage = lazy(() => import('src/pages/dashboard/calendar'));
 // ----------------------------------------------------------------------
