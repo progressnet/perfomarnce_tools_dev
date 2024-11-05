@@ -13,12 +13,17 @@ const swrOptions = {
 };
 
 
-type EventsData = {
+export type ITask = {
   id: number;
   status: string | null;
   subProcess: string;
   taskID: number;
   taskName: string;
+  leName: string;
+  duedate: string;
+  leCode: string;
+  taskDescription: string;
+  estimatedTime: string | null;
 };
 
 
@@ -32,7 +37,7 @@ const ENDPOINT_TASKS_BY_FILTERS = endpoints.tasksByFilters
 
 
 export function useGetTaskByParent(id: number | null) {
-  const { data, isLoading, error, isValidating } = useSWR<ApiData<EventsData>>(
+  const { data, isLoading, error, isValidating } = useSWR<ApiData<ITask>>(
     id ?ENDPOINT_BY_SUBPROCESS.concat(`/${id}`) : null,
     fetcher,
     swrOptions
@@ -47,9 +52,14 @@ export function useGetTaskByParent(id: number | null) {
   }), [data, error, isLoading, isValidating]);
 }
 
-export function useGetTaskByFilter(subprocessId: number, entity?:string) {
-  const { data, isLoading, error, isValidating } = useSWR<ApiData<EventsData>>(
-     `${ENDPOINT_TASKS_BY_FILTERS}?SubProcessID=${subprocessId}`,
+export function useGetTaskByFilter(
+  page: number,
+  rows: number,
+  subprocessId: number,
+  entity?:string
+) {
+  const { data, isLoading, error, isValidating } = useSWR<ApiData<ITask>>(
+     `${ENDPOINT_TASKS_BY_FILTERS}?SubProcessID=${subprocessId}&PageNumber=${page + 1}&PageSize=${rows}`,
     fetcher,
     swrOptions
   );

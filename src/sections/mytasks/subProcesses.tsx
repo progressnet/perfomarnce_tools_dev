@@ -122,8 +122,9 @@ const SubProcesses = ({data}: SubProcessesProps) => {
               alignItems="center"
               sx={{
                 cursor: "pointer",
-                borderColor: "grey.400",
                 borderRadius: 1,
+                borderLeft: '3px solid',
+                borderColor: subprocessId === subprocess.id ? 'primary.main' : 'transparent',
                 backgroundColor: subprocessId === subprocess.id ? 'grey.200' : 'white'
               }}
             >

@@ -11,42 +11,49 @@ import TablePagination from "@mui/material/TablePagination";
 import {SubTitle} from "./components/subTitle";
 import {Iconify} from "../../components/iconify";
 import {Scrollbar} from "../../components/scrollbar";
-import {useGetTaskByFilter} from "../../actions/task";
+import {TasksDrawer} from "./components/task-drawer";
+import {ITask, useGetTaskByFilter} from "../../actions/task";
 import {getSubProcessUrl} from "../../utils/buildURLparams";
-import {CustomErrorAlert} from "../../components/CustomAlert";
+import {CustomErrorAlert} from "../../components/custom-alert";
+import {SocialSharePopup} from "./components/social-share-popup";
 import {SearchInput} from "../../components/_local/custom-search-input";
 import {usePopover, CustomPopover} from "../../components/custom-popover";
-import {ENTITY_OPTIONS, FilterByEntity} from "./components/filterByEntity";
-import {FilterByStatus, STATUS_OPTIONS} from "./components/filterByStatus";
+import {ENTITY_OPTIONS, FilterByEntity} from "./components/filter-by-entity";
+import {FilterByStatus, STATUS_OPTIONS} from "./components/filter-by-status";
 
-import type {StatusProps} from "./components/filterByStatus";
-import type {EntityProps} from "./components/filterByEntity";
+import type {StatusProps} from "./components/filter-by-status";
+import type {EntityProps} from "./components/filter-by-entity";
 
 
 export function MyTasksTasksView() {
   const location = useLocation();
+  const currentUrl = new URL(window.location.href);
+
+
   const navigate = useNavigate();
   const {
     id,
     processName,
-    subProcesses: subProcessLength,
-    done,
+    numberOfSubprocesses,
     subprocessId
   } = Object.fromEntries(new URLSearchParams(location.search));
-
-
+  // ============================= STATE ===========================
+  const [activeTask, setActiveTask] = useState<any>(null);
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [state, setState] = useState({
     entity: ENTITY_OPTIONS[1],
     status: STATUS_OPTIONS[1],
     search: '',
-    page: 1,
+    page: 0,
     rowsPerPage: 10,
   })
-  // ========================================
+  // ============================= FETCH DATA SWR ===========================
   const {tasks, error, totalRecords} = useGetTaskByFilter(
+    state.page,
+    state.rowsPerPage,
     Number(subprocessId)
   );
-  // ========================================
+  // =============================== FILTERS ===============================
   const handleStatus = (val: StatusProps) => {
     setState(prev => ({...prev, status: val}))
   }
@@ -56,23 +63,21 @@ export function MyTasksTasksView() {
   const handleEntity = (val: EntityProps) => {
     setState(prev => ({...prev, entity: val}))
   }
-
+  // =============================== BACK ===============================
   const handleNavigateBack = () => {
     const url = getSubProcessUrl({
       id,
       processName,
-      subProcesses: subProcessLength,
-      done
+      numberOfSubprocesses,
     })
     navigate(url)
   }
-  // ========================================
-
+  // =============================== PAGINATION ===============================
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number,
   ) => {
-    setState(prev => ({...prev, page: newPage + 1}));
+    setState(prev => ({...prev, page: newPage}));
   };
 
   const handleChangeRowsPerPage = (
@@ -80,9 +85,17 @@ export function MyTasksTasksView() {
   ) => {
     setState(prev => ({...prev, page: 0, rowsPerPage: parseInt(event.target.value, 10)}));
   };
+  // ================================== TASKS DRAWER ===========================
+  const handleOpenDrawer = (newTask: ITask) => {
+    setActiveTask(newTask)
+    setOpenDrawer(true);
+  }
+  const handleCloseDrawer = () => {
+    setOpenDrawer(false);
+  }
   return (
     <Stack sx={{p: 2, height: '100%'}} spacing={0.6} >
-      <Stack >
+      <Stack spacing={2}>
         { /* ================= tasks header =========================== */}
         <Stack flexDirection="row" alignItems="center" justifyContent="space-between" spacing={1}>
           <Stack flexDirection="row" alignItems="center" spacing={1}>
@@ -92,6 +105,9 @@ export function MyTasksTasksView() {
               <Iconify icon="ion:chevron-back-outline" width={20}/>
             </IconButton>
             <Typography variant="h3">Tasks</Typography>
+          </Stack>
+          <Stack>
+          <SocialSharePopup url={`${currentUrl.href}${currentUrl.search}`}/>
           </Stack>
         </Stack>
         { /* ================= filters =========================== */}
@@ -127,6 +143,7 @@ export function MyTasksTasksView() {
           {
             tasks.map((task: any, index: number) => (
               <Stack
+                onClick={() => handleOpenDrawer(task)}
                 key={index}
                 flexDirection="row"
                 width="100%"
@@ -162,6 +179,7 @@ export function MyTasksTasksView() {
         rowsPerPage={state.rowsPerPage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+      <TasksDrawer task={activeTask} open={openDrawer} onClose={handleCloseDrawer} />
     </Stack>
   )
 }

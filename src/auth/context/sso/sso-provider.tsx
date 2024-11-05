@@ -22,7 +22,6 @@ export function SSOProvider({ children }: Props) {
 
 
   useEffect(() => {
-     console.log("provider pathname", pathname )
   }, [pathname])
 
 
