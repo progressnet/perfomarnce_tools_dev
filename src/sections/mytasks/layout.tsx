@@ -27,12 +27,24 @@ export function MyTasksLayout() {
 
 
   const renderMainView = () => {
-    if (tabsValue === 'entities') return <MyTasksEntitiesView />;
+    if (tabsValue === 'entities') {
+      return <MyTasksEntitiesView />;
+    }
+
     if (tabsValue === 'processes') {
-      if (processId) return <MyTasksSubProcessView />;
-      if (!processId && width <= 1179 && subprocessId > 0) return <MyTasksTasksView />;
+      const isMobile = width <= 1179;
+
+      if (isMobile) {
+        if (subprocessId) return <MyTasksTasksView />;
+        if (processId) return <MyTasksSubProcessView />;
+      } else {
+        if (processId) return <MyTasksSubProcessView />;
+        if (subprocessId) return <MyTasksTasksView />;
+      }
+
       return <MyTasksProcessView />;
     }
+
     return null;
   };
 
@@ -68,7 +80,7 @@ export function MyTasksLayout() {
           borderRadius: 2,
           backgroundColor: subprocessId ? 'white' : 'transparent',
         }}>
-          {subprocessId > 0 && <MyTasksTasksView />}
+          {subprocessId > 0 && width >= 1180 && <MyTasksTasksView />}
         </Stack>
       </Stack>
     </DashboardContent>

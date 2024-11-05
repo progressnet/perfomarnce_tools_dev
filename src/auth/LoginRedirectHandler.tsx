@@ -18,15 +18,12 @@ export function LoginRedirectHandler() {
   const location = useLocation();
 
   useEffect(() => {
-    console.log({pathname})
     const locationSearchEmail = location.search.split('email=')[1];
-    console.log({locationSearchEmail})
     if (locationSearchEmail) {
       localStorage.setItem('email', locationSearchEmail);
       const handleEmail = async () => {
         try {
           const { data } = await axios.get(`${endpoints.auth.email}?email=${encodeURIComponent(locationSearchEmail)}`);
-          console.log({data})
           if (!data.email) {
             console.error(data.error);
             setError('Error decrypting email');

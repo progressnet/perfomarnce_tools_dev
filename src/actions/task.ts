@@ -22,11 +22,18 @@ type EventsData = {
 };
 
 
-const ENDPOINT = endpoints.task
 
-export function useGetTask() {
+
+
+
+
+const ENDPOINT_BY_SUBPROCESS = endpoints.taskBySubProcess
+const ENDPOINT_TASKS_BY_FILTERS = endpoints.tasksByFilters
+
+
+export function useGetTaskByParent(id: number | null) {
   const { data, isLoading, error, isValidating } = useSWR<ApiData<EventsData>>(
-    ENDPOINT,
+    id ?ENDPOINT_BY_SUBPROCESS.concat(`/${id}`) : null,
     fetcher,
     swrOptions
   );
@@ -40,13 +47,9 @@ export function useGetTask() {
   }), [data, error, isLoading, isValidating]);
 }
 
-
-
-const ENDPOINT_BY_SUBPROCESS = endpoints.taskBySubProcess
-
-export function useGetTaskByParent(id: number | null) {
+export function useGetTaskByFilter(subprocessId: number, entity?:string) {
   const { data, isLoading, error, isValidating } = useSWR<ApiData<EventsData>>(
-    id ?ENDPOINT_BY_SUBPROCESS.concat(`/${id}`) : null,
+     `${ENDPOINT_TASKS_BY_FILTERS}?SubProcessID=${subprocessId}`,
     fetcher,
     swrOptions
   );

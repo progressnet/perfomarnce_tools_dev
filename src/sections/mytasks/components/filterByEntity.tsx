@@ -15,24 +15,27 @@ export type EntityProps = {
   id: number;
   name: string;
   code: string;
-
+  leCode: string;
 }
 
 
 export const ENTITY_OPTIONS = [
   {
     id: 1,
-    name: "all",
-    code: "all"
+    name: "All",
+    code: "all",
+    leCode: "M9GR"
   }, {
     id: 1,
-    name: "greece",
-    code: "gr"
+    name: "Greece",
+    code: "gr",
+    leCode: "M9GR"
   },
   {
     id: 2,
-    name: "england",
-    code: "gb"
+    name: "UK",
+    code: "gb",
+    leCode: "M9GR"
   },
 ]
 
@@ -99,7 +102,7 @@ export const FilterByEntity = (
                   component="img"
                   loading="lazy"
                   alt={option.code}
-                  src={option.name === "all" ? globe : `https://hatscripts.github.io/circle-flags/flags/${option?.code}.svg`}
+                  src={option.code === "all" ? globe : `https://hatscripts.github.io/circle-flags/flags/${option?.code}.svg`}
                   sx={{
                     width: '20px',
                     height: '20px',

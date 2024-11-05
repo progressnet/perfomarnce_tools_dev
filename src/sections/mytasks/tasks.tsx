@@ -10,7 +10,9 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 
 import {Iconify} from "../../components/iconify";
+import {useGetTaskByFilter} from "../../actions/task";
 import {getSubProcessUrl} from "../../utils/buildURLparams";
+import {CustomErrorAlert} from "../../components/CustomAlert";
 import {SearchInput} from "../../components/_local/custom-search-input";
 import {usePopover, CustomPopover} from "../../components/custom-popover";
 import {ENTITY_OPTIONS, FilterByEntity} from "./components/filterByEntity";
@@ -26,11 +28,16 @@ export function MyTasksTasksView() {
   const navigate = useNavigate();
   const { id, processName, subProcesses: subProcessLength, done, subprocessId } = Object.fromEntries(new URLSearchParams(location.search));
   // ========================================
+  // ========================================
   const [state, setState] = useState({
     entity: ENTITY_OPTIONS[1],
     status: STATUS_OPTIONS[1],
     search: '',
   })
+  // ========================================
+  const {tasks, error} = useGetTaskByFilter(
+    Number(subprocessId)
+  );
   // ========================================
   const handleStatus = (val: StatusProps) => {
     setState(prev => ({...prev, status: val}))
@@ -43,7 +50,6 @@ export function MyTasksTasksView() {
   }
 
   const handleNavigateBack = () => {
-    console.log('navigate back')
     const url = getSubProcessUrl({
       id,
       processName,
@@ -67,18 +73,27 @@ export function MyTasksTasksView() {
         </Stack>
       </Stack>
       { /* ================= filters =========================== */ }
-      <Stack alignItems="center" flexDirection="row" spacing={3}>
+      <Stack flexWrap="wrap" alignItems="center" flexDirection="row" sx={{
+        gap: {
+          xs: 1,
+          sm: 2,
+        },
+      }}>
          <Stack spacing={1} flexDirection="row" alignItems="center">
             <Typography sx={{fontSize: '16px', fontWeight: "bold"}}>Filter:</Typography>
             <FilterByEntity value={state.entity} handleValue={handleEntity} />
             <FilterByStatus value={state.status} handleValue={handleStatus} />
           </Stack>
          <Stack spacing={1} flexDirection="row" alignItems="center">
-           <Typography sx={{fontSize: '16px', fontWeight: "bold"}}>Search:</Typography>
+           <Typography sx={{ display: {
+               xs: 'none',
+                sm: 'block',
+             }, fontSize: '16px', fontWeight: "bold"}}>Search:</Typography>
            <SearchIcon handleValue={handleSearch}  value={state.search} />
          </Stack>
        </Stack>
       { /* ================= tasks  =========================== */ }
+      <CustomErrorAlert error={error} />
       <Stack>
         {subprocessId}
       </Stack>
@@ -118,9 +133,6 @@ export function SearchIcon(
         </Stack>
       </CustomPopover>
     </Stack>
-
-
-
   )
 }
 

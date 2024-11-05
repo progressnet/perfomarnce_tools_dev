@@ -21,23 +21,7 @@ type EventsData = {
 };
 
 
-const ENDPOINT = endpoints.subprocess
 
-export function useGetSubProcess() {
-  const { data, isLoading, error, isValidating } = useSWR<ApiData<EventsData>>(
-    ENDPOINT,
-    fetcher,
-    swrOptions
-  );
-
-  return useMemo(() => ({
-    subprocesses: data?.data || [],
-    isLoading,
-    error,
-    isValidating,
-    empty: !isLoading && !data?.data?.length,
-  }), [data, error, isLoading, isValidating]);
-}
 
 const ENDPOINT_BY_PROCESS = endpoints.subprocessByProcess
 
