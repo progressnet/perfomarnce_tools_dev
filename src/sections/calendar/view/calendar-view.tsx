@@ -24,7 +24,9 @@ import { useCalendar } from '../hooks/use-calendar';
 import { CalendarToolbar } from '../calendar-toolbar';
 import useCalendarStore from "../../../store/calendarStore";
 
-
+const calendarRange = {
+  end:new Date().toISOString().split("T")[0],
+};
 // ----------------------------------------------------------------------
 
 export function CalendarView() {
@@ -59,7 +61,7 @@ export function CalendarView() {
 
 
   useEffect(() => {
-    onInitialView();
+    // onInitialView();
   }, [onInitialView]);
 
   const flexProps = { flex: '1 1 auto', display: 'flex', flexDirection: 'column' };
@@ -71,6 +73,7 @@ export function CalendarView() {
     setDayEvents(filteredEvents)
     handleDayPress(day)
   }
+
   const getEventClassNames = (eventInfo: any) => {
     if (!eventInfo.event.extendedProps.clickable) {
       return ['non-clickable-event'];
@@ -132,10 +135,8 @@ export function CalendarView() {
           {eventInfo.event.title}
         </Typography>
       )
-
-
-
   }
+
   return (
     <>
       <DashboardContent maxWidth="xl" sx={{ ...flexProps }}>
@@ -151,12 +152,10 @@ export function CalendarView() {
               onChangeView={onChangeView}
             />
             <Calendar
-              validRange={{
-                end: new Date().toISOString().split("T")[0], // Disable dates after today
-              }}
+              validRange={calendarRange}
               locale='en-gb'
-              eventContent={renderContent}
-              eventClassNames={getEventClassNames} // Apply the class based on clickable property
+              eventContent={renderContent }
+              eventClassNames={getEventClassNames}
               eventOrder="order"
               weekends
               editable
@@ -190,16 +189,15 @@ export function CalendarView() {
                 timeGridPlugin,
                 interactionPlugin,
               ]}
-
             />
           </StyledCalendar>
         </Card>
       </DashboardContent>
        <CalendarDialog
-         URL={URL}
-        onCloseForm={onCloseForm}
-        openForm={openForm }
-        events={dayEvents}
+          URL={URL}
+          onCloseForm={onCloseForm}
+          openForm={openForm }
+          events={dayEvents}
        />
     </>
   );
