@@ -111,10 +111,10 @@ const SubProcesses = ({data}: SubProcessesProps) => {
         overflowY: 'auto',
       }}
     >
-      <Stack spacing={0.8}  sx={{overflowY: "auto"}}>
+      <Stack  sx={{overflowY: "auto"}}>
         {
           data.map((subprocess: any, index: number) => (
-          <Stack key={`${subprocess.id}-${index}`}>
+          <Stack  sx={{cursor: "pointer",borderBottom: "1.4px dashed", borderColor: "grey.400", py: 1}} key={`${subprocess.id}-${index}`}>
             <Stack
               onClick={() => handleNavigate(subprocess)}
               flexDirection="row"
@@ -127,7 +127,7 @@ const SubProcesses = ({data}: SubProcessesProps) => {
                 backgroundColor: subprocessId === subprocess.id ? 'grey.200' : 'white'
               }}
             >
-              <Stack sx={{flex: 1, p: 1, justifyContent: "center"   }}>
+              <Stack sx={{flex: 1, p: 1, justifyContent: "center",  }}>
                 <Typography sx={{fontSize: '16px'}} variant="subtitle1">{subprocess?.subProcess}</Typography>
                 <Stack spacing={1} flexDirection="row" alignItems="center">
                   <SubTitle text={`${subprocess?.notStarted || 0} Not Started`}/>
@@ -139,7 +139,6 @@ const SubProcesses = ({data}: SubProcessesProps) => {
                 <Iconify icon="mingcute:right-fill" color="grey.500" />
               </Stack>
             </Stack>
-            <Divider  sx={{width: '100%', height: 1, mt: 0.8 }} />
           </Stack>
 
       ))

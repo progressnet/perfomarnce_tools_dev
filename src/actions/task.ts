@@ -55,10 +55,12 @@ export function useGetTaskByFilter(subprocessId: number, entity?:string) {
   );
 
   return useMemo(() => ({
-    tasks: data?.data || [],
+    tasks: data?.data  || [],
     isLoading,
     error,
     isValidating,
+    totalRecords: data?.totalRecords || 0,
+    pageSize: data?.pageSize || 10,
     empty: !isLoading && !data?.data?.length,
   }), [data, error, isLoading, isValidating]);
 }
