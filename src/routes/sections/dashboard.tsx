@@ -30,16 +30,6 @@ export const dashboardRoutes = [
     element: <SSOGuard>{layoutContent}</SSOGuard>,
     children: [
       { element:  <CalendarPage />,  index: true },
-      // {
-      //   path: 'my-tasks',
-      //   element: <MyTasksLayout />,
-      //   children: [
-      //     { path: 'process', element: <MyTasksProcess /> },
-      //     { path:'subprocess', element: <MyTasksSubProcessView/> },
-      //     { path:'task', element: <MyTasksSubProcessView/> },
-      //     { path: 'entities', element: <MyTasksEntities /> },
-      //   ],
-      // },
       {
         path: 'my-tasks',
         element: <DashboardMytasks />,

@@ -25,13 +25,6 @@ type TasksProps = {
 const TASK_ENDPOINT = endpoints.task
 
 export function useGetTotal() {
-  const { data, isLoading, error, isValidating } = useSWR<ApiData<TasksProps>>(
-    `${TASK_ENDPOINT}?PageNumber=1&PageSize=1000`,
-    fetcher,
-    swrOptions
-  );
-
-
   const {
     data: totalProcesses,
     isLoading: processLoading,

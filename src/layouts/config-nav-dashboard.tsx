@@ -3,7 +3,6 @@ import { paths } from 'src/routes/paths';
 import { CONFIG } from 'src/config-global';
 
 import { SvgColor } from 'src/components/svg-color';
-import {Label} from "../components/label";
 
 // ----------------------------------------------------------------------
 
@@ -47,8 +46,7 @@ export const navData = [
     subheader: 'MANAGEMENT',
     items: [
       { title: 'My Timesheet', path: paths.dashboard.calendar, icon: ICONS.calendar },
-      // { title: 'Test Route', path: paths.dashboard.test, icon: ICONS.menuItem },
-      // { title: 'My Tasks', path: paths.dashboard.test, icon: ICONS.kanban,   },
+      { title: 'My Tasks', path: paths.dashboard.myTasks, icon: ICONS.kanban,   },
     ],
   },
 ];

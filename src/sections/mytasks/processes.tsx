@@ -75,7 +75,12 @@ const ProcessesList = ({data}: ProcessesListProps) => {
               flexDirection="row"
               width="100%"
               alignItems="center"
-              sx={{cursor: "pointer",borderBottom: "1.4px dashed", borderColor: "grey.400"}}
+              sx={{
+                cursor: "pointer",
+                borderBottom: "1.4px dashed",
+                borderColor: "grey.400",
+                userSelect: "none",
+              }}
             >
               <Stack sx={{flex: 1, p: 1, justifyContent: "center"   }}>
                 <Typography sx={{fontSize: '16px'}} variant="subtitle1">{process.processName}</Typography>

@@ -104,7 +104,7 @@ export function MyTasksTasksView() {
               sx={{display: "inline-flex", width: 35, height: 35}}>
               <Iconify icon="ion:chevron-back-outline" width={20}/>
             </IconButton>
-            <Typography variant="h3">Tasks</Typography>
+            <Typography variant="h4">Tasks</Typography>
           </Stack>
           <Stack>
           <SocialSharePopup url={`${currentUrl.href}${currentUrl.search}`}/>
@@ -148,23 +148,39 @@ export function MyTasksTasksView() {
                 flexDirection="row"
                 width="100%"
                 alignItems="center"
-                sx={{cursor: "pointer", borderBottom: "1.4px dashed", borderColor: "grey.400"}}
+                sx={{cursor: "pointer", borderBottom: "1.4px dashed", borderColor: "grey.400", p: 1}}
               >
-                <Stack sx={{flex: 1, p: 2, justifyContent: "center"}}>
-                  <Typography
-                    sx={{fontSize: '15px', maxWidth: '400px'}}
-                    variant="subtitle1">
-                    {task.taskName}
-                  </Typography>
-                  <Stack sx={{mt: 0.5}} spacing={1} flexDirection="row" alignItems="center">
-                    <SubTitle text={`Status: ${task?.status} `}/>
-                    <Divider orientation="vertical" sx={{height: '15px'}}/>
-                    <SubTitle text={` Entity: ${task?.leCode}`}/>
+                <Stack sx={{
+                  userSelect: "none",
+                  flex: 1,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  borderLeft: "4px solid",
+                  borderRadius: "6px",
+                  borderColor: activeTask?.taskID === task?.taskID ? "primary.main" : "transparent",
+                  backgroundColor: activeTask?.taskID === task?.taskID ? "grey.100" : "transparent"
+                }}>
+                  <Stack sx={{
+                    flex: 1,
+                    p: 2,
+                    justifyContent: "center",
+                  }}>
+                    <Typography
+                      sx={{fontSize: '15px', maxWidth: '400px'}}
+                      variant="subtitle1">
+                      {task.taskName}
+                    </Typography>
+                    <Stack sx={{mt: 0.5}} spacing={1} flexDirection="row" alignItems="center">
+                      <SubTitle text={`Status: ${task?.status} `}/>
+                      <Divider orientation="vertical" sx={{height: '15px'}}/>
+                      <SubTitle text={` Entity: ${task?.leCode}`}/>
+                    </Stack>
+                  </Stack>
+                  <Stack sx={{minWidth: '40px'}}>
+                    <Iconify icon="mingcute:right-fill" color="grey.500"/>
                   </Stack>
                 </Stack>
-                <Stack sx={{minWidth: '40px'}}>
-                  <Iconify icon="mingcute:right-fill" color="grey.500"/>
-                </Stack>
+
               </Stack>
             ))
           }

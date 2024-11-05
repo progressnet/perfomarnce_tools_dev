@@ -121,6 +121,7 @@ const SubProcesses = ({data}: SubProcessesProps) => {
               width="100%"
               alignItems="center"
               sx={{
+                userSelect: "none",
                 cursor: "pointer",
                 borderRadius: 1,
                 borderLeft: '3px solid',
