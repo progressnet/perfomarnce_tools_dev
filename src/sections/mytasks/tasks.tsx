@@ -1,10 +1,10 @@
-import {useState} from "react";
 import {useLocation} from "react-router";
+import {useState, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 
+import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Alert from "@mui/material/Alert";
-import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import TablePagination from "@mui/material/TablePagination";
@@ -15,18 +15,26 @@ import {Scrollbar} from "../../components/scrollbar";
 import {TasksDrawer} from "./components/task-drawer";
 import { useGetTaskByFilter} from "../../actions/task";
 import {getSubProcessUrl} from "../../utils/buildURLparams";
-import {CustomErrorAlert} from "../../components/custom-alert";
+import {FilterByStatus} from "./components/filter-by-status";
+import { FilterByEntity} from "./components/filter-by-entity";
 import {SocialSharePopup} from "./components/social-share-popup";
 import {SearchInput} from "../../components/_local/custom-search-input";
 import {usePopover, CustomPopover} from "../../components/custom-popover";
 import {ActivityIndicator} from "../../components/_local/ActivityIndicator";
-import {ENTITY_OPTIONS, FilterByEntity} from "./components/filter-by-entity";
-import {FilterByStatus, STATUS_OPTIONS} from "./components/filter-by-status";
 
 import type {ITask} from "../../actions/task";
+import type {IEntity, } from "../../actions/legalEntity";
 import type {StatusProps} from "./components/filter-by-status";
-import type {EntityProps} from "./components/filter-by-entity";
 
+
+
+type State = {
+  entity: IEntity | null;
+  status: { id: number; name: string } | null;
+  search: string;
+  page: number;
+  rowsPerPage: number;
+};
 
 export function MyTasksTasksView() {
   const location = useLocation();
@@ -38,32 +46,45 @@ export function MyTasksTasksView() {
     id,
     processName,
     numberOfSubprocesses,
-    subprocessId
+    subprocessId,
+    country,
+    code,
   } = Object.fromEntries(new URLSearchParams(location.search));
   // ============================= STATE ===========================
   const [activeTask, setActiveTask] = useState<ITask | null>(null);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
-  const [state, setState] = useState({
-    entity: ENTITY_OPTIONS[1],
-    status: STATUS_OPTIONS[1],
+  const [state, setState] = useState<State>({
+    entity: null,
+    status: null,
     search: '',
     page: 0,
     rowsPerPage: 10,
-  })
+  });
+
+
   // ============================= FETCH DATA SWR ===========================
   const {tasks, error, totalRecords, isLoading} = useGetTaskByFilter(
     state.page,
     state.rowsPerPage,
-    Number(subprocessId)
+    Number(subprocessId),
+    state.entity?.country || country,
+    state.status?.name,
   );
+
+  useEffect(() => {
+     if(country) {
+       setState(prev => ({...prev, entity: {country, countryCode: code}}))
+     }
+
+  }, [country, code])
   // =============================== FILTERS ===============================
-  const handleStatus = (val: StatusProps) => {
+  const handleStatus = (val: StatusProps | null) => {
     setState(prev => ({...prev, status: val}))
   }
   const handleSearch = (val: string) => {
     setState(prev => ({...prev, search: val}))
   }
-  const handleEntity = (val: EntityProps) => {
+  const handleEntity = (val:  IEntity | null) => {
     setState(prev => ({...prev, entity: val}))
   }
   // =============================== BACK ===============================
@@ -145,8 +166,8 @@ export function MyTasksTasksView() {
             position: 'relative'
           }}
         >
-          {!tasks.length && !isLoading && <Alert severity="info">No data found</Alert>
-          }
+          {!tasks.length && !isLoading && !error && <Alert severity="info">No data found</Alert>}
+          {error && <Alert severity="error">{error}</Alert>}
           <ActivityIndicator isLoading={isLoading} />
           {
             tasks.map((task: any, index: number) => (
@@ -171,18 +192,34 @@ export function MyTasksTasksView() {
 
                   <Stack sx={{
                     flex: 1,
-                    p: 2,
+                    p: 1,
                     justifyContent: "center",
                   }}>
-                    <Typography
-                      sx={{fontSize: '15px', maxWidth: '400px'}}
-                      variant="subtitle1">
-                      {task.taskName}
-                    </Typography>
+                    <Stack flexDirection="row" alignItems="center">
+
+                      <Typography
+                        sx={{fontSize: '15px', maxWidth: '400px'}}
+                        variant="subtitle1">
+                        {task.taskName}
+                      </Typography>
+                    </Stack>
+
                     <Stack sx={{mt: 0.5}} spacing={1} flexDirection="row" alignItems="center">
+                      {(state.entity || country) && (
+                        <Box
+                          component="img"
+                          loading="lazy"
+                          alt={ code}
+                          src={ `https://hatscripts.github.io/circle-flags/flags/${state.entity?.countryCode.toLowerCase()}.svg`}
+                          sx={{
+                            width: '12px',
+                            height: '12px',
+                            maxWidth: 'unset',
+                            objectFit: 'cover',
+                          }}
+                        />
+                      )}
                       <SubTitle text={`Status: ${task?.status} `}/>
-                      <Divider orientation="vertical" sx={{height: '15px'}}/>
-                      <SubTitle text={` Entity: ${task?.leCode}`}/>
                     </Stack>
                   </Stack>
                   <Stack sx={{minWidth: '40px'}}>
@@ -194,7 +231,6 @@ export function MyTasksTasksView() {
             ))
           }
         </Scrollbar>
-      <CustomErrorAlert error={error}/>
       <TablePagination
         sx={{height: 'auto', overflow: 'hidden'}}
         component="div"

@@ -41,8 +41,10 @@ export const endpoints = {
   timesheet: '/TimesheetEntries',
   timesheetDateRange: '/TimesheetEntriesByDateRange',
   process: '/Process',
+  //
   subprocess: '/SubProcess',
   subprocessByProcess: '/SubProcessByProcessID',
+  subprocessByEntity: '/SubProcessByEntity',
   //
   task: '/Tasks',
   taskBySubProcess: '/TaskBySubProcessID',

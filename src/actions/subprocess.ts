@@ -22,6 +22,7 @@ type EventsData = {
 
 
 const ENDPOINT_BY_PROCESS = endpoints.subprocessByProcess
+const ENDPOINT_BY_ENTITY = endpoints.subprocessByEntity
 
 export function useGetSubProcessByProcess(id: number | null, filter?: string) {
 
@@ -50,3 +51,32 @@ export function useGetSubProcessByProcess(id: number | null, filter?: string) {
 
 
 
+
+export type ISubprocessEntity = {
+  country: string;
+  countryCode: string;
+  subprocesses: number;
+  ongoing: number;
+  notStarted: number;
+};
+
+export function useGetSubProcessByEntity(country?: string) {
+  let URL = `${ENDPOINT_BY_ENTITY}`;
+  if(country) {
+    URL = `${URL}?country=${country}`;
+  }
+  const { data, isLoading, error, isValidating } = useSWR<ApiData<ISubprocessEntity>>(
+    URL,
+    fetcher,
+    swrOptions
+  );
+
+  return useMemo(() => ({
+    subprocesses: data?.data || [],
+    isLoading,
+    error,
+    isValidating,
+    empty: !isLoading && !data?.data.length,
+  }), [data, error, isLoading, isValidating]);
+
+}

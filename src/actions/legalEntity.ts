@@ -13,18 +13,16 @@ const swrOptions = {
 };
 
 
-type EventsData = {
-  code: string;
-  city: string;
+export type IEntity = {
+  code?: string;
   country: string;
-  currency: string;
+  countryCode: string;
 };
-
 
 const ENDPOINT = endpoints.legalEntity
 
 export function useGetLegalEntity() {
-  const { data, isLoading, error, isValidating } = useSWR<ApiData<EventsData>>(
+  const { data, isLoading, error, isValidating } = useSWR<ApiData<IEntity >>(
     ENDPOINT,
     fetcher,
     swrOptions

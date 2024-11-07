@@ -6,7 +6,6 @@ type ActivityIndicatorProps = {
 };
 
 export function ActivityIndicator({isLoading}: ActivityIndicatorProps) {
-  console.log("indicator", isLoading);
   if(!isLoading) return null;
   return (
     <Stack

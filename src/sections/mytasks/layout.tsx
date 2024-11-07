@@ -1,5 +1,5 @@
 import { useState} from "react";
-import { useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
@@ -24,15 +24,21 @@ export function MyTasksLayout() {
   const searchParams = new URLSearchParams(location.search);
   const subprocessId = Number(searchParams.get('subprocessId'));
   const processId = Number(searchParams.get('id'));
+  const country = searchParams.get('country');
 
 
   const renderMainView = () => {
+    console.log(tabsValue)
+    console.log(country)
+    const isMobile = width <= 1179;
     if (tabsValue === 'entities') {
+      if(isMobile && country) {
+        return <MyTasksTasksView />;
+      }
       return <MyTasksEntitiesView />;
     }
 
     if (tabsValue === 'processes') {
-      const isMobile = width <= 1179;
 
       if (isMobile) {
         if (subprocessId) return <MyTasksTasksView />;
@@ -48,6 +54,7 @@ export function MyTasksLayout() {
     return null;
   };
 
+  const isMyTasks =  subprocessId || country
   return (
     <DashboardContent maxWidth="xl" sx={{ ...flexProps }}>
       <Stack
@@ -78,9 +85,10 @@ export function MyTasksLayout() {
           flex: 3,
           height: '100%',
           borderRadius: 2,
-          backgroundColor: subprocessId ? 'white' : 'transparent',
+          backgroundColor: isMyTasks ? 'white' : 'transparent',
         }}>
           {subprocessId > 0 && width >= 1180 && <MyTasksTasksView />}
+          {country && width >= 1180 && <MyTasksTasksView />}
         </Stack>
       </Stack>
     </DashboardContent>
@@ -100,9 +108,14 @@ export const FilterTabs = (
     setValue,
   }: FilterTabsProps) => {
 
+  const location = useLocation();
+  const navigate = useNavigate();
+
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
+    navigate(location.pathname)
+
   };
 
   return (

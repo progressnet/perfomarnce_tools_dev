@@ -1,6 +1,4 @@
-
-
-
+import {useState, useEffect} from "react";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -9,40 +7,17 @@ import Typography from "@mui/material/Typography";
 
 import {usePopover, CustomPopover} from "src/components/custom-popover";
 
-import globe from "../../../../public/assets/planet-earth.png"
+import {Iconify} from "../../../components/iconify";
+import {useGetLegalEntity} from "../../../actions/legalEntity";
 
-export type EntityProps = {
-  id: number;
-  name: string;
-  code: string;
-  leCode: string;
-}
+import type { IEntity} from "../../../actions/legalEntity";
 
 
-export const ENTITY_OPTIONS = [
-  {
-    id: 1,
-    name: "All",
-    code: "all",
-    leCode: "M9GR"
-  }, {
-    id: 1,
-    name: "Greece",
-    code: "gr",
-    leCode: "M9GR"
-  },
-  {
-    id: 2,
-    name: "UK",
-    code: "gb",
-    leCode: "M9GR"
-  },
-]
 
 
 export type FilterByEntityProps = {
-  value: EntityProps;
-  handleValue: (entity: EntityProps) => void;
+  value: IEntity| null;
+  handleValue: (entity:IEntity| null) => void;
 
 }
 
@@ -52,15 +27,52 @@ export const FilterByEntity = (
     handleValue
   }: FilterByEntityProps) => {
   const popover = usePopover();
+  const {entities} = useGetLegalEntity();
+  const [sliced, setSliced] = useState<IEntity[]>(entities.slice(0, 10));
+  //
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    if (entities) {
+      setSliced(entities.slice(0, 20))
+    }
+  }, [entities])
 
 
-
-  const handleChooseEntity = (newEntity: EntityProps ) => {
+  const handleChooseEntity = (newEntity:IEntity ) => {
     handleValue(newEntity)
     popover.onClose();
 
   }
-  const SRC = value.name === "all" ? globe : `https://hatscripts.github.io/circle-flags/flags/${value?.code}.svg`
+
+  const loadMoreEntities = () => {
+    if (!loading && hasMore) {
+      setLoading(true);
+      setPage((prevPage) => {
+        const nextPage = prevPage + 1;
+        const nextEntities = entities.slice(nextPage * 10, (nextPage + 1) * 10);
+        setHasMore(nextEntities.length > 0); // Check if more data is available
+        setSliced((prev) => [...prev, ...nextEntities]);
+        return nextPage;
+      });
+      setLoading(false);
+    }
+  };
+
+  const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLElement;
+
+    const { scrollHeight, scrollTop, clientHeight } = target;
+
+    // Trigger load more when we're within 100px of the bottom
+    if (scrollHeight - scrollTop - clientHeight <= 120) {
+      loadMoreEntities(); // Trigger load more when the bottom is reached (with a 100px buffer)
+    }
+  };
+
+  const SRC =  `https://hatscripts.github.io/circle-flags/flags/${value?.countryCode.toLowerCase()}.svg`
   return (
     <Stack >
       <Stack
@@ -76,41 +88,58 @@ export const FilterByEntity = (
         alignItems="center"
         onClick={popover.onOpen}
       >
-        <Typography sx={{fontSize: '14px', }}>entity:</Typography>
-        <Stack spacing={0.5} flexDirection="row" alignItems="center">
-          <Box
-            component="img"
-            loading="lazy"
-            alt={value?.code}
-            src={SRC}
-            sx={{
-              width: '17px',
-              height: '17px',
-              maxWidth: 'unset',
-              objectFit: 'cover',
-            }}
-          />
-          <Typography sx={{fontSize:'14px', color: "grey.500"}}>{value.code}</Typography>
-        </Stack>
-      </Stack>
-      <CustomPopover open={popover.open} anchorEl={popover.anchorEl} onClose={popover.onClose}>
-        <Stack >
-          {ENTITY_OPTIONS.map((option) => (
-            <Stack sx={{width: '100%'}} key={option.id} flexDirection="row" alignItems="center">
-              <MenuItem sx={{width: '100%'}} key={option.code} value={option.name} onClick={() => handleChooseEntity(option)}>
+        <Typography sx={{fontSize: '14px',fontWeight: 'medium', color: 'text.secondary' }}>entity:</Typography>
+        {
+          value && (
+            <Stack   spacing={2} flexDirection="row" alignItems="center">
+              <Stack spacing={0.5} flexDirection="row" alignItems="center">
                 <Box
                   component="img"
                   loading="lazy"
-                  alt={option.code}
-                  src={option.code === "all" ? globe : `https://hatscripts.github.io/circle-flags/flags/${option?.code}.svg`}
+                  alt={value?.countryCode}
+                  src={SRC}
                   sx={{
-                    width: '20px',
-                    height: '20px',
+                    width: '12px',
+                    height: '12px',
                     maxWidth: 'unset',
                     objectFit: 'cover',
                   }}
                 />
-                <Typography variant="subtitle1">{option.name}</Typography>
+                <Typography sx={{fontSize:'12px', color: "grey.600"}}>{value?.countryCode}</Typography>
+              </Stack>
+              <Stack
+                onClick={() => handleValue(null)}>
+                <Iconify icon="eva:close-circle-fill" color="grey.400"  />
+              </Stack>
+            </Stack>
+          )
+        }
+      </Stack>
+      {/* =========== POPOVER ============= */}
+      <CustomPopover    anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right',
+      }} open={popover.open} anchorEl={popover.anchorEl} onClose={popover.onClose}>
+        <Stack
+          onScroll={handleScroll}
+          sx={{minWidth: '150px', maxHeight: '200px', overflowY: 'scroll'}}
+        >
+          {sliced.map((option) => (
+            <Stack sx={{width: '100%'}} key={option.code} flexDirection="row" alignItems="center">
+              <MenuItem sx={{width: '100%'}} key={option.code} value={option.country} onClick={() => handleChooseEntity(option)}>
+                <Box
+                  component="img"
+                  loading="lazy"
+                  alt={option.code}
+                  src={`https://hatscripts.github.io/circle-flags/flags/${option?.countryCode.toLowerCase()}.svg`}
+                  sx={{
+                    width: '15px',
+                    height: '15px',
+                    maxWidth: 'unset',
+                    objectFit: 'cover',
+                  }}
+                />
+                <Typography sx={{fontSize: '14px'}} variant="subtitle1">{option.country}</Typography>
               </MenuItem>
             </Stack>
           ))}

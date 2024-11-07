@@ -56,10 +56,35 @@ export function useGetTaskByFilter(
   page: number,
   rows: number,
   subprocessId: number,
-  entity?:string
+  country?:string,
+  status?: string,
 ) {
+  const shouldFetch = subprocessId || country;
+
+  let URL = ENDPOINT_TASKS_BY_FILTERS;
+  const params = new URLSearchParams();
+
+  if (subprocessId) {
+    params.append("SubProcessID", subprocessId as any);
+  }
+
+  if (country) {
+    params.append("EntityCountry", country);
+  }
+
+  if (status) {
+    params.append("TaskStatus", status);
+  }
+
+  params.append("PageNumber", String(page + 1) );
+  params.append("PageSize", String(rows));
+
+// Append the query string to the URL
+  URL = `${URL}?${params.toString()}`;
+
+
   const { data, isLoading, error, isValidating } = useSWR<ApiData<ITask>>(
-     `${ENDPOINT_TASKS_BY_FILTERS}?SubProcessID=${subprocessId}&PageNumber=${page + 1}&PageSize=${rows}`,
+    shouldFetch ? URL : null, // Only fetch if `shouldFetch` is true
     fetcher,
     swrOptions
   );
