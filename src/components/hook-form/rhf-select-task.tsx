@@ -38,8 +38,8 @@ export function RHFSelectTask(
     <Autocomplete
       sx={{width: '100%'}}
       id={`rhf-autocomplete-${name}-${Math.random()}`}
-      value={tasks.find((item) => item?.taskID === value) || null}
-      onChange={(event, newValue) => handleValue({id: newValue?.taskID || null, name: newValue?.taskName || null})}
+      value={tasks.find((item) => item?.taskId === value) || null}
+      onChange={(event, newValue) => handleValue({id: newValue?.taskId || null, name: newValue?.taskName || null})}
       options={tasks}
       getOptionLabel={(option) => option?.taskName}
       renderInput={(params) => (

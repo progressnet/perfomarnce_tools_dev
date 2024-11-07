@@ -3,6 +3,7 @@ import {useLocation} from "react-router";
 import {useNavigate} from "react-router-dom";
 
 import Stack from "@mui/material/Stack";
+import Alert from "@mui/material/Alert";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
@@ -12,15 +13,17 @@ import {SubTitle} from "./components/subTitle";
 import {Iconify} from "../../components/iconify";
 import {Scrollbar} from "../../components/scrollbar";
 import {TasksDrawer} from "./components/task-drawer";
-import {ITask, useGetTaskByFilter} from "../../actions/task";
+import { useGetTaskByFilter} from "../../actions/task";
 import {getSubProcessUrl} from "../../utils/buildURLparams";
 import {CustomErrorAlert} from "../../components/custom-alert";
 import {SocialSharePopup} from "./components/social-share-popup";
 import {SearchInput} from "../../components/_local/custom-search-input";
 import {usePopover, CustomPopover} from "../../components/custom-popover";
+import {ActivityIndicator} from "../../components/_local/ActivityIndicator";
 import {ENTITY_OPTIONS, FilterByEntity} from "./components/filter-by-entity";
 import {FilterByStatus, STATUS_OPTIONS} from "./components/filter-by-status";
 
+import type {ITask} from "../../actions/task";
 import type {StatusProps} from "./components/filter-by-status";
 import type {EntityProps} from "./components/filter-by-entity";
 
@@ -38,7 +41,7 @@ export function MyTasksTasksView() {
     subprocessId
   } = Object.fromEntries(new URLSearchParams(location.search));
   // ============================= STATE ===========================
-  const [activeTask, setActiveTask] = useState<any>(null);
+  const [activeTask, setActiveTask] = useState<ITask | null>(null);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [state, setState] = useState({
     entity: ENTITY_OPTIONS[1],
@@ -48,7 +51,7 @@ export function MyTasksTasksView() {
     rowsPerPage: 10,
   })
   // ============================= FETCH DATA SWR ===========================
-  const {tasks, error, totalRecords} = useGetTaskByFilter(
+  const {tasks, error, totalRecords, isLoading} = useGetTaskByFilter(
     state.page,
     state.rowsPerPage,
     Number(subprocessId)
@@ -138,8 +141,13 @@ export function MyTasksTasksView() {
           sx={{
             mt: 2,
             overflowY: 'auto',
+            height: '100%',
+            position: 'relative'
           }}
         >
+          {!tasks.length && !isLoading && <Alert severity="info">No data found</Alert>
+          }
+          <ActivityIndicator isLoading={isLoading} />
           {
             tasks.map((task: any, index: number) => (
               <Stack
@@ -157,9 +165,10 @@ export function MyTasksTasksView() {
                   alignItems: "center",
                   borderLeft: "4px solid",
                   borderRadius: "6px",
-                  borderColor: activeTask?.taskID === task?.taskID ? "primary.main" : "transparent",
-                  backgroundColor: activeTask?.taskID === task?.taskID ? "grey.100" : "transparent"
+                  borderColor: activeTask?.taskId === task.taskId ? "primary.main" : "transparent",
+                  backgroundColor: activeTask?.taskId === task.taskId ? "grey.100" : "transparent"
                 }}>
+
                   <Stack sx={{
                     flex: 1,
                     p: 2,

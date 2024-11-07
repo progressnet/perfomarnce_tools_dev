@@ -3,6 +3,7 @@ import {useState} from "react";
 import {useLocation, useNavigate, } from "react-router-dom";
 
 import Stack from "@mui/material/Stack";
+import Alert from "@mui/material/Alert";
 import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
@@ -13,6 +14,7 @@ import {SubTitle} from "./components/subTitle";
 import {Iconify} from "../../components/iconify";
 import {Scrollbar} from "../../components/scrollbar";
 import { useGetSubProcessByProcess} from "../../actions/subprocess";
+import {ActivityIndicator} from "../../components/_local/ActivityIndicator";
 
 
 
@@ -27,14 +29,15 @@ export function MyTasksSubProcessView() {
   const processName = searchParams.get('processName');
   const subProcessLength = searchParams.get('numberOfSubprocesses');
   // ====================================================
-  const {subprocesses} = useGetSubProcessByProcess(Number(id) || null);
+  const {subprocesses, isLoading} = useGetSubProcessByProcess(Number(id) || null, filter);
   const navigate = useNavigate();
+
 
   const handleFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilter(event.target.value)
   }
   return (
-    <Stack sx={{p:2, overflow: "hidden"}} spacing={1}>
+    <Stack sx={{p:2, overflow: "hidden", height: '100%'}} spacing={1}>
       <Stack
         onClick={() => navigate(paths.dashboard.myTasks)}
         flexDirection="row"
@@ -80,15 +83,16 @@ export function MyTasksSubProcessView() {
         }}
       />
       {/* SUB PROCESS LIST */}
-      <SubProcesses data={subprocesses} />
+      <SubProcesses data={subprocesses} isLoading={isLoading}/>
     </Stack>
   )
 }
 
 export type SubProcessesProps = {
   data: any;
+  isLoading: boolean;
 }
-const SubProcesses = ({data}: SubProcessesProps) => {
+const SubProcesses = ({data, isLoading}: SubProcessesProps) => {
   // hooks:
   const location = useLocation();
   const navigate = useNavigate();
@@ -109,8 +113,13 @@ const SubProcesses = ({data}: SubProcessesProps) => {
     <Scrollbar
       sx={{
         overflowY: 'auto',
+        position: 'relative',
+        height: '100%',
       }}
     >
+      {!data.length && !isLoading && <Alert severity="info">No data found</Alert>
+      }
+      <ActivityIndicator isLoading={isLoading} />
       <Stack  sx={{overflowY: "auto"}}>
         {
           data.map((subprocess: any, index: number) => (

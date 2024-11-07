@@ -92,7 +92,6 @@ export function CalendarView() {
   const renderContent = (eventInfo: EventContentArg) => {
     const {clickable, totalHours } = eventInfo.event.extendedProps;
     const progress = Math.min((totalHours / 8) * 100, 100);
-  console.log( eventInfo.event.extendedProps)
     const eventContentStyle = {
       whiteSpace: 'normal',
       wordWrap: 'break-word',

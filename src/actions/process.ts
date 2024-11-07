@@ -23,9 +23,11 @@ type EventsData = {
 
 const ENDPOINT = endpoints.process
 
-export function useGetProcess() {
+export function useGetProcess(searchFilter?: string) {
+  const urlFilter = `${ENDPOINT}?searchTerm=${searchFilter}&PageNumber=1&PageSize=2000`;
+  const noFilter = `${ENDPOINT}?PageNumber=1&PageSize=2000`;
   const { data, isLoading, error, isValidating } = useSWR<ApiData<EventsData>>(
-    ENDPOINT,
+    searchFilter ? urlFilter : noFilter,
     fetcher,
     swrOptions
   );
@@ -39,62 +41,3 @@ export function useGetProcess() {
     }), [data, error, isLoading, isValidating]);
 }
 
-const PROCESSES = [
-  {
-    id: 1,
-    processName: 'Process 1',
-    subProcesses: 10,
-    tasks: 20,
-    done: 2,
-  }, {
-    id: 2,
-    processName: 'Closing Process',
-    subProcesses: 5,
-    tasks: 10,
-    done: 4,
-  },
-  {
-    id: 3,
-    processName: 'Process 3',
-    subProcesses: 5,
-    tasks: 10,
-    done: 4,
-  },{
-    id: 4,
-    processName: 'Process 4',
-    subProcesses: 5,
-    tasks: 10,
-    done: 4,
-  },{
-    id: 5,
-    processName: 'Process 5',
-    subProcesses: 5,
-    tasks: 10,
-    done: 4,
-  },{
-    id: 6,
-    processName: 'Process 6',
-    subProcesses: 5,
-    tasks: 10,
-    done: 4,
-  },{
-    id: 7,
-    processName: 'Process 7',
-    subProcesses: 5,
-    tasks: 10,
-    done: 4,
-  },{
-    id: 8,
-    processName: 'Process 8',
-    subProcesses: 5,
-    tasks: 10,
-    done: 4,
-  },
-]
-
-
-export function useGetMyTasksProcesses() {
-  return {
-    processes: PROCESSES,
-  }
-}

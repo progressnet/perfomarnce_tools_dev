@@ -12,7 +12,7 @@ import type {ITask} from "../../../actions/task";
 
 
 type TasksDrawerProps = {
-  task: ITask;
+  task: ITask | null;
   open: boolean;
   onClose: () => void;
 

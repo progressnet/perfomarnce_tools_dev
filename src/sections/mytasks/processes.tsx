@@ -1,32 +1,34 @@
 import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 import Stack from "@mui/material/Stack";
-import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import InputAdornment from "@mui/material/InputAdornment";
 
-import {useGetMyTasksProcesses, useGetProcess} from "src/actions/process";
+import { useGetProcess} from "src/actions/process";
 
 import {Iconify} from "src/components/iconify";
 import {Scrollbar} from "src/components/scrollbar";
-import {useNavigate} from "react-router-dom";
 
+import Alert from "@mui/material/Alert";
 import {SubTitle} from "./components/subTitle";
 import {getSubProcessUrl} from "../../utils/buildURLparams";
+import {ActivityIndicator} from "../../components/_local/ActivityIndicator";
 
 
 
 export function MyTasksProcessView() {
-  const {processes} = useGetProcess();
-
-
   const [filter, setFilter] = useState('');
+
+  const {processes, isLoading} = useGetProcess(filter);
+
+
   const handleFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilter(event.target.value)
   }
   return (
-    <Stack sx={{p:2, overflow: "hidden"}} spacing={1}>
+    <Stack sx={{p:2, overflow: "hidden", height: '100%'}} spacing={1}>
       <Typography variant="h6">Select Process:</Typography>
       <TextField
         size="small"
@@ -41,7 +43,7 @@ export function MyTasksProcessView() {
           ),
         }}
       />
-      <ProcessesList data={processes}/>
+      <ProcessesList data={processes} isLoading={isLoading}/>
     </Stack>
   )
 }
@@ -50,10 +52,10 @@ export function MyTasksProcessView() {
 // ===============================================================================
 export type ProcessesListProps = {
   data: any;
-
+  isLoading: boolean;
 }
 
-const ProcessesList = ({data}: ProcessesListProps) => {
+const ProcessesList = ({data, isLoading}: ProcessesListProps,) => {
   const navigate = useNavigate();
   // =============================================
   const handleNavigate = (currentProcess: any) => {
@@ -64,9 +66,14 @@ const ProcessesList = ({data}: ProcessesListProps) => {
     <Scrollbar
       sx={{
         overflowY: 'auto',
+        height: '100%',
+        position: 'relative',
       }}
     >
-      <Stack sx={{overflowY: "auto"}}>
+      {!data.length && !isLoading && <Alert severity="info">No data found</Alert>
+      }
+      <ActivityIndicator isLoading={isLoading} />
+      <Stack sx={{overflowY: "auto", height: '100%'}}>
         {
           data.map((process: any, index: number) => (
             <Stack

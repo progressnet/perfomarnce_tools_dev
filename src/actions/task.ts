@@ -17,7 +17,7 @@ export type ITask = {
   id: number;
   status: string | null;
   subProcess: string;
-  taskID: number;
+  taskId: number;
   taskName: string;
   leName: string;
   duedate: string;
