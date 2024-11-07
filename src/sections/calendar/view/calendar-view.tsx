@@ -1,6 +1,6 @@
 import type {EventContentArg} from "@fullcalendar/core";
 
-import {useEffect, useState} from 'react';
+import {useState, useEffect} from 'react';
 import Calendar from '@fullcalendar/react';
 import listPlugin from '@fullcalendar/list';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -8,6 +8,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
 import interactionPlugin from '@fullcalendar/interaction';
 
+import Box from "@mui/material/Box";
 import Card from '@mui/material/Card';
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
@@ -91,7 +92,7 @@ export function CalendarView() {
   const renderContent = (eventInfo: EventContentArg) => {
     const {clickable, totalHours } = eventInfo.event.extendedProps;
     const progress = Math.min((totalHours / 8) * 100, 100);
-
+  console.log( eventInfo.event.extendedProps)
     const eventContentStyle = {
       whiteSpace: 'normal',
       wordWrap: 'break-word',
@@ -131,9 +132,12 @@ export function CalendarView() {
       )
     }
       return (
-        <Typography  sx={eventContentStyle}>
-          {eventInfo.event.title}
-        </Typography>
+          <Typography sx={eventContentStyle}>{eventInfo.event.extendedProps.
+            taskName} - <Box sx={{fontWeight: "bold"}} component="span">
+               {eventInfo.event.extendedProps.hours} hr
+            </Box>
+          </Typography>
+
       )
   }
 
