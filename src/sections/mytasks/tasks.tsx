@@ -206,7 +206,7 @@ export function MyTasksTasksView() {
                     </Stack>
 
                     <Stack sx={{mt: 0.5}} spacing={1} flexDirection="row" alignItems="center">
-                      {(state.entity || country) && (
+                      {(state.entity) && (
                         <Box
                           component="img"
                           loading="lazy"
