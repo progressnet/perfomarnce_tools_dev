@@ -200,7 +200,8 @@ export function MyTasksTasksView() {
                       <Typography
                         sx={{fontSize: '15px', maxWidth: '400px'}}
                         variant="subtitle1">
-                        {task.taskName}
+                        {task.taskName} -
+                        <Box sx={{color: 'primary.main'}} component="span"> {task.leCode}</Box>
                       </Typography>
                     </Stack>
 
