@@ -49,7 +49,10 @@ export const endpoints = {
   task: '/Tasks',
   taskBySubProcess: '/TaskBySubProcessID',
   tasksByFilters: '/TasksByFilters',
+  //
   legalEntity: '/LegalEntity',
+  // reports:
+  summary: '/Summary',
   auth: {
     me: '/auth/me',
     email: '/auth/email',

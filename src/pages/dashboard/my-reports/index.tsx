@@ -2,6 +2,7 @@
 import { Helmet } from 'react-helmet-async';
 
 import { CONFIG } from 'src/config-global';
+import {MySummaryView} from "../../../sections/my-reports";
 
 // ----------------------------------------------------------------------
 
@@ -13,7 +14,7 @@ export default function MyReports() {
       <Helmet>
         <title> {metadata.title}</title>
       </Helmet>
-      <div>reports</div>
+      <MySummaryView />
     </>
   );
 }

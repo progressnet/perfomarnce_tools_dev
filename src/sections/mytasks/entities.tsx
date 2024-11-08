@@ -32,19 +32,6 @@ export function MyTasksEntitiesView() {
       flexDirection: 'column',
     }} spacing={2}
     >
-      {/* <TextField */}
-      {/*  size="small" */}
-      {/*  value={filter } */}
-      {/*  onChange={handleFilter} */}
-      {/*  placeholder="Search Process..." */}
-      {/*  InputProps={{ */}
-      {/*    startAdornment: ( */}
-      {/*      <InputAdornment position="start"> */}
-      {/*        <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} /> */}
-      {/*      </InputAdornment> */}
-      {/*    ), */}
-      {/*  }} */}
-      {/* /> */}
       <Scrollbar
         sx={{
           overflowY: 'auto',

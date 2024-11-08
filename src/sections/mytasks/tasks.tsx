@@ -198,7 +198,7 @@ export function MyTasksTasksView() {
                     <Stack flexDirection="row" alignItems="center">
 
                       <Typography
-                        sx={{fontSize: '15px', maxWidth: '400px'}}
+                        sx={{fontSize: '15px', maxWidth: '600px'}}
                         variant="subtitle1">
                         {task.taskName} -
                         <Box sx={{color: 'primary.main'}} component="span"> {task.leCode}</Box>
