@@ -28,6 +28,9 @@ export const FilterByEntity = (
   }: FilterByEntityProps) => {
   const popover = usePopover();
   const {entities} = useGetLegalEntity();
+  const filteredEntities = [
+    ...new Map(entities.map((entity) => [entity.country, entity])).values(),
+  ];
   const [sliced, setSliced] = useState<IEntity[]>(entities.slice(0, 10));
   //
   const [hasMore, setHasMore] = useState(true);
@@ -36,8 +39,9 @@ export const FilterByEntity = (
 
   useEffect(() => {
     if (entities) {
-      setSliced(entities.slice(0, 20))
+      setSliced(filteredEntities.slice(0, 20))
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entities])
 
 
@@ -52,8 +56,8 @@ export const FilterByEntity = (
       setLoading(true);
       setPage((prevPage) => {
         const nextPage = prevPage + 1;
-        const nextEntities = entities.slice(nextPage * 10, (nextPage + 1) * 10);
-        setHasMore(nextEntities.length > 0); // Check if more data is available
+        const nextEntities = filteredEntities.slice(nextPage * 10, (nextPage + 1) * 10);
+        setHasMore(nextEntities.length > 0);
         setSliced((prev) => [...prev, ...nextEntities]);
         return nextPage;
       });

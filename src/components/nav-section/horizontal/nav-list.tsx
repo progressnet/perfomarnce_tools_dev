@@ -58,6 +58,7 @@ export function NavList({
       ref={navItemRef}
       render={render}
       // slots
+      id={data.title}
       title={data.title}
       path={data.path}
       icon={data.icon}
@@ -155,6 +156,7 @@ function NavSubList({
   slotProps,
   enabledRootRedirect,
 }: NavSubListProps) {
+
   return (
     <NavUl sx={{ gap: 0.5 }}>
       {data.map((list) => (

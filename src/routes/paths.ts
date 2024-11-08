@@ -24,13 +24,8 @@ export const paths = {
   dashboard: {
     root: ROOTS.DASHBOARD,
     test: `${ROOTS.DASHBOARD}/test`,
-    // myTasks: {
-    //   root: `${ROOTS.DASHBOARD}/my-tasks`,
-    //   process: `${ROOTS.DASHBOARD}/my-tasks/process`,
-    //   subprocess: `${ROOTS.DASHBOARD}/my-tasks/subprocess`,
-    //   task: `${ROOTS.DASHBOARD}/my-tasks/task`,
-    //   entities: `${ROOTS.DASHBOARD}/my-tasks/entities`,
-    // },
+    myReports: `${ROOTS.DASHBOARD}/my-reports`,
+    leaveRequests: `${ROOTS.DASHBOARD}/leave-requests`,
     myTasks:  `${ROOTS.DASHBOARD}/my-tasks`,
     calendar: `${ROOTS.DASHBOARD}`,
   }

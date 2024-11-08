@@ -1,61 +1,114 @@
-import { useState, useCallback } from 'react';
+import {useState, useEffect, useCallback} from 'react';
+import {useLocation, useNavigate} from "react-router-dom";
 
+import {alpha} from "@mui/material";
 import Stack from '@mui/material/Stack';
 import Collapse from '@mui/material/Collapse';
-import { useTheme } from '@mui/material/styles';
+import {useTheme} from '@mui/material/styles';
+import Typography from "@mui/material/Typography";
 
-import { NavList } from './nav-list';
-import { navSectionClasses } from '../classes';
-import { navSectionCssVars } from '../css-vars';
-import { NavUl, NavLi, Subheader } from '../styles';
+import {NavList} from './nav-list';
+import {Iconify} from "../../iconify";
+import {paths} from "../../../routes/paths";
+import {navSectionClasses} from '../classes';
+import {navSectionCssVars} from '../css-vars';
+import {NavUl, NavLi, Subheader} from '../styles';
+import { useGetProcess} from "../../../actions/process";
 
-import type { NavGroupProps, NavSectionProps } from '../types';
-import {useGetTotal} from "../../../actions/sidebarQueries";
-import {Label} from "../../label";
+import type {IProcess} from "../../../actions/process";
+import type {NavGroupProps, NavSectionProps} from '../types';
 
 // ----------------------------------------------------------------------
 
-export function NavSectionVertical({
-  sx,
-  data,
-  render,
-  slotProps,
-  enabledRootRedirect,
-  cssVars: overridesVars,
-}: NavSectionProps) {
-  const {totalTasks} = useGetTotal();
+export function NavSectionVertical(
+  {
+    sx,
+    data,
+    render,
+    slotProps,
+    enabledRootRedirect,
+    cssVars: overridesVars,
+  }: NavSectionProps) {
   const theme = useTheme();
-
+  // ==== CLOSING DASHBOARD CONTENT ======
+  // ===== fetch processes =====
+  const {processes} = useGetProcess();
+  const navigate = useNavigate();
   const cssVars = {
     ...navSectionCssVars.vertical(theme),
     ...overridesVars,
   };
 
 
-  // fetch and pass the total number of tasks to the sidebar:
-  const newSidebarData = data.map((section) => ({
-      ...section,
-      items: section.items.map((item) => {
-        if (item.title === "My Tasks") {
-          return {
-            ...item,
-            info: (
-              <Label color="error" variant="inverted">
-                {totalTasks > 99 ? `+ ${totalTasks}` : totalTasks}
-              </Label>
-            ),
-          };
-        }
-        return item;
-      }),
-    }));
+  const [open, setOpen] = useState(true);
+  const location = useLocation();
+  const [active, setActive] = useState<number | null>(null);
+  const handleToggle = useCallback(() => {
+    setOpen((prev) => !prev);
+  }, []);
+
+  useEffect(() => {
+    if(location.pathname !== paths.dashboard.myTasks) {
+      setActive(null)
+    }
+  }, [location])
 
 
+  const handleNavClick = (item: IProcess) => {
+    navigate(`${paths.dashboard.myTasks}?id=${item.id}&processName=${item.processName}&numberOfSubprocesses=${item.numberOfSubprocesses}`)
+    setActive(item.id);
+  }
 
+  const renderContent = () => {
+    return processes.map((proc, index) => (
+      <Stack
+        onClick={() => handleNavClick(proc)}
+        key={index}
+
+        sx={{
+          mx: 1,
+          p:0.5,
+          borderBottom: "1.4px dashed",
+          borderColor: "grey.400",
+          userSelect: "none",
+        }}
+      >
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          sx={{
+            p: 1,
+            borderRadius: 1,
+            width: '100%',
+            color: active === proc.id ? theme.palette.primary.main : "inherit",
+            backgroundColor: active === proc.id ? alpha(theme.palette.primary.main, 0.1): "transparent"
+          }}>
+          <Stack>
+            <Typography variant="subtitle2">{proc.processName}</Typography>
+            <Typography
+              sx={{
+                whiteSpace: 'nowrap',
+                color: active === proc.id ? alpha(theme.palette.primary.main, 0.7) : "text.secondary",
+                fontSize: '12px',
+                fontWeight: 'medium'
+              }}
+            >
+              {proc.numberOfSubprocesses} Sub-Processes
+            </Typography>
+          </Stack>
+          <Stack sx={{ minWidth: '40px' }}>
+            <Iconify icon="mingcute:right-fill" color="grey.500" />
+          </Stack>
+        </Stack>
+
+      </Stack>
+    ));
+  };
   return (
-    <Stack component="nav" className={navSectionClasses.vertical.root} sx={{ ...cssVars, ...sx }}>
-      <NavUl sx={{ flex: '1 1 auto', gap: 'var(--nav-item-gap)' }}>
-        {newSidebarData.map((group) => (
+    <Stack component="nav" className={navSectionClasses.vertical.root} sx={{...cssVars, ...sx}}>
+      <NavUl sx={{flex: '1 1 auto', gap: 'var(--nav-item-gap)'}}>
+        {data.map((group) => (
           <Group
             key={group.subheader ?? group.items[0].title}
             subheader={group.subheader}
@@ -65,6 +118,20 @@ export function NavSectionVertical({
             enabledRootRedirect={enabledRootRedirect}
           />
         ))}
+        <Stack>
+          <>
+            <Subheader
+              data-title='CLOSING DASHBOARD'
+              open={open}
+              onClick={handleToggle}
+              sx={slotProps?.subheader}
+            >
+              CLOSING DASHBOARD
+            </Subheader>
+            <Collapse in={open}>{renderContent()}</Collapse>
+          </>
+
+        </Stack>
       </NavUl>
     </Stack>
   );
@@ -72,7 +139,7 @@ export function NavSectionVertical({
 
 // ----------------------------------------------------------------------
 
-function Group({ items, render, subheader, slotProps, enabledRootRedirect }: NavGroupProps) {
+function Group({items, render, subheader, slotProps, enabledRootRedirect}: NavGroupProps) {
   const [open, setOpen] = useState(true);
 
   const handleToggle = useCallback(() => {
@@ -80,7 +147,7 @@ function Group({ items, render, subheader, slotProps, enabledRootRedirect }: Nav
   }, []);
 
   const renderContent = (
-    <NavUl sx={{ gap: 'var(--nav-item-gap)' }}>
+    <NavUl sx={{gap: 'var(--nav-item-gap)'}}>
       {items.map((list) => (
         <NavList
           key={list.title}

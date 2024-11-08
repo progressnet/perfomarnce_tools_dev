@@ -14,10 +14,11 @@ const swrOptions = {
 
 
 
-type EventsData = {
+export type IProcess = {
   id: number;
   processName: string;
   department: string;
+  numberOfSubprocesses: number;
 };
 
 
@@ -26,7 +27,7 @@ const ENDPOINT = endpoints.process
 export function useGetProcess(searchFilter?: string) {
   const urlFilter = `${ENDPOINT}?searchTerm=${searchFilter}&PageNumber=1&PageSize=2000`;
   const noFilter = `${ENDPOINT}?PageNumber=1&PageSize=2000`;
-  const { data, isLoading, error, isValidating } = useSWR<ApiData<EventsData>>(
+  const { data, isLoading, error, isValidating } = useSWR<ApiData<IProcess>>(
     searchFilter ? urlFilter : noFilter,
     fetcher,
     swrOptions

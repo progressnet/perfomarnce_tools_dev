@@ -21,6 +21,7 @@ import { MenuButton } from '../components/menu-button';
 import { LayoutSection } from '../core/layout-section';
 import { HeaderSection } from '../core/header-section';
 import { StyledDivider, useNavColorVars } from './styles';
+import {useSidebarData} from "../../hooks/use-sidebar-data";
 import {AccountPopup} from "../../sections/auth/account-popup";
 import { navData as dashboardNavData } from '../config-nav-dashboard';
 
@@ -39,20 +40,19 @@ export type DashboardLayoutProps = {
 
 export function DashboardLayout({ sx, children, header, data }: DashboardLayoutProps) {
   const theme = useTheme();
-
   const mobileNavOpen = useBoolean();
-
   const settings = useSettingsContext();
-
   const navColorVars = useNavColorVars(theme, settings);
-
   const layoutQuery: Breakpoint = 'lg';
-
-  const navData = data?.nav ?? dashboardNavData;
-
+  // ==================================================================
   const isNavMini = settings.navLayout === 'mini';
   const isNavHorizontal = settings.navLayout === 'horizontal';
   const isNavVertical = isNavMini || settings.navLayout === 'vertical';
+  // ==================================================================
+  const navData = data?.nav ?? dashboardNavData;
+  const sidebarData = useSidebarData(navData);
+  // =============== filter data ======================================
+
 
   return (
     <LayoutSection
@@ -90,7 +90,7 @@ export function DashboardLayout({ sx, children, header, data }: DashboardLayoutP
             ),
             bottomArea: isNavHorizontal ? (
               <NavHorizontal
-                data={navData}
+                data={sidebarData }
                 layoutQuery={layoutQuery}
                 cssVars={navColorVars.section}
               />
@@ -107,7 +107,7 @@ export function DashboardLayout({ sx, children, header, data }: DashboardLayoutP
                   }}
                 />
                 <NavMobile
-                  data={navData}
+                  data={sidebarData}
                   open={mobileNavOpen.value}
                   onClose={mobileNavOpen.onFalse}
                   cssVars={navColorVars.section}
@@ -133,7 +133,7 @@ export function DashboardLayout({ sx, children, header, data }: DashboardLayoutP
             rightArea: (
               <Box display="flex" alignItems="center" gap={{ xs: 0, sm: 0.75 }}>
                 {/* -- Searchbar -- */}
-                <Searchbar data={navData} />
+                 <Searchbar data={sidebarData } />
                 {/* <LanguagePopover data={allLangs} /> */}
                 {/* <AccountDrawer data={_account} /> */}
                 <AccountPopup  />
@@ -148,7 +148,7 @@ export function DashboardLayout({ sx, children, header, data }: DashboardLayoutP
       sidebarSection={
         isNavHorizontal ? null : (
           <NavVertical
-            data={navData}
+            data={sidebarData}
             isNavMini={isNavMini}
             layoutQuery={layoutQuery}
             cssVars={navColorVars.section}

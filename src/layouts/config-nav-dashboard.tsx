@@ -4,6 +4,7 @@ import { CONFIG } from 'src/config-global';
 
 import { SvgColor } from 'src/components/svg-color';
 
+
 // ----------------------------------------------------------------------
 
 const icon = (name: string) => (
@@ -45,8 +46,11 @@ export const navData = [
   {
     subheader: 'MANAGEMENT',
     items: [
-      { title: 'My Timesheet', path: paths.dashboard.calendar, icon: ICONS.calendar },
-      { title: 'My Tasks', path: paths.dashboard.myTasks, icon: ICONS.kanban,   },
+      {id: 'my-tasks',  title: 'My Tasks', path: paths.dashboard.myTasks, icon: ICONS.kanban,   },
+      {id: 'leave-requests', title: 'Leave Requests', path: paths.dashboard.leaveRequests, icon: ICONS.parameter },
+      {id: 'my-timesheet', title: 'My Timesheet', path: paths.dashboard.calendar, icon: ICONS.calendar },
+      {id: 'my-reports', title: 'My Reports', path: paths.dashboard.myReports, icon: ICONS.external },
     ],
   },
+
 ];

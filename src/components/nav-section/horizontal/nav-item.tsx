@@ -19,6 +19,7 @@ import type { NavItemProps, NavItemStateProps } from '../types';
 export const NavItem = forwardRef<HTMLButtonElement, NavItemProps>(
   (
     {
+      id,
       path,
       icon,
       info,
@@ -52,7 +53,7 @@ export const NavItem = forwardRef<HTMLButtonElement, NavItemProps>(
     return (
       <StyledNavItem
         ref={ref}
-        aria-label={title}
+        aria-label={typeof title === 'string' ? title : undefined}
         depth={depth}
         active={active}
         disabled={disabled}
