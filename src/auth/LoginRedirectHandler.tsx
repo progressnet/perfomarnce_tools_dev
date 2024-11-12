@@ -14,11 +14,11 @@ import {SplashScreen} from "../components/loading-screen";
 export function LoginRedirectHandler() {
   const [error, setError] = useState("")
   const navigate = useNavigate();
-  const pathname = usePathname();
   const location = useLocation();
 
   useEffect(() => {
     const locationSearchEmail = location.search.split('email=')[1];
+    console.log({locationSearchEmail})
     if (locationSearchEmail) {
       localStorage.setItem('email', locationSearchEmail);
       const handleEmail = async () => {

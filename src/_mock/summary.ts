@@ -1,12 +1,13 @@
 export const summaryData = [
   {
+    id: 1,
     country: 'Greece',
     code: 'GR',
     tasks: [
       {
         process: 'processName',
         subprocess: 'subProcessName',
-        taskName: 'taskName',
+        taskName: 'taskName large test name',
         agents: [
           {
             firstName: "Vossios Dimitris",
@@ -56,6 +57,7 @@ export const summaryData = [
     ]
   },
   {
+    id: 2,
     country: 'Belgium',
     code: 'BE',
     tasks: [

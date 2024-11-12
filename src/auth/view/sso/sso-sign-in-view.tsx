@@ -1,5 +1,4 @@
 import Link from "@mui/material/Link";
-import Stack from "@mui/material/Stack";
 
 
 export function SSOSignInView() {
