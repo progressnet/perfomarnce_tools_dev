@@ -3,7 +3,7 @@ import * as React from "react";
 import Typography from "@mui/material/Typography";
 import {alpha, Box, TableCell} from "@mui/material";
 
-import {EmptyCell} from "./empty-cell";
+import {EmptyCell} from "./table-empty-cell";
 
 
 

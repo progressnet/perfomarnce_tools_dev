@@ -11,8 +11,9 @@ import { Box, Card, Table, alpha, TableRow, TableHead, TableCell, TableBody, Typ
 import { Iconify } from "../iconify";
 import { Scrollbar } from '../scrollbar';
 import {CountryFlag} from "../country-flag";
-import {EmptyCell} from "../../sections/my-reports/components/empty-cell";
-import {CustomSumCell, CustomHoursCell} from "../../sections/my-reports/components/custom-hours-cell";
+
+import {EmptyCell} from "../../sections/my-reports/table/table-empty-cell";
+import {CustomHoursCell, CustomSumCell} from "../../sections/my-reports/table/table-custom-hours-cell";
 
 const columns = [
   { id: 'country', label: 'Country', width: '100px' },
@@ -97,12 +98,12 @@ export function CustomExpandableTable({ data, table }: CustomExpandableTableProp
                           alignItems: 'center',
                           columnGap: 0.5,
                         }}
-                       isExpanded={isTaskExpanded}
+                        isExpanded={isTaskExpanded}
                       >
-                          <IconButton onClick={() => handleExpandRow(item.id)}>
-                            <Iconify icon={isTaskExpanded ? "mingcute:down-fill" : "mingcute:up-fill"} />
-                          </IconButton>
-                          <Typography sx={{ fontSize: '14px', textWrap: 'nowrap' }}>{`Tasks (${item.tasks.length})`}</Typography>
+                        <IconButton onClick={() => handleExpandRow(item.id)}>
+                          <Iconify icon={isTaskExpanded ? "mingcute:down-fill" : "mingcute:up-fill"} />
+                        </IconButton>
+                        <Typography sx={{ fontSize: '14px', textWrap: 'nowrap' }}>{`Tasks (${item.tasks.length})`}</Typography>
                       </CustomTableCell>
                       <EmptyCell />
                       <CustomSumCell color='#fa9805'>
@@ -113,7 +114,6 @@ export function CustomExpandableTable({ data, table }: CustomExpandableTableProp
                           {calculateDateTotals(item.tasks, dateColumn.id)}
                         </CustomHoursCell>
                       ))}
-
                     </TableRow>
                     <ExpandableTasks item={item} expandRow={expandRow} dateColumns={dateColumns} />
                   </React.Fragment>
@@ -168,21 +168,21 @@ const ExpandableTasks = ({ item, expandRow, dateColumns }: ExpandableTasksProps)
               ))}
             </TableRow>
             {task.agents.map((agent: any, agentIdx: number) => (
-               taskIdx === isAgentExpanded && (
-                 <TableRow  key={`${taskIdx}-${agentIdx}`}>
-                   <EmptyCell />
-                   <EmptyCell />
-                   <AgentCell agentName={agent.firstName} />
-                   <CustomSumCell color='#ededed' textColor="black">
-                     {Object.values(agent.dates).reduce((sum: number, hours: any) => sum + hours, 0)}
-                   </CustomSumCell>
-                   {dateColumns.map((dateColumn) => (
-                       <CustomHoursCell key={dateColumn.id} color='#696a69'>
-                         {agent.dates[dateColumn.id] || 0}
-                       </CustomHoursCell>
-                   ))}
-                 </TableRow>
-               )
+              taskIdx === isAgentExpanded && (
+                <TableRow  key={`${taskIdx}-${agentIdx}`}>
+                  <EmptyCell />
+                  <EmptyCell />
+                  <AgentCell agentName={agent.firstName} />
+                  <CustomSumCell color='#ededed' textColor="black">
+                    {Object.values(agent.dates).reduce((sum: number, hours: any) => sum + hours, 0)}
+                  </CustomSumCell>
+                  {dateColumns.map((dateColumn) => (
+                    <CustomHoursCell key={dateColumn.id} color='#696a69'>
+                      {agent.dates[dateColumn.id] || 0}
+                    </CustomHoursCell>
+                  ))}
+                </TableRow>
+              )
             ))}
           </React.Fragment>
         )
@@ -233,23 +233,23 @@ const createDateColumns = (data: any): string[] => {
 
 
 export const AgentCell = ({ agentName }: { agentName: string }) => {
-    const theme = useTheme();
-    return (
-      <TableCell>
-          <Box sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 0.5,
-            backgroundColor: alpha(theme.palette.success.main, 0.2),
-            border: 1,
-            borderColor: 'success.main',
-            borderRadius: '6px',
-            padding: 0.5,
-          }}>
-            <Iconify sx={{color: 'green'}} icon="ic:round-person"  width={20}/>
-            <Typography sx={{fontSize: '13px', textWrap: 'nowrap', color: 'green'}}>{agentName}</Typography>
-          </Box>
-      </TableCell>
-    )
+  const theme = useTheme();
+  return (
+    <TableCell>
+      <Box sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 0.5,
+        backgroundColor: alpha(theme.palette.success.main, 0.2),
+        border: 1,
+        borderColor: 'success.main',
+        borderRadius: '6px',
+        padding: 0.5,
+      }}>
+        <Iconify sx={{color: 'green'}} icon="ic:round-person"  width={20}/>
+        <Typography sx={{fontSize: '13px', textWrap: 'nowrap', color: 'green'}}>{agentName}</Typography>
+      </Box>
+    </TableCell>
+  )
 }

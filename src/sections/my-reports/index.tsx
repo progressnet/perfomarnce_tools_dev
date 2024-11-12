@@ -1,20 +1,17 @@
 import {useState, useEffect} from "react";
 
-
+import {MyReportsTable} from "./table/_index";
+import {summaryData} from "../../_mock/summary";
 import {DashboardContent} from "../../layouts/dashboard";
 import {useTable} from "../../components/custom-table/use-table";
-import {CustomReusableTable} from "../../components/custom-table";
 
-import type {IReport} from "../../actions/summary";
-import type {TableColumn} from "../../components/custom-table/_types";
-import {summaryData} from "../../_mock/summary";
-import {CustomExpandableTable} from "../../components/custom-table/expandableTable";
+import type {ISummaryData} from "./table/_types";
 
 
 
 export function MySummaryView() {
   const table = useTable();
-  const summary = summaryData;
+  const summary = summaryData as ISummaryData[] ;
 
 
 
@@ -27,10 +24,7 @@ export function MySummaryView() {
 
   return (
     <DashboardContent maxWidth="xl" sx={{ ...flexProps }}>
-      <CustomExpandableTable
-        table={table}
-        data={summary}
-      />
+      <MyReportsTable data={summary} table={table} />
     </DashboardContent>
 
 
