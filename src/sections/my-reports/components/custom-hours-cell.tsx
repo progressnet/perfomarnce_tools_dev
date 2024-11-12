@@ -28,7 +28,7 @@ export function CustomHoursCell({children, key, color}: CustomHoursCellProps) {
         justifyContent: 'center'}}
       >
         <Typography sx={{fontSize: '13px'}}>
-          {children} h
+          {children} H
         </Typography>
 
       </Box>
@@ -56,7 +56,7 @@ export function CustomSumCell({children, color, textColor = 'white'}:CustomSumCe
         justifyContent: 'center'}}
       >
         <Typography sx={{fontSize: '13px'}}>
-          {children} h
+          {children} H
         </Typography>
 
       </Box>

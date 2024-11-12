@@ -1,5 +1,13 @@
+import type { Theme, SxProps } from "@mui/system";
+
 import * as React from "react";
 
-import {TableCell} from "@mui/material";
+import { TableCell } from "@mui/material";
 
-export const EmptyCell = () => <TableCell sx={{ textAlign: 'center', color: 'grey.400' }}>---</TableCell>;
+type EmptyCellProps = {
+  sx?: SxProps<Theme>;
+};
+
+export const EmptyCell = ({ sx }: EmptyCellProps) => (
+  <TableCell sx={{ textAlign: 'center', color: 'grey.400' }}>---</TableCell>
+);
