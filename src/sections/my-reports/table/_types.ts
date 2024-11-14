@@ -1,38 +1,56 @@
 
-export type DateColumn = {
+export type IDateColumn = {
     id: string;
     label: string;
 };
 
-// incoming data types:
-export type ISummaryData = {
-    id: number;
-    country: string;
-    code: string;
-    entity: Entity[];
+type Agent = {
+  agentId: string;
+  lastName: string;
+  totalHours: number;
+  dateHours: Record<string, number>;
+};
+
+type Task = {
+  taskId: string;
+  taskName: string;
+  totalHours: number;
+  dateHours: Record<string, number>;
+  agents: Agent[];
+};
+
+type SubProcess = {
+  subProcessId: string;
+  subProcessName: string;
+  totalHours: number;
+  dateHours: Record<string, number>;
+  tasks: Task[];
+};
+
+type Process = {
+  processId: string;
+  processName: string;
+  totalHours: number;
+  dateHours: Record<string, number>;
+  subProcesses: SubProcess[];
 };
 
 export type Entity = {
-    entityName: string;
-    masterProcess: MasterProcess[];
+  entityName: string;
+  totalHours: number;
+  dateHours: Record<string, number>;
+  masterProcesses: Process[];
 };
 
-export type MasterProcess = {
-    processName: string;
-    subProcess: SubProcess[];
+type Country = {
+  id: number;
+  code: string;
+  country: string;
+  totalHours: number;
+  dateHours: Record<string, number>;
+  entities: Entity[];
 };
 
-export type SubProcess = {
-    subprocessName: string;
-    tasks: Task[];
-};
+// Define the table data type, which is an array of `Country` objects
+export type ISummaryData = Country[];
 
-export type Task = {
-    taskName: string;
-    agents: Agent[];
-};
-
-export type Agent = {
-    firstName: string;
-    dates: Record<string, number>;
-};

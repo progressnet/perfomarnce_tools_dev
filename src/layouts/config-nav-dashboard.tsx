@@ -3,6 +3,7 @@ import { paths } from 'src/routes/paths';
 import { CONFIG } from 'src/config-global';
 
 import { SvgColor } from 'src/components/svg-color';
+import {Iconify} from "../components/iconify";
 
 
 // ----------------------------------------------------------------------
@@ -38,6 +39,8 @@ const ICONS = {
   analytics: icon('ic-analytics'),
   dashboard: icon('ic-dashboard'),
   parameter: icon('ic-parameter'),
+  statsReport: <Iconify icon="iconoir:stats-report" width={5}/>,
+  suitcase: <Iconify icon="fontisto:suitcase-alt" width={5}/>
 };
 
 // ----------------------------------------------------------------------
@@ -47,9 +50,9 @@ export const navData = [
     subheader: 'MANAGEMENT',
     items: [
       {id: 'my-tasks',  title: 'My Tasks', path: paths.dashboard.myTasks, icon: ICONS.kanban,   },
-      {id: 'leave-requests', title: 'Leave Requests', path: paths.dashboard.leaveRequests, icon: ICONS.parameter },
+      {id: 'leave-requests', title: 'Leave Requests', path: paths.dashboard.leaveRequests, icon: ICONS.suitcase },
       {id: 'my-timesheet', title: 'My Timesheet', path: paths.dashboard.calendar, icon: ICONS.calendar },
-      {id: 'my-reports', title: 'My Reports', path: paths.dashboard.myReports, icon: ICONS.external },
+      {id: 'my-reports', title: 'My Reports', path: paths.dashboard.myReports, icon: ICONS.statsReport },
     ],
   },
 

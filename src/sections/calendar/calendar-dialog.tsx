@@ -48,7 +48,7 @@ export const CalendarDialog = (
   return (
     <Dialog
       fullWidth
-      maxWidth="md"
+      maxWidth="lg"
       open={openForm}
       onClose={onCloseForm}
       transitionDuration={{
@@ -70,9 +70,9 @@ export const CalendarDialog = (
         spacing={1}
         sx={{
           display: 'flex',
-          flexDirection: 'row',
-          '@media (max-width: 600px)': {
-            flexDirection: 'column'
+          flexDirection: {
+            xs: 'column',
+            md: 'row',
           },
           height: '100%',
           padding: '12px',
@@ -84,15 +84,15 @@ export const CalendarDialog = (
         {/* LEFT SIDE (Event List) */}
         <Stack
           sx={{
-            '@media (max-width: 600px)': {
-              display: 'none'
+            display: {
+              xs: 'none',
+              md: 'flex',
             },
             maxWidth: '300px',
             flex: 1,
             backgroundColor: '#fbfbfb',
             borderRadius: 1,
             boxShadow: '0px 0px 20px 0px rgba(0,0,0,0.1)',
-            display: 'flex',
             flexDirection: 'column',
 
           }}
@@ -146,8 +146,7 @@ export const CalendarDialog = (
 
           <Scrollbar
             sx={{
-              padding: 2,
-              paddingX: 3,
+              padding: 4,
               overflowY: 'auto',
             }}
           >
@@ -183,9 +182,9 @@ const ListOfCurrentEvents = ({ events }: ListOfCurrentEventsProps) => {
         sx={{
           flex: 1,
           overflowY: 'auto',
-          maxHeight: '100%',
-          '@media (max-width: 600px)': {
-            maxHeight: '108px',
+          maxHeight: {
+            xs: '108px',
+            md: '100%',
           },
         }}
       >

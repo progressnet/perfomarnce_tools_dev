@@ -46,7 +46,6 @@ export function useCalendar(events: ICalendarEvent[]) {
   const onInitialView = useCallback(() => {
     if (calendarEl) {
       const calendarApi = calendarEl.getApi();
-
       const newView = smUp ? 'dayGridMonth' : 'listWeek';
       calendarApi.changeView(newView);
       setView(newView);

@@ -107,7 +107,6 @@ export function CalendarForm(
     clickedDate: state.clickedDate,
   })));
   const stringDateVariant = dayjs(clickedDate).format('MMMM D YYYY');
-
   const defaultValues = useMemo(
     () => ({
       process: {
@@ -228,7 +227,6 @@ export function CalendarForm(
     <Form methods={methods} onSubmit={onSubmit}>
       <Stack spacing={2}>
         { /* ============== PROCESS ================ */}
-        <HorizontalInputContainer label="Process">
           <Field.SelectProcess
             name="process"
             error={errors?.process?.message || ""}
@@ -236,9 +234,7 @@ export function CalendarForm(
             value={values.process.id}
             handleValue={handleProcessChange}
           />
-        </HorizontalInputContainer>
         { /* ============== SUB-PROCESS ================ */}
-         <HorizontalInputContainer label="Sub-process">
            <Field.SelectSubProcess
             processID={values.process?.id}
             name="subprocess"
@@ -247,7 +243,6 @@ export function CalendarForm(
             value={values.subprocess?.id}
             handleValue={handleSubProcessChange}
            />
-         </HorizontalInputContainer>
         { /* ============== TASK ================ */}
           <Typography
             sx={{
@@ -260,17 +255,8 @@ export function CalendarForm(
           >
             Choose the task that you have been working on
           </Typography>
-          <Grid spacing={0} container justifyContent="end">
-            <Grid alignContent="center" item xs={4}
-              sx={{
-                '@media (max-width: 897px)': {
-                  display: 'none',
-                },
-              }}
-            >
-              <Typography variant="body2" sx={{fontWeight: 'medium'}}>Task</Typography>
-            </Grid>
-            <Grid item xs={12} md={8}>
+          <Grid spacing={0} container >
+            <Grid item xs={12} >
                <Field.SelectTask
                 subprocessID={values?.subprocess?.id}
                 name="task"
@@ -281,7 +267,7 @@ export function CalendarForm(
                />
             </Grid>
             { /* ============== TEXT DISPLAY ================ */}
-            <Grid item xs={12} md={8} >
+            <Grid item xs={8}  >
               {values.process?.name && values.subprocess?.name && values.task?.name ? (
                 <SelectedValues
                   processName={values?.process?.name}
@@ -363,27 +349,6 @@ export type HorizontalInputProps = {
   label: string;
 }
 
-export const HorizontalInputContainer = ({children, label}:  HorizontalInputProps) => (
-  <Grid container sx={{
-    width: '100%',
-    alignItems: 'space-between',
-  }}>
-    <Grid item xs={4}   sx={{
-      '@media (max-width: 897px)': {
-        display: 'none',
-      },
-    }}>
-      <Typography variant="body2" sx={{ fontWeight: 'medium' }}>{label}</Typography>
-    </Grid>
-
-    <Grid item md={8} xs={12} sx={{
-      width: { xs: '100%' }, // take full width on xs screens
-    }}>
-      {children}
-    </Grid>
-  </Grid>
-  )
-
 
 // ============== HOURS CONTROLLER ================
 
@@ -406,6 +371,7 @@ export const HoursController = (
       <Stack
         flexDirection="row"
         alignItems="center"
+        justifyContent="space-between"
         spacing={3}
         sx={{
           '@media (max-width: 897px)': {
@@ -419,7 +385,7 @@ export const HoursController = (
             '@media (max-width: 897px)': {
               fontSize: '0.92rem',
             },
-            fontSize: '1.15rem',
+            fontSize: '1.1rem',
             fontWeight: 'medium',
           }}
         >
@@ -479,7 +445,7 @@ export function RadioCompletionButtons(
             fontWeight: 'medium',
           }}
           id="is-completed-input"
-        >Is this task completed
+        >Is this task completed?
         </Typography>
         <RadioGroup
 

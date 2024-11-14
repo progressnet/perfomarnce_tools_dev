@@ -1,6 +1,8 @@
 import type { TextFieldProps } from '@mui/material/TextField';
 
+import Box from "@mui/material/Box";
 import TextField from '@mui/material/TextField';
+import Typography from "@mui/material/Typography";
 import Autocomplete from '@mui/material/Autocomplete';
 
 import { useGetTaskByParent} from "../../actions/task";
@@ -34,6 +36,7 @@ export function RHFSelectTask(
     placeholder,
   }: RHFAutocompleteProps) {
   const {tasks, error: taskError} = useGetTaskByParent(subprocessID);
+  console.log({tasks})
   return (
     <Autocomplete
       sx={{width: '100%'}}
@@ -41,7 +44,15 @@ export function RHFSelectTask(
       value={tasks.find((item) => item?.taskId === value) || null}
       onChange={(event, newValue) => handleValue({id: newValue?.taskId || null, name: newValue?.taskName || null})}
       options={tasks}
-      getOptionLabel={(option) => option?.taskName}
+      getOptionLabel={(option) => `${option?.taskName} - ${option?.leCode}`}
+      renderOption={(props, option) => (
+        <li  {...props}>
+          <Typography variant="body2" component="span">{option?.taskName}
+            <Box sx={{color: 'primary.main', fontWeight: 'bold'}} component="span"> {` - ${option?.leCode}`}</Box>
+          </Typography>
+
+        </li>
+      )}
       renderInput={(params) => (
           <TextField
             {...params}
@@ -50,7 +61,6 @@ export function RHFSelectTask(
             variant={variant}
             error={!!error || !!taskError?.errors[0]}
             helperText={ taskError?.errors.map((er: string ) => er).join(", ") || error || helperText}
-            // inputProps={{ ...params.inputProps, autoComplete: 'new-password' }}
           />
 
       )}
