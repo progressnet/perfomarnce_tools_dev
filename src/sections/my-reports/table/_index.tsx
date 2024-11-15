@@ -124,9 +124,9 @@ export function MyReportsTable(
   // ===============================================================================
   return (
     <Box>
-      <Stack sx={{mb: 3}}>
-        <TableLevel level={level} color={CELL_COLORS[level]} />
-      </Stack>
+      {/* <Stack sx={{mb: 3}}> */}
+      {/*  <TableLevel level={level} color={CELL_COLORS[level]} /> */}
+      {/* </Stack> */}
       <Card>
         <TableFiltersRow
           open={open}
