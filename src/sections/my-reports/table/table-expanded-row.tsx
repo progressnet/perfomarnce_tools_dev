@@ -72,7 +72,6 @@ export const ExpandableRow = memo((
             {children}
           </Stack>
         </Stack>
-
         <TableSumCell color={color}>
           {item.totalHours}
         </TableSumCell>

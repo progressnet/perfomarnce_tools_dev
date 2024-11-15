@@ -34,7 +34,8 @@ export function RHFSelectSubProcess(
   const { subprocesses, error: subprocessError } = useGetSubProcessByProcess(processID);
   return (
     <Autocomplete
-      sx={{ width: '100%' }}
+      sx={{ width: '100%', minWidth: 200 }}
+      disabled={!processID}
       id={`rhf-autocomplete-${name}`}
       value={subprocesses.find((subprocess) => subprocess?.id === value) || null}
       onChange={(event, newValue) => handleValue({id: newValue?.id || null, name: newValue?.subProcess || null})}

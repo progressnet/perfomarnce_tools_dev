@@ -38,7 +38,7 @@ export function RHFSelectProcess(
 
   return (
     <Autocomplete
-      sx={{width: '100%'}}
+      sx={{width: '100%', minWidth: 200}}
       id={`rhf-autocomplete-${name}`}
       onChange={(event, newValue) => handleValue({id: newValue?.id || null, name: newValue?.processName || null} )}
       options={processes}

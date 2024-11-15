@@ -9,13 +9,12 @@ import {EmptyCell} from "./table-empty-cell";
 
 type CustomHoursCellProps = {
   children: React.ReactNode;
-  key: string;
   color: string;
 };
-export function TableHoursCell({children, key, color}: CustomHoursCellProps) {
+export function TableHoursCell({children, color}: CustomHoursCellProps) {
   if(children === 0) return <EmptyCell />;
   return (
-    <TableCell key={key}>
+    <TableCell>
       <Stack flexDirection="row" alignItems="center" justifyContent="center" sx={{width: '100%'}}>
         <Box sx={{
           borderRadius: '6px',

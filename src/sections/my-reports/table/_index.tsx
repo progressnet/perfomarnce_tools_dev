@@ -12,7 +12,7 @@ import {TableDatesRow} from "./table-dates-row";
 import {CustomTableHeader} from "./table-header";
 import {TableHoursCell} from "./table-hours-cell";
 import {ExpandableRow} from "./table-expanded-row";
-import {TableFiltersRow} from "./table-filters-row";
+import {FiltersProps, TableFiltersRow} from "./table-filters-row";
 import {TableCellCountry} from "./table-cell-country";
 import {Scrollbar} from "../../../components/scrollbar";
 import {CELL_BORDER_RIGHT, CELL_BOX_SHADOW} from "../config";
@@ -38,13 +38,15 @@ const CELL_COLORS = {
   agent: '#00bcd4',         // Teal (for agent)
 }
 
-
 // ====================================================================================================
 export function MyReportsTable(
   {
     data,
     table,
   }: MyReportsTableProps) {
+  // ============================== state =========================================
+  const [open, setOpen] = useState(false);
+  const [dateValues, setDateValues] = useState<{ start: string , end: string  }>({ start: dayjs().format('YYYY-MM-DD'), end: dayjs().format('YYYY-MM-DD') });
   const [level, setLevel] = useState<ExpandKeys>('country');
   const [expand, setExpand] = useState<ExpandState>({
     country: null,
@@ -54,18 +56,47 @@ export function MyReportsTable(
     task: null,
     agent: null,
   });
+  //
+  const [filter, setFilter] = useState<FiltersProps>({
+    start: dayjs().format('YYYY-MM-DD'),
+    end:  dayjs().format('YYYY-MM-DD'),
+    process: null,
+    subprocess: null,
+    entity: null,
+    country: null,
+    task: null,
+  });
+  // ===============================================================================
+  const handleFilter = useCallback((type: string, value: {id:number, name: string}) => {
+    if(type === 'process') {
+      setFilter((prev) => ({
+        ...prev,
+        process: value,
+        subprocess: null,
+        task: null,
+      }));
+    }
+    if(type === 'subprocess') {
+      setFilter((prev) => ({
+        ...prev,
+        subprocess: value,
+        task: null,
+      }));
+    }
+    setFilter((prev) => ({
+      ...prev,
+      [type]: value,
+    }));
 
-  const [dateValues, setDateValues] = useState<{ start: string , end: string  }>({ start: dayjs().format('YYYY-MM-DD'), end: dayjs().format('YYYY-MM-DD') });
-
+  }, [])
+  // ===============================================================================
   const handleDateChange = useCallback((type: 'start' | 'end', value: string) => {
     setDateValues((prev) => ({
       ...prev,
       [type]: value,
     }));
   }, []);
-
-
-
+  // ===============================================================================
   const handleExpanded = useCallback(
     (id: string | number | null, type: ExpandKeys) => {
       setExpand((prev) => {
@@ -88,21 +119,21 @@ export function MyReportsTable(
     },
     []
   );
+  // ===============================================================================
   const dateColumns: IDateColumn[] = createDateColumns(data);
+  // ===============================================================================
   return (
     <Box>
       <Stack sx={{mb: 3}}>
         <TableLevel level={level} color={CELL_COLORS[level]} />
       </Stack>
       <Card>
-        <TableDatesRow
-          dateError={false}
-          valueEnd={dateValues.start}
-          valueStart={dateValues.end}
-         onChange={handleDateChange}
+        <TableFiltersRow
+          open={open}
+          setOpen={setOpen}
+          filter={filter}
+          handleFilter={handleFilter}
         />
-        <Divider />
-        <TableFiltersRow />
         <Box sx={{overflowX: 'auto', position: 'relative'}}>
           <Scrollbar>
             <Table size={table.dense ? 'small' : 'medium'} sx={{minWidth: 960}}>

@@ -20,6 +20,7 @@ export type RHFAutocompleteProps =  {
   error?: string;
   handleValue: ( newValue: {id: number | null, name: string | null}) => void;
   subprocessID: number | null;
+  minWidth?: number;
 
 };
 
@@ -34,25 +35,18 @@ export function RHFSelectTask(
     variant,
     helperText,
     placeholder,
+    minWidth = 200,
   }: RHFAutocompleteProps) {
   const {tasks, error: taskError} = useGetTaskByParent(subprocessID);
-  console.log({tasks})
   return (
     <Autocomplete
-      sx={{width: '100%'}}
+      sx={{width: '100%', minWidth}}
+      disabled={!subprocessID}
       id={`rhf-autocomplete-${name}-${Math.random()}`}
       value={tasks.find((item) => item?.taskId === value) || null}
       onChange={(event, newValue) => handleValue({id: newValue?.taskId || null, name: newValue?.taskName || null})}
       options={tasks}
       getOptionLabel={(option) => `${option?.taskName} - ${option?.leCode}`}
-      renderOption={(props, option) => (
-        <li  {...props}>
-          <Typography variant="body2" component="span">{option?.taskName}
-            <Box sx={{color: 'primary.main', fontWeight: 'bold'}} component="span"> {` - ${option?.leCode}`}</Box>
-          </Typography>
-
-        </li>
-      )}
       renderInput={(params) => (
           <TextField
             {...params}
