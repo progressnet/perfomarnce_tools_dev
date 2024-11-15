@@ -7,7 +7,6 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
 import {paths} from "../routes/paths";
-import {usePathname} from "../routes/hooks";
 import axios, {endpoints} from "../utils/axios";
 import {SplashScreen} from "../components/loading-screen";
 
