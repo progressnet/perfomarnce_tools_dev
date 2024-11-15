@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 type TableFiltersRowProps = {
 
 }
-export function TableFiltersRow({}: TableFiltersRowProps) {
+export function TableFiltersRow() {
   return (
     <Stack padding={2} flexDirection="row" spacing={2}>
        <Stack>
