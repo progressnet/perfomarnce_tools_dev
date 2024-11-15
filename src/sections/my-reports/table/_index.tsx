@@ -2,23 +2,23 @@ import dayjs from "dayjs";
 import { useState, Fragment, useCallback} from "react";
 
 import Stack from "@mui/material/Stack";
+import Divider from "@mui/material/Divider";
 import {Box, Card, Table, TableRow, TableBody, Typography} from "@mui/material";
 
 import {TableLevel} from "./table-level";
 import {TableSumCell} from "./table-sum-cell";
 import {TableFlexCell} from "./table-flex-cell";
+import {TableDatesRow} from "./table-dates-row";
 import {CustomTableHeader} from "./table-header";
 import {TableHoursCell} from "./table-hours-cell";
 import {ExpandableRow} from "./table-expanded-row";
-import {TableDatesRow} from "./table-dates-row";
+import {TableFiltersRow} from "./table-filters-row";
 import {TableCellCountry} from "./table-cell-country";
 import {Scrollbar} from "../../../components/scrollbar";
 import {CELL_BORDER_RIGHT, CELL_BOX_SHADOW} from "../config";
 import {createDateColumns} from "../utils/create-date-columns";
 
 import type { IDateColumn, ISummaryData} from "./_types";
-import {TableFiltersRow} from "./table-filters-row";
-import Divider from "@mui/material/Divider";
 //
 export type MyReportsTableProps = {
   data: ISummaryData;
