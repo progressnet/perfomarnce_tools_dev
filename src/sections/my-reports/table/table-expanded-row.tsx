@@ -3,18 +3,17 @@ import type { ReactNode} from "react";
 import {memo} from "react";
 import * as React from "react";
 
-import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import {alpha, TableRow} from "@mui/material";
-import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
 
 import {TableSumCell} from "./table-sum-cell";
 import {TableFlexCell} from "./table-flex-cell";
 import {TableHoursCell} from "./table-hours-cell";
 import {Iconify} from "../../../components/iconify";
+import {CELL_BOX_SHADOW, CELL_BORDER_RIGHT} from "../config";
 
 import type {IDateColumn} from "./_types";
-import {CELL_BORDER_RIGHT, CELL_BOX_SHADOW} from "../config";
 
 export type ExpandableRowProps = {
   children: ReactNode;
@@ -25,6 +24,7 @@ export type ExpandableRowProps = {
   mapKey: string;
   color: string;
   handleExpandChild: () => void;
+  paddingLeft?: number;
 }
 
 export const ExpandableRow = memo((
@@ -36,12 +36,14 @@ export const ExpandableRow = memo((
     mapKey,
     color,
     handleExpandChild,
+    paddingLeft = 0,
     shouldExpand = true
   }: ExpandableRowProps) => {
   if(!isExpanded) return null;
   return (
     <TableRow>
       <TableFlexCell sx={{
+        paddingLeft,
         cursor: 'pointer',
         position: 'sticky',
         borderRight: CELL_BORDER_RIGHT,
@@ -54,22 +56,13 @@ export const ExpandableRow = memo((
         <Stack
           onClick={handleExpandChild}
           flexDirection="row"
-          spacing={2}
+          spacing={1}
           alignItems="center"
         >
           {shouldExpand && <Iconify color={alpha(color, 0.6)} icon={isExpanded ? "mingcute:down-fill" : "mingcute:up-fill"} />}
-          <Stack spacing={1} flexDirection="row" alignItems="center">
-            <Box
-              sx={{
-                minWidth: '10px',
-                minHeight: '10px',
-                backgroundColor: alpha(color, 0.1),
-                borderRadius: '50%',
-                border: '1px solid',
-                borderColor: color,
-              }}
-            />
-            {children}
+          <Stack flexDirection="row" alignItems="center" spacing={0.5}>
+            {!shouldExpand && <Iconify icon="material-symbols-light:person" color={color} />}
+            <Typography sx={{maxWidth: 140}}>{children}</Typography>
           </Stack>
         </Stack>
         <TableSumCell color={color}>

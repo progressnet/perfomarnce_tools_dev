@@ -169,6 +169,7 @@ export function MyReportsTable(
                           return (
                             <Fragment key={entIndex}>
                               <ExpandableRow
+                                paddingLeft={4}
                                 isExpanded={expand.country === country.id}
                                 handleExpandChild={() => handleExpanded(entity.entityName, 'entity')}
                                 item={entity}
@@ -184,6 +185,7 @@ export function MyReportsTable(
                                 entity?.masterProcesses && entity?.masterProcesses.map((masterProcess, mpIndex) => (
                                   <Fragment key={`${masterProcess.processName}-${mpIndex}`}>
                                     <ExpandableRow
+                                      paddingLeft={6}
                                       key={masterProcess.processName}
                                       isExpanded={expand.entity === entity.entityName}
                                       handleExpandChild={() => handleExpanded(masterProcess.processId, 'masterProcess')}
@@ -200,6 +202,7 @@ export function MyReportsTable(
                                       masterProcess.subProcesses &&  masterProcess.subProcesses.map((subProcess, subIndex) => (
                                         <Fragment key={`${subProcess.subProcessName}-${subIndex}`}>
                                           <ExpandableRow
+                                            paddingLeft={8}
                                             key={subProcess.subProcessName}
                                             isExpanded={expand.masterProcess === masterProcess.processId}
                                             handleExpandChild={() => handleExpanded(subProcess.subProcessId, 'subProcess')}
@@ -216,6 +219,7 @@ export function MyReportsTable(
                                             subProcess?.tasks &&  subProcess.tasks.map((task) => (
                                               <Fragment key={task.taskId}>
                                                 <ExpandableRow
+                                                  paddingLeft={10}
                                                   isExpanded={expand.subProcess === subProcess.subProcessId}
                                                   handleExpandChild={() => handleExpanded(task.taskId, 'task')}
                                                   item={task}
@@ -230,6 +234,7 @@ export function MyReportsTable(
                                                 {
                                                   task?.agents && task.agents.map((agent) => (
                                                     <ExpandableRow
+                                                      paddingLeft={12}
                                                       shouldExpand={false}
                                                       key={agent.agentId}
                                                       isExpanded={expand.task === task.taskId}

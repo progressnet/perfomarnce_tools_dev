@@ -13,16 +13,18 @@ type TableCellCountryProps = {
     isExpanded: boolean;
     handleExpanded: (value: any) => void;
     color: string;
+    marginLeft?: number;
 };
 
 
-export function TableCellCountry({color, code, width =18, country, isExpanded, handleExpanded }: TableCellCountryProps) {
+export function TableCellCountry({color, code, width =18, country, isExpanded, handleExpanded, marginLeft }: TableCellCountryProps) {
     const SRC =  `https://hatscripts.github.io/circle-flags/flags/${code?.toLowerCase()}.svg`
     return (
         <Box
           onClick={handleExpanded}
           sx={{
             minWidth: FIRST_CELL_WIDTH,
+            marginLeft,
             padding: 0,
             display: 'flex',
             alignItems: 'center',
