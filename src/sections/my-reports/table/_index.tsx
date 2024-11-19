@@ -1,26 +1,23 @@
 import dayjs from "dayjs";
+import * as React from "react";
 import { useState, Fragment, useCallback} from "react";
 
-import Stack from "@mui/material/Stack";
-import Divider from "@mui/material/Divider";
+import TableCell from "@mui/material/TableCell";
 import {Box, Card, Table, TableRow, TableBody, Typography, TableFooter} from "@mui/material";
 
-import {TableLevel} from "./table-level";
 import {TableSumCell} from "./table-sum-cell";
 import {TableFlexCell} from "./table-flex-cell";
-import {TableDatesRow} from "./table-dates-row";
 import {CustomTableHeader} from "./table-header";
 import {TableHoursCell} from "./table-hours-cell";
 import {ExpandableRow} from "./table-expanded-row";
-import {FiltersProps, TableFiltersRow} from "./table-filters-row";
+import { TableFiltersRow} from "./table-filters-row";
 import {TableCellCountry} from "./table-cell-country";
 import {Scrollbar} from "../../../components/scrollbar";
-import {CELL_BORDER_RIGHT, CELL_BOX_SHADOW, FIRST_CELL_WIDTH, FIRST_COLUMN_WIDTH} from "../config";
 import {createDateColumns} from "../utils/create-date-columns";
+import {CELL_BOX_SHADOW, FIRST_CELL_WIDTH, CELL_BORDER_RIGHT} from "../config";
 
+import type {FiltersProps} from "./table-filters-row";
 import type { IDateColumn, ISummaryData} from "./_types";
-import TableCell from "@mui/material/TableCell";
-import * as React from "react";
 //
 export type MyReportsTableProps = {
   data: ISummaryData;
@@ -270,15 +267,15 @@ export function MyReportsTable(
               }}>
                 <TableRow sx={{
                   backgroundColor: 'grey.100',
-                  borderRight: CELL_BORDER_RIGHT,
-                  boxShadow: CELL_BOX_SHADOW,
                 }}>
                   <TableCell   sx={{
-                    backgroundColor: 'grey.200',
+                    backgroundColor: 'grey.100',
+                    borderRight: '1px red!important',
+                    boxShadow: CELL_BOX_SHADOW,
+                    display: 'flex',
                     flexDirection: 'row',
                     left: 0,
                     top:0,
-                    width: FIRST_COLUMN_WIDTH,
                     position: 'sticky',
                     fontWeight: "bold",
                     textAlign: "center"
@@ -292,7 +289,7 @@ export function MyReportsTable(
                     }}>
                       Total Hours
                     </Box>
-                    <TableSumCell color="red">
+                    <TableSumCell color="blue">
                       {data.reduce((total, country) => total + country.totalHours, 0)}
                     </TableSumCell>
                   </TableCell>
