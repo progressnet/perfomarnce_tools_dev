@@ -17,7 +17,7 @@ import type {IDateColumn} from "./_types";
 
 export type ExpandableRowProps = {
   children: ReactNode;
-  isExpanded: boolean;
+  isExpanded?: boolean;
   shouldExpand?: boolean;
   item: any;
   dateColumns: IDateColumn[];
@@ -25,6 +25,7 @@ export type ExpandableRowProps = {
   color: string;
   handleExpandChild: () => void;
   paddingLeft?: number;
+  show: boolean;
 }
 
 export const ExpandableRow = memo((
@@ -37,9 +38,10 @@ export const ExpandableRow = memo((
     color,
     handleExpandChild,
     paddingLeft = 0,
-    shouldExpand = true
+    shouldExpand = true,
+    show
   }: ExpandableRowProps) => {
-  if(!isExpanded) return null;
+  if(!show) return null;
   return (
     <TableRow>
       <TableFlexCell sx={{
@@ -59,6 +61,7 @@ export const ExpandableRow = memo((
           spacing={1}
           alignItems="center"
         >
+
           {shouldExpand && <Iconify color={alpha(color, 0.6)} icon={isExpanded ? "mingcute:down-fill" : "mingcute:up-fill"} />}
           <Stack flexDirection="row" alignItems="center" spacing={0.5}>
             {!shouldExpand && <Iconify icon="material-symbols-light:person" color={color} />}

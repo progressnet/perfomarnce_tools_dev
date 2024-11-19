@@ -170,7 +170,8 @@ export function MyReportsTable(
                             <Fragment key={entIndex}>
                               <ExpandableRow
                                 paddingLeft={4}
-                                isExpanded={expand.country === country.id}
+                                show={expand.country === country.id}
+                                isExpanded={expand.entity === entity.entityName}
                                 handleExpandChild={() => handleExpanded(entity.entityName, 'entity')}
                                 item={entity}
                                 dateColumns={dateColumns}
@@ -187,7 +188,8 @@ export function MyReportsTable(
                                     <ExpandableRow
                                       paddingLeft={6}
                                       key={masterProcess.processName}
-                                      isExpanded={expand.entity === entity.entityName}
+                                      show={expand.entity === entity.entityName}
+                                      isExpanded={expand.masterProcess === masterProcess.processId}
                                       handleExpandChild={() => handleExpanded(masterProcess.processId, 'masterProcess')}
                                       item={masterProcess}
                                       dateColumns={dateColumns}
@@ -204,7 +206,8 @@ export function MyReportsTable(
                                           <ExpandableRow
                                             paddingLeft={8}
                                             key={subProcess.subProcessName}
-                                            isExpanded={expand.masterProcess === masterProcess.processId}
+                                            show={expand.masterProcess === masterProcess.processId}
+                                            isExpanded={expand.subProcess === subProcess.subProcessId}
                                             handleExpandChild={() => handleExpanded(subProcess.subProcessId, 'subProcess')}
                                             item={subProcess}
                                             dateColumns={dateColumns}
@@ -220,7 +223,8 @@ export function MyReportsTable(
                                               <Fragment key={task.taskId}>
                                                 <ExpandableRow
                                                   paddingLeft={10}
-                                                  isExpanded={expand.subProcess === subProcess.subProcessId}
+                                                  show={expand.subProcess === subProcess.subProcessId}
+                                                  isExpanded={expand.task === task.taskId}
                                                   handleExpandChild={() => handleExpanded(task.taskId, 'task')}
                                                   item={task}
                                                   dateColumns={dateColumns}
@@ -237,7 +241,7 @@ export function MyReportsTable(
                                                       paddingLeft={12}
                                                       shouldExpand={false}
                                                       key={agent.agentId}
-                                                      isExpanded={expand.task === task.taskId}
+                                                      show={expand.task === task.taskId}
                                                       handleExpandChild={() => handleExpanded(agent.agentId, 'agent')}
                                                       item={agent}
                                                       dateColumns={dateColumns}
