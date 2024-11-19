@@ -3,7 +3,7 @@ import { useState, Fragment, useCallback} from "react";
 
 import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
-import {Box, Card, Table, TableRow, TableBody, Typography} from "@mui/material";
+import {Box, Card, Table, TableRow, TableBody, Typography, TableFooter} from "@mui/material";
 
 import {TableLevel} from "./table-level";
 import {TableSumCell} from "./table-sum-cell";
@@ -15,10 +15,12 @@ import {ExpandableRow} from "./table-expanded-row";
 import {FiltersProps, TableFiltersRow} from "./table-filters-row";
 import {TableCellCountry} from "./table-cell-country";
 import {Scrollbar} from "../../../components/scrollbar";
-import {CELL_BORDER_RIGHT, CELL_BOX_SHADOW} from "../config";
+import {CELL_BORDER_RIGHT, CELL_BOX_SHADOW, FIRST_CELL_WIDTH, FIRST_COLUMN_WIDTH} from "../config";
 import {createDateColumns} from "../utils/create-date-columns";
 
 import type { IDateColumn, ISummaryData} from "./_types";
+import TableCell from "@mui/material/TableCell";
+import * as React from "react";
 //
 export type MyReportsTableProps = {
   data: ISummaryData;
@@ -46,8 +48,6 @@ export function MyReportsTable(
   }: MyReportsTableProps) {
   // ============================== state =========================================
   const [open, setOpen] = useState(false);
-  const [dateValues, setDateValues] = useState<{ start: string , end: string  }>({ start: dayjs().format('YYYY-MM-DD'), end: dayjs().format('YYYY-MM-DD') });
-  const [level, setLevel] = useState<ExpandKeys>('country');
   const [expand, setExpand] = useState<ExpandState>({
     country: null,
     entity: null,
@@ -89,13 +89,7 @@ export function MyReportsTable(
     }));
 
   }, [])
-  // ===============================================================================
-  const handleDateChange = useCallback((type: 'start' | 'end', value: string) => {
-    setDateValues((prev) => ({
-      ...prev,
-      [type]: value,
-    }));
-  }, []);
+
   // ===============================================================================
   const handleExpanded = useCallback(
     (id: string | number | null, type: ExpandKeys) => {
@@ -110,7 +104,6 @@ export function MyReportsTable(
             agent: type === 'country' || type === 'entity' || type === 'masterProcess' || type === 'subProcess' || type === 'task' || type === 'agent' ? null : prev.agent,
           };
         }
-        setLevel(type);
         return {
           ...prev,
           [type]: id,
@@ -121,12 +114,14 @@ export function MyReportsTable(
   );
   // ===============================================================================
   const dateColumns: IDateColumn[] = createDateColumns(data);
-  // ===============================================================================
+  const totalHoursByDate = dateColumns.map((dateColumn) =>
+    data.reduce((total, country) => {
+      return total + (country.dateHours[dateColumn.id] || 0)
+    } , 0)
+  );
+
   return (
     <Box>
-      {/* <Stack sx={{mb: 3}}> */}
-      {/*  <TableLevel level={level} color={CELL_COLORS[level]} /> */}
-      {/* </Stack> */}
       <Card>
         <TableFiltersRow
           open={open}
@@ -270,11 +265,48 @@ export function MyReportsTable(
                   })
                 }
               </TableBody>
+              <TableFooter sx={{
+                position: 'relative'
+              }}>
+                <TableRow sx={{
+                  backgroundColor: 'grey.100',
+                  borderRight: CELL_BORDER_RIGHT,
+                  boxShadow: CELL_BOX_SHADOW,
+                }}>
+                  <TableCell   sx={{
+                    backgroundColor: 'grey.200',
+                    flexDirection: 'row',
+                    left: 0,
+                    top:0,
+                    width: FIRST_COLUMN_WIDTH,
+                    position: 'sticky',
+                    fontWeight: "bold",
+                    textAlign: "center"
+                  }}>
+                    <Box  sx={{
+                      minWidth: FIRST_CELL_WIDTH,
+                      padding: 0,
+                      display: 'flex',
+                      alignItems: 'center',
+                      columnGap: 1.4,
+                    }}>
+                      Total Hours
+                    </Box>
+                    <TableSumCell color="red">
+                      {data.reduce((total, country) => total + country.totalHours, 0)}
+                    </TableSumCell>
+                  </TableCell>
+                  {totalHoursByDate.map((total, index) => (
+                    <TableCell key={index} align="center" sx={{ fontWeight: "bold" }}>
+                      {total}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableFooter>
             </Table>
           </Scrollbar>
         </Box>
       </Card>
-
     </Box>
 
   )
