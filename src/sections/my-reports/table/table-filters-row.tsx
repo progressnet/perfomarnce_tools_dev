@@ -1,6 +1,7 @@
+import type {SetStateAction} from "react";
+
 import dayjs from "dayjs";
 import * as React from "react";
-import {SetStateAction, useState} from "react";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -53,6 +54,8 @@ export function TableFiltersRow(
     setOpen(openDrawer);
   };
   //
+
+
   return (
     <Stack  padding={2}>
       <Stack flexDirection="row" spacing={2} alignItems="center" justifyContent="space-between">
@@ -77,7 +80,7 @@ export function TableFiltersRow(
             slotProps={{
               textField: {
                 fullWidth: true,
-                helperText: false && 'End date must be later than start date',
+                helperText: false,
               },
             }}
             sx={{
@@ -101,7 +104,7 @@ export function TableFiltersRow(
               backgroundColor: 'primary.dark',
             },
           }}>
-            <Iconify color="white" icon="material-symbols:file-export"/>
+            <Iconify onClick={() => console.log('download')} color="white" icon="material-symbols:file-export"/>
           </IconButton>
         </Stack>
       </Stack>

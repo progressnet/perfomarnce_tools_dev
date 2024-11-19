@@ -275,7 +275,7 @@ export function MyReportsTable(
                 }}>
                   <TableCell   sx={{
                     backgroundColor: 'grey.100',
-                    borderRight: '1px red!important',
+                    borderRight: CELL_BORDER_RIGHT,
                     boxShadow: CELL_BOX_SHADOW,
                     display: 'flex',
                     flexDirection: 'row',
@@ -294,14 +294,14 @@ export function MyReportsTable(
                     }}>
                       Total Hours
                     </Box>
-                    <TableSumCell color="blue">
+                    <TableSumCell color="#1730e8">
                       {data.reduce((total, country) => total + country.totalHours, 0)}
                     </TableSumCell>
                   </TableCell>
-                  {totalHoursByDate.map((total, index) => (
-                    <TableCell key={index} align="center" sx={{ fontWeight: "bold" }}>
+                  {totalHoursByDate.map((total, indexTh) => (
+                    <TableHoursCell color="#1730e8" key={`${total}-${indexTh}`}>
                       {total}
-                    </TableCell>
+                    </TableHoursCell >
                   ))}
                 </TableRow>
               </TableFooter>
