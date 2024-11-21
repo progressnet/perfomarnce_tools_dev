@@ -24,7 +24,6 @@ import {SSOProvider} from "./auth/context/sso/sso-provider";
 export default function App() {
   useScrollToTop();
   return (
-    <SSOProvider>
     <I18nProvider>
       <LocalizationProvider>
             <SettingsProvider settings={defaultSettings}>
@@ -39,7 +38,5 @@ export default function App() {
             </SettingsProvider>
       </LocalizationProvider>
     </I18nProvider>
-     </SSOProvider>
-
   );
 }

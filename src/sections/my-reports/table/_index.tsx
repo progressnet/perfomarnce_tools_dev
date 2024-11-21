@@ -18,8 +18,11 @@ import {Scrollbar} from "../../../components/scrollbar";
 import {createDateColumns} from "../utils/create-date-columns";
 import {CELL_BOX_SHADOW, FIRST_CELL_WIDTH, CELL_BORDER_RIGHT, FIRST_COLUMN_WIDTH} from "../config";
 
-import type { IDateColumn} from "./_types";
 import type {FiltersProps} from "./table-filters-row";
+import type {IDateColumn} from "../../../types/summary";
+import {createFilterData} from "../utils/create-filter-data";
+
+
 //
 export type MyReportsTableProps = {
   table: any;
@@ -63,8 +66,20 @@ export function MyReportsTable(
     country: null,
     task: null,
   });
+  console.log({filter})
   // ===============================================================================
-  const {summary} = useGetSummary(filter.start, filter.end);
+  const {summary, summaryFilterData, error} = useGetSummary({
+    startDate: filter.start,
+    endDate: filter.end,
+    processId: filter.process?.id,
+    subProcessId: filter.subprocess?.id,
+    entityId: filter.entity?.id,
+    countryId: filter.country?.id,
+    taskId: filter.task?.id,
+  });
+
+
+
   // ===============================================================================
   const handleFilter = useCallback((type: string, value: {id:number, name: string}) => {
     if(type === 'process') {
@@ -115,7 +130,6 @@ export function MyReportsTable(
   const dateColumns: IDateColumn[] = createDateColumns(summary );
   const totalHoursByDate = dateColumns.map((dateColumn) =>
     summary.reduce((total, country) => {
-      console.log({country})
       return total + (country.dateHours[dateColumn.id] || 0)
     } , 0)
   );
@@ -124,6 +138,7 @@ export function MyReportsTable(
     <Box>
       <Card>
         <TableFiltersRow
+          filtersData={summaryFilterData}
           open={open}
           setOpen={setOpen}
           filter={filter}

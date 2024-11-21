@@ -31,7 +31,6 @@ const authSSO = {
         </AuthSplitLayout>
       ),
     },
-    // Add the route that will handle the redirect from the external SSO
     {
       path: 'login-redirect',
       element: (

@@ -2,7 +2,7 @@ import {Box, TableRow, TableCell, TableHead, Typography} from "@mui/material";
 
 import {CELL_BOX_SHADOW, FIRST_CELL_WIDTH, SECOND_CELL_WIDTH, CELL_BORDER_RIGHT, FIRST_COLUMN_WIDTH} from "../config";
 
-import type {IDateColumn} from "./_types";
+import type {IDateColumn} from "../../../types/summary";
 
 export function CustomTableHeader({columns}: { columns: IDateColumn[] }) {
   return (

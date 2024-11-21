@@ -13,7 +13,7 @@ import {TableHoursCell} from "./table-hours-cell";
 import {Iconify} from "../../../components/iconify";
 import {CELL_BOX_SHADOW, CELL_BORDER_RIGHT, FIRST_COLUMN_WIDTH} from "../config";
 
-import type {IDateColumn} from "./_types";
+import type {IDateColumn} from "../../../types/summary";
 
 export type ExpandableRowProps = {
   children: ReactNode;

@@ -53,6 +53,7 @@ export const endpoints = {
   legalEntity: '/LegalEntity',
   // reports:
   summary: '/SummaryWithParameters',
+  reportFilters: '/ReportFilters',
   auth: {
     me: '/auth/me',
     email: '/auth/email',

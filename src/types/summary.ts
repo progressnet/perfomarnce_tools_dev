@@ -1,7 +1,7 @@
 
 export type IDateColumn = {
-    id: string;
-    label: string;
+  id: string;
+  label: string;
 };
 
 type Agent = {

@@ -4,7 +4,8 @@ import {useMemo} from "react";
 import {fetcher,endpoints} from "../utils/axios";
 
 import type {ApiData} from "./_types";
-import type {ISummaryData} from "../sections/my-reports/table/_types";
+import type {ISummaryData} from "../types/summary";
+import type {ISummaryFilterData} from "../types/summary-filters";
 
 const enableServer = false;
 const swrOptions = {
@@ -16,20 +17,45 @@ const swrOptions = {
 
 
 const ENDPOINT = endpoints.summary
+const ENDPOINT_FILTER = endpoints.reportFilters
 
-export function useGetSummary(startDate: string , endDate: string ) {
-  const { data, isLoading, error, isValidating } = useSWR<ApiData<ISummaryData>>(
-     `${ENDPOINT}?startDate=${startDate}&endDate=${endDate}`,
+
+type SummaryApiData = {
+  data: ISummaryFilterData;
+  error: any;
+  succeeded: boolean;
+
+}
+
+export function useGetSummary(filters: { [key: string]: string | number | undefined }) {
+  // First fetch: Summary data
+  const { data, isLoading: isSummaryLoading, error: summaryError, isValidating } = useSWR<ApiData<ISummaryData>>(
+    [`${ENDPOINT}`, { params: { startDate: filters.startDate, endDate: filters.endDate } }],
     fetcher,
     swrOptions
   );
-
-  return useMemo(() => ({
-    summary: data?.data || [],
-    isLoading,
-    error,
-    isValidating,
-    empty: !isLoading && !data?.data?.length,
-  }), [data, error, isLoading, isValidating]);
-
+  // Second fetch: Summary filter data
+  const {
+    data: summaryFilterData,
+    isLoading: isSummaryFilterLoading,
+    error: summaryFilterError,
+  } = useSWR<SummaryApiData>(
+    [`${ENDPOINT_FILTER}`, { params: {
+      startdate: filters.startDate,
+      enddate: filters.endDate,
+      } }],
+    fetcher,
+    swrOptions
+  );
+  return useMemo(
+    () => ({
+      summary: data?.data || [],
+      summaryFilterData:  summaryFilterData?.data?.countries || [] ,
+      isLoading: isSummaryLoading || isSummaryFilterLoading,
+      error: summaryError || summaryFilterError,
+      isValidating,
+      empty: !isSummaryLoading && !data?.data?.length,
+    }),
+    [data, summaryFilterData, isSummaryLoading, isSummaryFilterLoading, summaryError, summaryFilterError, isValidating]
+  );
 }

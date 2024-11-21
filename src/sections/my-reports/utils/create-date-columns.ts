@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 
-import type {IDateColumn, ISummaryData} from "../table/_types";
+import type {IDateColumn, ISummaryData} from "../../../types/summary";
 
 export const createDateColumns = (data: ISummaryData[]): IDateColumn[] => {
   const dates: IDateColumn[] = [];

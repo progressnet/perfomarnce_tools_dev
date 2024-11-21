@@ -28,8 +28,6 @@ export function MyTasksLayout() {
 
 
   const renderMainView = () => {
-    console.log(tabsValue)
-    console.log(country)
     const isMobile = width <= 1179;
     if (tabsValue === 'entities') {
       if(isMobile && country) {
