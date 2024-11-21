@@ -5,6 +5,7 @@ import * as React from "react";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import {useTheme} from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
@@ -17,9 +18,10 @@ import Drawer, {drawerClasses} from "@mui/material/Drawer";
 
 import {Iconify} from "../../../components/iconify";
 import {paper, varAlpha} from "../../../theme/styles";
-import {createFilterData} from "../utils/create-filter-data";
+import {generateFilterData} from "../utils/create-filter-data";
 
 import type { Country} from "../../../types/summary-filters";
+import type { GenerateFilterDataProps} from "../utils/create-filter-data";
 
 
 export type Filter = {
@@ -27,13 +29,14 @@ export type Filter = {
   name: string;
 }
 export type FiltersProps = {
-  start: string;
-  end: string;
-  process: Filter | null;
-  subprocess: Filter | null;
-  entity: Filter | null;
-  country: Filter | null;
-  task: Filter | null;
+  masterProcess: string | null;
+  start: string; // stringDate
+  end: string; // stringDate
+  subProcess: number | null // id;
+  entity: string | null; // name
+  country: string | null; // name
+  task: number | null; // id
+  agent: number | null; // id
 
 }
 
@@ -41,8 +44,9 @@ export type TableFiltersRowProps = {
   open: boolean;
   setOpen: React.Dispatch<SetStateAction<boolean>>;
   filter: FiltersProps;
-  handleFilter: (type: string, value: any) => void;
+  handleFilter: (type: keyof FiltersProps, value: number | string) => void;
   filtersData: Country[],
+  dispatchFilter: React.Dispatch<any>;
 }
 
 export function TableFiltersRow(
@@ -52,6 +56,7 @@ export function TableFiltersRow(
     filter,
     handleFilter,
     filtersData,
+    dispatchFilter,
   }: TableFiltersRowProps) {
   //
   const toggleDrawer = (openDrawer: boolean) => () => {
@@ -59,6 +64,7 @@ export function TableFiltersRow(
   };
   //
 
+  const data = React.useMemo(() => generateFilterData(filtersData, filter), [filtersData, filter]);
 
   return (
     <Stack  padding={2}>
@@ -115,7 +121,8 @@ export function TableFiltersRow(
         </Stack>
       </Stack>
       <FilterDrawer
-        filtersData={filtersData}
+        dispatchFilter={dispatchFilter}
+        data={data}
         open={open}
         toggleDrawer={toggleDrawer}
         filter={filter}
@@ -129,8 +136,9 @@ type FilterDrawerProps = {
   open: boolean;
   toggleDrawer: (open: boolean) => () => void;
   filter: FiltersProps;
-  handleFilter: (type: string, value: any) => void;
-  filtersData: Country[];
+  handleFilter: (type: keyof FiltersProps, value: number | string) => void;
+  data: GenerateFilterDataProps[];
+  dispatchFilter: React.Dispatch<any>;
 }
 const FilterDrawer =
   (
@@ -139,16 +147,9 @@ const FilterDrawer =
       toggleDrawer,
       filter,
       handleFilter,
-      filtersData,
+      data,
+      dispatchFilter
     }: FilterDrawerProps) => {
-    const {countries, entities, masterProcesses, subProcesses, tasks, agents} = createFilterData(filtersData || []);
-    const data = [
-      { key: 'name', label: 'Countries', name: 'countries',  options: countries },
-      {key: 'name', label: 'Entities', name: 'entities', options: entities },
-      {key: 'id', label: 'Master Processes', name:' masterProcess', options: masterProcesses },
-      {key: 'id', label: 'Sub Processes',  name:'subProcess', options: subProcesses },
-    ];
-    console.log({countries})
     const theme = useTheme();
     return (
       <Drawer
@@ -175,20 +176,21 @@ const FilterDrawer =
           </Stack>
           <Divider/>
           <Stack padding={2} spacing={2}>
+            <Button onClick={() => dispatchFilter({type: 'RESET_FILTERS'})}>Reset filters</Button>
             {
               data.map((item: any, index) =>  {
                 return (
                   <Autocomplete
                     key={index}
                     options={item.options}
-                    getOptionLabel={(option: any) => option.name}
+                    getOptionLabel={(option: any) => option?.name}
+                    isOptionEqualToValue={(option, value) => option?.name === value?.name}
                     id={`rhf-autocomplete-${index}`}
-                    onChange={(event, newValue) => handleFilter(item.label.toLowerCase(), newValue[item.key])}
-                    value={filter[item.name]}
+                    onChange={(event, newValue) => handleFilter(item?.name, newValue ?  newValue[item?.key] : null)}
+                    value={item.options.find((option: any) => option[item.key] === filter[item?.name as keyof FiltersProps]) || null}
                     renderInput={(params) => (
                       <TextField
                         label={item.label}
-                        inputProps={{ ...params.inputProps, autoComplete: 'new-password' }}
                         {...params}
                       />
                     )}

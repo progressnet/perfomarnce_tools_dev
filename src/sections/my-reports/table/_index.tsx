@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import * as React from "react";
-import { useState, Fragment, useCallback} from "react";
+import {useState, Fragment, useCallback, useReducer} from "react";
 
 import TableCell from "@mui/material/TableCell";
 import {Box, Card, Table, TableRow, TableBody,  TableFooter} from "@mui/material";
@@ -20,7 +20,7 @@ import {CELL_BOX_SHADOW, FIRST_CELL_WIDTH, CELL_BORDER_RIGHT, FIRST_COLUMN_WIDTH
 
 import type {FiltersProps} from "./table-filters-row";
 import type {IDateColumn} from "../../../types/summary";
-import {createFilterData} from "../utils/create-filter-data";
+import {FilterAction, filterReducer, initialFilterState} from "../reducer";
 
 
 //
@@ -28,7 +28,7 @@ export type MyReportsTableProps = {
   table: any;
 };
 //
-type ExpandKeys = 'country' | 'entity' | 'masterProcess' | 'subProcess' | 'task' | 'agent';
+export type ExpandKeys = 'country' | 'entity' | 'masterProcess' | 'subProcess' | 'task' | 'agent';
 type ExpandState = { [key in ExpandKeys]: string | number | null };
 
 //
@@ -57,51 +57,24 @@ export function MyReportsTable(
     agent: null,
   });
   //
-  const [filter, setFilter] = useState<FiltersProps>({
-    start: dayjs().format('YYYY-MM-DD'),
-    end:  dayjs().format('YYYY-MM-DD'),
-    process: null,
-    subprocess: null,
-    entity: null,
-    country: null,
-    task: null,
-  });
-  console.log({filter})
+  const [filter, dispatchFilter] = useReducer<React.Reducer<FiltersProps, FilterAction>>(filterReducer, initialFilterState);
   // ===============================================================================
   const {summary, summaryFilterData, error} = useGetSummary({
     startDate: filter.start,
     endDate: filter.end,
-    processId: filter.process?.id,
-    subProcessId: filter.subprocess?.id,
-    entityId: filter.entity?.id,
-    countryId: filter.country?.id,
-    taskId: filter.task?.id,
+    masterProcess: filter.masterProcess,
+    subProcess: filter.subProcess,
+    entity: filter.entity,
+    country: filter.country,
+    task: filter.task,
+    agent: filter.agent,
   });
 
 
-
+  console.log('FILTERS', filter)
   // ===============================================================================
-  const handleFilter = useCallback((type: string, value: {id:number, name: string}) => {
-    if(type === 'process') {
-      setFilter((prev) => ({
-        ...prev,
-        process: value,
-        subprocess: null,
-        task: null,
-      }));
-    }
-    if(type === 'subprocess') {
-      setFilter((prev) => ({
-        ...prev,
-        subprocess: value,
-        task: null,
-      }));
-    }
-    setFilter((prev) => ({
-      ...prev,
-      [type]: value,
-    }));
-
+  const handleFilter = useCallback((field: keyof FiltersProps, value: number | string) => {
+    dispatchFilter({ type: 'SET_FILTER', field, value });
   }, [])
 
   // ===============================================================================
@@ -143,6 +116,7 @@ export function MyReportsTable(
           setOpen={setOpen}
           filter={filter}
           handleFilter={handleFilter}
+          dispatchFilter={dispatchFilter}
         />
         <Box sx={{overflowX: 'auto', position: 'relative'}}>
           <Scrollbar>
