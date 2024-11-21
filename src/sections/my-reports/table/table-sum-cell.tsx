@@ -44,16 +44,20 @@ type CustomSumCellProps = {
     textColor?: string;
 };
 export function TableSumCell({children, color, textColor = 'white'}:CustomSumCellProps) {
-    if(children === 0) return <EmptyCell />;
+    if(children === 0) return null;
     return (
-        <Stack  justifyContent="center" alignItems="flex-start" sx={{ padding: 0, minWidth: SECOND_CELL_WIDTH}}>
+        <Stack
+          justifyContent="center"
+          alignItems="flex-end"
+          sx={{ padding: 0, width: SECOND_CELL_WIDTH}}>
             <Box sx={{
                 borderRadius: '6px',
                 backgroundColor: color,
                 color: textColor,
                 padding: '4px 0',
                 minWidth: '45px',
-                display: 'flex', alignItems: 'center',
+                display: 'flex',
+                alignItems: 'center',
                 justifyContent: 'center'}}
             >
                 <Typography sx={{fontSize: '12px'}}>

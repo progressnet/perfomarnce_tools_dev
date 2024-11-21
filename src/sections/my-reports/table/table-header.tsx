@@ -21,8 +21,8 @@ export function CustomTableHeader({columns}: { columns: IDateColumn[] }) {
           <Box sx={{padding: 0, width: '100%', minWidth: FIRST_CELL_WIDTH,}}>
             <Typography sx={{textWrap: 'nowrap', fontSize: '14px'}}>Data Tree</Typography>
           </Box>
-          <Box sx={{padding: 0, width: '100%', minWidth: SECOND_CELL_WIDTH}}>
-            <Typography sx={{textWrap: 'nowrap', fontSize: '14px'}}>Total</Typography>
+          <Box sx={{padding: 0, width: '100%', minWidth: SECOND_CELL_WIDTH, paddingRight: 1}}>
+            <Typography sx={{textWrap: 'nowrap', textAlign: 'end', fontSize: '14px'}}>Total</Typography>
           </Box>
         </TableCell>
         {

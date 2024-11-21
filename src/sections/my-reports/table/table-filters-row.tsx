@@ -98,13 +98,15 @@ export function TableFiltersRow(
           </Box>
         </Stack>
         <Stack>
-          <IconButton sx={{
+          <IconButton
+            onClick={() => console.log('download')}
+            sx={{
             backgroundColor: 'primary.main',
             '&:hover': {
               backgroundColor: 'primary.dark',
             },
           }}>
-            <Iconify onClick={() => console.log('download')} color="white" icon="material-symbols:file-export"/>
+            <Iconify  color="white" icon="material-symbols:file-export"/>
           </IconButton>
         </Stack>
       </Stack>

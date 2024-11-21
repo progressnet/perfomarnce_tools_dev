@@ -11,7 +11,7 @@ import {TableSumCell} from "./table-sum-cell";
 import {TableFlexCell} from "./table-flex-cell";
 import {TableHoursCell} from "./table-hours-cell";
 import {Iconify} from "../../../components/iconify";
-import {CELL_BOX_SHADOW, CELL_BORDER_RIGHT} from "../config";
+import {CELL_BOX_SHADOW, CELL_BORDER_RIGHT, FIRST_COLUMN_WIDTH} from "../config";
 
 import type {IDateColumn} from "./_types";
 
@@ -48,6 +48,7 @@ export const ExpandableRow = memo((
         paddingLeft,
         cursor: 'pointer',
         position: 'sticky',
+        minWidth: FIRST_COLUMN_WIDTH,
         borderRight: CELL_BORDER_RIGHT,
         boxShadow: CELL_BOX_SHADOW,
         top: 0,
@@ -61,11 +62,10 @@ export const ExpandableRow = memo((
           spacing={1}
           alignItems="center"
         >
-
           {shouldExpand && <Iconify color={alpha(color, 0.6)} icon={isExpanded ? "mingcute:down-fill" : "mingcute:up-fill"} />}
           <Stack flexDirection="row" alignItems="center" spacing={0.5}>
             {!shouldExpand && <Iconify icon="material-symbols-light:person" color={color} />}
-            <Typography sx={{maxWidth: 140}}>{children}</Typography>
+            <Typography sx={{fontSize: '12px', maxWidth: 340}}>{children}</Typography>
           </Stack>
         </Stack>
         <TableSumCell color={color}>

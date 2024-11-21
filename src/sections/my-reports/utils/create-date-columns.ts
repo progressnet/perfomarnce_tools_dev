@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 
 import type {IDateColumn, ISummaryData} from "../table/_types";
 
-export const createDateColumns = (data: ISummaryData): IDateColumn[] => {
+export const createDateColumns = (data: ISummaryData[]): IDateColumn[] => {
   const dates: IDateColumn[] = [];
   data.forEach((country) => {
     Object.keys(country.dateHours).forEach((date) => {

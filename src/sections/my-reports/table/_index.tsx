@@ -3,7 +3,9 @@ import * as React from "react";
 import { useState, Fragment, useCallback} from "react";
 
 import TableCell from "@mui/material/TableCell";
-import {Box, Card, Table, TableRow, TableBody, Typography, TableFooter} from "@mui/material";
+import {Box, Card, Table, TableRow, TableBody,  TableFooter} from "@mui/material";
+
+import { useGetSummary } from "src/actions/summary";
 
 import {TableSumCell} from "./table-sum-cell";
 import {TableFlexCell} from "./table-flex-cell";
@@ -14,13 +16,12 @@ import { TableFiltersRow} from "./table-filters-row";
 import {TableCellCountry} from "./table-cell-country";
 import {Scrollbar} from "../../../components/scrollbar";
 import {createDateColumns} from "../utils/create-date-columns";
-import {CELL_BOX_SHADOW, FIRST_CELL_WIDTH, CELL_BORDER_RIGHT} from "../config";
+import {CELL_BOX_SHADOW, FIRST_CELL_WIDTH, CELL_BORDER_RIGHT, FIRST_COLUMN_WIDTH} from "../config";
 
+import type { IDateColumn} from "./_types";
 import type {FiltersProps} from "./table-filters-row";
-import type { IDateColumn, ISummaryData} from "./_types";
 //
 export type MyReportsTableProps = {
-  data: ISummaryData;
   table: any;
 };
 //
@@ -40,7 +41,6 @@ const CELL_COLORS = {
 // ====================================================================================================
 export function MyReportsTable(
   {
-    data,
     table,
   }: MyReportsTableProps) {
   // ============================== state =========================================
@@ -63,6 +63,8 @@ export function MyReportsTable(
     country: null,
     task: null,
   });
+  // ===============================================================================
+  const {summary} = useGetSummary(filter.start, filter.end);
   // ===============================================================================
   const handleFilter = useCallback((type: string, value: {id:number, name: string}) => {
     if(type === 'process') {
@@ -110,9 +112,10 @@ export function MyReportsTable(
     []
   );
   // ===============================================================================
-  const dateColumns: IDateColumn[] = createDateColumns(data);
+  const dateColumns: IDateColumn[] = createDateColumns(summary );
   const totalHoursByDate = dateColumns.map((dateColumn) =>
-    data.reduce((total, country) => {
+    summary.reduce((total, country) => {
+      console.log({country})
       return total + (country.dateHours[dateColumn.id] || 0)
     } , 0)
   );
@@ -132,7 +135,7 @@ export function MyReportsTable(
               <CustomTableHeader columns={dateColumns}/>
               <TableBody>
                 {
-                  data.map((country, index) => {
+                  summary.map((country, index) => {
                     return (
                       <Fragment key={index}>
                         <TableRow>
@@ -142,6 +145,7 @@ export function MyReportsTable(
                             zIndex: 1,
                             backgroundColor: 'white',
                             left: 0,
+                            minWidth: FIRST_COLUMN_WIDTH,
                             borderRight: CELL_BORDER_RIGHT,
                             boxShadow: CELL_BOX_SHADOW,
                           }}>
@@ -178,9 +182,7 @@ export function MyReportsTable(
                                 mapKey="entityName"
                                 color={CELL_COLORS.entity}
                               >
-                                <Typography sx={{fontSize: '12px'}}>
                                   {entity.entityName}
-                                </Typography>
                               </ExpandableRow>
                               {
                                 entity?.masterProcesses && entity?.masterProcesses.map((masterProcess, mpIndex) => (
@@ -196,17 +198,15 @@ export function MyReportsTable(
                                       mapKey="processName"
                                       color={CELL_COLORS.masterProcess}
                                     >
-                                      <Typography sx={{fontSize: '12px'}}>
                                         {masterProcess?.processName}
-                                      </Typography>
                                     </ExpandableRow>
                                     {
-                                      masterProcess.subProcesses &&  masterProcess.subProcesses.map((subProcess, subIndex) => (
-                                        <Fragment key={`${subProcess.subProcessName}-${subIndex}`}>
+                                      masterProcess?.subProcesses &&  masterProcess?.subProcesses.map((subProcess, subIndex) => (
+                                        <Fragment key={`${subProcess?.subProcessName}-${subIndex}`}>
                                           <ExpandableRow
                                             paddingLeft={8}
                                             key={subProcess.subProcessName}
-                                            show={expand.masterProcess === masterProcess.processId}
+                                            show={expand?.masterProcess === masterProcess?.processId}
                                             isExpanded={expand.subProcess === subProcess.subProcessId}
                                             handleExpandChild={() => handleExpanded(subProcess.subProcessId, 'subProcess')}
                                             item={subProcess}
@@ -214,9 +214,7 @@ export function MyReportsTable(
                                             mapKey="subProcessName"
                                             color={CELL_COLORS.subProcess}
                                           >
-                                            <Typography sx={{fontSize: '12px'}}>
                                               {subProcess.subProcessName}
-                                            </Typography>
                                           </ExpandableRow>
                                           {
                                             subProcess?.tasks &&  subProcess.tasks.map((task) => (
@@ -231,9 +229,7 @@ export function MyReportsTable(
                                                   mapKey="taskName"
                                                   color={CELL_COLORS.task}
                                                 >
-                                                  <Typography sx={{fontSize: '12px'}}>
                                                     {task.taskName}
-                                                  </Typography>
                                                 </ExpandableRow>
                                                 {
                                                   task?.agents && task.agents.map((agent) => (
@@ -245,12 +241,10 @@ export function MyReportsTable(
                                                       handleExpandChild={() => handleExpanded(agent.agentId, 'agent')}
                                                       item={agent}
                                                       dateColumns={dateColumns}
-                                                      mapKey="lastName"
+                                                      mapKey="fullName"
                                                       color={CELL_COLORS.agent}
                                                     >
-                                                      <Typography sx={{fontSize: '12px'}}>
-                                                        {agent?.lastName}
-                                                      </Typography>
+                                                        {agent?.fullName}
                                                     </ExpandableRow>
                                                   ))
                                                 }
@@ -281,8 +275,11 @@ export function MyReportsTable(
                     backgroundColor: 'grey.100',
                     borderRight: CELL_BORDER_RIGHT,
                     boxShadow: CELL_BOX_SHADOW,
+                    minWidth: FIRST_COLUMN_WIDTH,
                     display: 'flex',
                     flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
                     left: 0,
                     top:0,
                     position: 'sticky',
@@ -299,9 +296,10 @@ export function MyReportsTable(
                       Total Hours
                     </Box>
                     <TableSumCell color="#1730e8">
-                      {data.reduce((total, country) => total + country.totalHours, 0)}
+                      {summary.reduce((total, country) => total + country.totalHours, 0)}
                     </TableSumCell>
                   </TableCell>
+                  {/* =============================================================================== */}
                   {totalHoursByDate.map((total, indexTh) => (
                     <TableHoursCell color="#1730e8" key={`${total}-${indexTh}`}>
                       {total}

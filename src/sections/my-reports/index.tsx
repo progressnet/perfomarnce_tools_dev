@@ -1,6 +1,5 @@
 
 import {MyReportsTable} from "./table/_index";
-import {tableData} from "../../_mock/summary";
 import {DashboardContent} from "../../layouts/dashboard";
 import {useTable} from "../../components/custom-table/use-table";
 
@@ -10,7 +9,6 @@ import {useTable} from "../../components/custom-table/use-table";
 
 export function MySummaryView() {
   const table = useTable();
-  const tableDate = tableData ;
 
 
 
@@ -22,7 +20,7 @@ export function MySummaryView() {
 
   return (
     <DashboardContent maxWidth="xl" sx={{ ...flexProps }}>
-      <MyReportsTable data={tableDate} table={table} />
+      <MyReportsTable  table={table} />
     </DashboardContent>
 
 

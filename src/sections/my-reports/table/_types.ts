@@ -6,7 +6,7 @@ export type IDateColumn = {
 
 type Agent = {
   agentId: string;
-  lastName: string;
+  fullName: string;
   totalHours: number;
   dateHours: Record<string, number>;
 };
@@ -52,5 +52,5 @@ type Country = {
 };
 
 // Define the table data type, which is an array of `Country` objects
-export type ISummaryData = Country[];
+export type ISummaryData = Country;
 

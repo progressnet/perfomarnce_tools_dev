@@ -52,7 +52,7 @@ export const endpoints = {
   //
   legalEntity: '/LegalEntity',
   // reports:
-  summary: '/Summary',
+  summary: '/SummaryWithParameters',
   auth: {
     me: '/auth/me',
     email: '/auth/email',
