@@ -16,13 +16,13 @@ import {ExpandableRow} from "./table-expanded-row";
 import { TableFiltersRow} from "./table-filters-row";
 import {TableCellCountry} from "./table-cell-country";
 import {Scrollbar} from "../../../components/scrollbar";
-import {filterReducer, FiltersProps, initialFilterState} from "../reducer";
+import {transformFilter} from "../utils/transform-filter";
+import {filterReducer, initialFilterState} from "../reducer";
 import {createDateColumns} from "../utils/create-date-columns";
 import {CELL_BOX_SHADOW, FIRST_CELL_WIDTH, CELL_BORDER_RIGHT, FIRST_COLUMN_WIDTH} from "../config";
 
-import type {FilterAction} from "../reducer";
-
 import type {IDateColumn} from "../../../types/summary";
+import type {FilterAction, FiltersProps} from "../reducer";
 
 
 //
@@ -60,18 +60,16 @@ export function MyReportsTable(
   });
   //
   const [filter, dispatchFilter] = useReducer<React.Reducer<FiltersProps, FilterAction>>(filterReducer, initialFilterState);
-  // ===============================================================================
+  // ===============================================================================]
   const {summary, summaryFilterData, isLoading, errorMessage, isError} = useGetSummary({
     startDate: filter.start,
     endDate: filter.end,
-    country: filter.country,
-    isSubmit: filter.isSubmit,
-    // entity: filter.entity,
-    // masterProcess: filter.masterProcess,
-    // subProcess: filter.subProcess,
-    // country: filter.country,
-    // task: filter.task,
-    // agent: filter.agent,
+    country: transformFilter(filter.country),
+    entity: transformFilter(filter.entity),
+    masterProcess: transformFilter(filter.masterProcess),
+    subProcess: transformFilter(filter.subProcess),
+    task: transformFilter(filter.task),
+    agent: transformFilter(filter.agent),
   });
 
 

@@ -23,8 +23,6 @@ const layoutContent = (
 );
 
 
-
-
 export const dashboardRoutes = [
   {
     path: `/FinanceFactoryTimesheet/dashboard`,

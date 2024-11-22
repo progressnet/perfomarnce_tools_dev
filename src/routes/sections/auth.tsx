@@ -5,7 +5,6 @@ import { AuthSplitLayout } from 'src/layouts/auth-split';
 
 import { SplashScreen } from 'src/components/loading-screen';
 
-import {LoginRedirectHandler} from "../../auth/LoginRedirectHandler";
 
 
 // ----------------------------------------------------------------------

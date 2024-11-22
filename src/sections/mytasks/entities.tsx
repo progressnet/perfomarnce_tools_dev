@@ -1,17 +1,13 @@
 import { useState } from "react";
+import {useLocation, useNavigate} from "react-router-dom";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import InputAdornment from "@mui/material/InputAdornment";
 
-import {useLocation, useNavigate} from "react-router-dom";
 import {SubTitle} from "./components/subTitle";
-import { Iconify } from "../../components/iconify";
 import { Scrollbar } from "../../components/scrollbar";
-import globe from "../../../public/assets/planet-earth.png";
 import { useGetSubProcessByEntity} from "../../actions/subprocess";
 
 import type {ISubprocessEntity} from "../../actions/subprocess";
@@ -20,9 +16,6 @@ export function MyTasksEntitiesView() {
   const [filter, setFilter] = useState('');
   const { subprocesses, isLoading } = useGetSubProcessByEntity(filter);
 
-  const handleFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFilter(event.target.value);
-  };
 
   return (
     <Stack sx={{
@@ -76,7 +69,7 @@ export const EntityItem = ({ item }: EntityItemProps) => {
           component="img"
           loading="lazy"
           alt={item.countryCode}
-          src={item.countryCode === "all" ? globe : `https://hatscripts.github.io/circle-flags/flags/${item.countryCode.toLowerCase()}.svg`}
+          src={`https://hatscripts.github.io/circle-flags/flags/${item.countryCode.toLowerCase()}.svg`}
           sx={{
             width: '20px',
             height: '20px',

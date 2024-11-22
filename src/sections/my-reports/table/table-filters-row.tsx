@@ -2,7 +2,7 @@ import type {SetStateAction} from "react";
 
 import dayjs from "dayjs";
 import {toast} from "sonner";
-import { useMemo, useState, useEffect} from "react";
+import { useMemo, useState} from "react";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -19,12 +19,13 @@ import Drawer, {drawerClasses} from "@mui/material/Drawer";
 
 import {Iconify} from "../../../components/iconify";
 import {paper, varAlpha} from "../../../theme/styles";
-import {generateFilterData} from "../utils/create-filter-data";
+import {FilterOptionAutocomplete, generateFilterData} from "../utils/create-filter-data";
 import {useGetExportExcel} from "../../../actions/export-excel";
 
-import type {FiltersProps} from "../reducer";
+import {FiltersProps, MapFilterProps} from "../reducer";
 import type { Country} from "../../../types/summary-filters";
 import type { GenerateFilterDataProps} from "../utils/create-filter-data";
+import {ExpandKeys} from "./_index";
 
 
 export type Filter = {
@@ -63,7 +64,6 @@ export function TableFiltersRow(
   //
 
   const data = useMemo(() => generateFilterData(filtersData, filter), [filtersData, filter]);
-
 
   const handleExportExcel = async () => {
     setIsSubmit(true);
@@ -162,15 +162,16 @@ type FilterDrawerProps = {
   open: boolean;
   toggleDrawer: (open: boolean) => () => void;
   filter: FiltersProps;
-  handleFilter: (type: keyof FiltersProps, value: number | string) => void;
+  handleFilter: (type: keyof FiltersProps, value: number[] | string[]) => void;
   data: GenerateFilterDataProps[];
   dispatchFilter: React.Dispatch<any>;
   isLoading: boolean,
 }
+
+//
 const FilterDrawer =
   (
     {
-      isLoading,
       open,
       toggleDrawer,
       filter,
@@ -180,12 +181,6 @@ const FilterDrawer =
     }: FilterDrawerProps) => {
     const theme = useTheme();
 
-
-    useEffect(() => {
-       if(isLoading) {
-         dispatchFilter({ type: 'SET_SUBMIT'});
-       }
-    }, [isLoading, dispatchFilter]);
     return (
       <Drawer
         slotProps={{backdrop: {invisible: true}}}
@@ -205,22 +200,29 @@ const FilterDrawer =
           </Stack>
           <Divider/>
           <Stack padding={2} spacing={2}>
-             <Stack spacing={1}>
-               <Button variant="contained" onClick={() => dispatchFilter({type: 'SET_SUBMIT'})}>Apply</Button>
-               <Button variant="outlined" onClick={() => dispatchFilter({type: 'RESET_FILTERS'})}>Reset filters</Button>
+             <Stack spacing={1} sx={{marginBottom: 2}}>
+               <Button variant="contained" onClick={() => dispatchFilter({type: 'RESET_FILTERS'})}>Reset filters</Button>
              </Stack>
             {
               data.map((item: any, index) =>  {
+
                 return (
                   <Autocomplete
-                    multiple={item.name === 'country'}
+                    multiple
                     key={index}
                     options={item.options}
-                    getOptionLabel={(option: any) => option?.name}
+                    getOptionLabel={(option: any) => {
+                      return option?.name
+                    }}
                     isOptionEqualToValue={(option, value) => option?.name === value?.name}
                     id={`rhf-autocomplete-${index}`}
-                    onChange={(event, newValue) => handleFilter(item.name, newValue.map((value: any) => value[item.key]))}
-                    // value={item.options.find((option: any) => option[item.key] === filter[item?.name as keyof FiltersProps]) || null}
+                    onChange={(event, newValue: FilterOptionAutocomplete[]) =>
+                      handleFilter(
+                        item.name,
+                        newValue.map((value) => value[item.key])
+                      )
+                    }
+                    value={item?.options.filter((option: any) => filter[item.name as ExpandKeys].includes(option[item.key])) }
                     renderInput={(params) => (
                       <TextField
                         label={item.label}

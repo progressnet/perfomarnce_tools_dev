@@ -28,16 +28,20 @@ type SummaryApiData = {
 }
 
 
-export function useGetSummary(filters: { [key: string]: any }) {
+export function useGetSummary(filters: { [key: string]: any}) {
   const {data, isLoading: isSummaryLoading, error: summaryError, isValidating} = useSWR<ApiData<ISummaryData>>(
-    filters.isSubmit ?  [`${ENDPOINT}`, {
+    [`${ENDPOINT}`, {
       params: {
         startDate: filters.startDate,
         endDate: filters.endDate,
-        countryId: filters.country.length > 0 ? filters.country.join(',') : null,
-
+        countryId: filters.country,
+        entity: filters.entity,
+        masterProcessId: filters.masterProcess,
+        subProcessId: filters.subProcess,
+        task: filters.task,
+        agent: filters.agent,
       }
-    }] : null,
+    }],
     fetcher,
     swrOptions
   );
@@ -52,12 +56,6 @@ export function useGetSummary(filters: { [key: string]: any }) {
       params: {
         startdate: filters.startDate,
         enddate: filters.endDate,
-        countryId: filters.country,
-        entity: filters.entity,
-        masterProcessId: filters.masterProcess,
-        subProcessId: filters.subProcess,
-        task: filters.task,
-        agent: filters.agent,
       }
     }],
     fetcher,

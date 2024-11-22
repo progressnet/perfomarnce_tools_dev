@@ -1,20 +1,11 @@
 import type { Theme, SxProps, Breakpoint } from '@mui/material/styles';
 
-import Box from '@mui/material/Box';
-import Alert from '@mui/material/Alert';
-
-import { paths } from 'src/routes/paths';
-
 import { CONFIG } from 'src/config-global';
-
-import { Logo } from 'src/components/logo';
 
 import { Section } from './section';
 import { Main, Content } from './main';
 import { HeaderSection } from '../core/header-section';
 import { LayoutSection } from '../core/layout-section';
-import { SettingsButton } from '../components/settings-button';
-
 // ----------------------------------------------------------------------
 
 export type AuthSplitLayoutProps = {

@@ -1,32 +1,35 @@
 import dayjs from "dayjs";
 
-export type FiltersProps = {
+export type SharedTypes = {
+  country: string[]; // name
+  entity: string[];
+  masterProcess:string[],
+  subProcess:string[],
+  task: string[],
+  agent: string[],
+}
+export type FiltersProps = SharedTypes & {
   isSubmit: boolean;
   start: string; // stringDate
   end: string; // stringDate
-  country: string[]; // name
-  // entity: string | null; // name
-  // masterProcess: string | null;
-  // subProcess: number | null // id;
-  // task: number | null; // id
-  // agent: number | null; // id
-
 }
+export type MapFilterProps = SharedTypes
 export type FilterAction =
   | { type: 'SET_FILTER'; field: keyof FiltersProps; value: any }
-  | { type: 'SET_SUBMIT'; field: keyof FiltersProps; value: boolean }
   | { type: 'RESET_FILTERS' };
+
+
 
 export const initialFilterState: FiltersProps = {
   isSubmit: false,
   start: dayjs().format('YYYY-MM-DD'),
   end: dayjs().format('YYYY-MM-DD'),
   country: [],
-  // masterProcess: null,
-  // subProcess: null,
-  // entity: null,
-  // task: null,
-  // agent: null,
+  entity: [],
+  masterProcess:[],
+  subProcess: [],
+  task: [],
+  agent: [],
 };
 
 export const filterReducer = (state: FiltersProps, action: FilterAction): FiltersProps => {
@@ -38,53 +41,47 @@ export const filterReducer = (state: FiltersProps, action: FilterAction): Filter
         return {
           ...state,
           country: value,
-          // entity: null,
-          // masterProcess: null,
-          // subProcess: null,
-          // task: null,
-          // agent: null,
+          entity: [],
+          masterProcess: [],
+          subProcess:  [],
+          task:  [],
+          agent:  [],
         };
       }
-      // if(field === 'entity') {
-      //   return {
-      //     ...state,
-      //     entity: value,
-      //     masterProcess: null,
-      //     subProcess: null,
-      //     task: null,
-      //     agent: null,
-      //   };
-      // }
-      // if (field === 'masterProcess') {
-      //   return {
-      //     ...state,
-      //     masterProcess: value,
-      //     subProcess: null,
-      //     task: null,
-      //     agent: null,
-      //   };
-      // }
-      // if (field === 'subProcess') {
-      //   return {
-      //     ...state,
-      //     subProcess: value,
-      //     task: null,
-      //     agent: null,
-      //   };
-      // }
-      // if (field === 'task') {
-      //   return {
-      //     ...state,
-      //     task: value,
-      //     agent: null,
-      //   };
-      // }
-      // if(field === 'agent') {
-      //   return {
-      //     ...state,
-      //     agent: value,
-      //   }
-      // }
+      if (field === 'entity') {
+        return {
+          ...state,
+          entity: value,
+          masterProcess: [],
+          subProcess:  [],
+          task:  [],
+          agent:  [],
+        };
+      }
+      if (field === 'masterProcess') {
+        return {
+          ...state,
+          masterProcess: value,
+          subProcess:  [],
+          task:  [],
+          agent:  [],
+        };
+      }
+      if (field === 'subProcess') {
+        return {
+          ...state,
+          subProcess: value,
+          task:  [],
+          agent:  [],
+        };
+      }
+      if (field === 'task') {
+        return {
+          ...state,
+          task: value,
+          agent:  [],
+        };
+      }
       return { ...state, [action.field]: action.value };
     }
 
@@ -94,14 +91,6 @@ export const filterReducer = (state: FiltersProps, action: FilterAction): Filter
         start: state.start,
         end: state.end,
         isSubmit: !state.isSubmit
-      };
-    }
-    case 'SET_SUBMIT': {
-      return {
-        ...initialFilterState,
-        start: state.start,
-        end: state.end,
-        isSubmit: !state.isSubmit,
       };
     }
     default:
