@@ -52,39 +52,28 @@ export function useGetTaskByParent(id: number | null) {
   }), [data, error, isLoading, isValidating]);
 }
 
+
+//
 export function useGetTaskByFilter(
   page: number,
   rows: number,
   subprocessId: number,
   country?:string,
   status?: string,
+  search?: string
 ) {
   const shouldFetch = subprocessId || country;
-
-  let URL = ENDPOINT_TASKS_BY_FILTERS;
-  const params = new URLSearchParams();
-
-  if (subprocessId) {
-    params.append("SubProcessID", subprocessId as any);
-  }
-
-  if (country) {
-    params.append("EntityCountry", country);
-  }
-
-  if (status) {
-    params.append("TaskStatus", status);
-  }
-
-  params.append("PageNumber", String(page + 1) );
-  params.append("PageSize", String(rows));
-
-// Append the query string to the URL
-  URL = `${URL}?${params.toString()}`;
-
-
   const { data, isLoading, error, isValidating } = useSWR<ApiData<ITask>>(
-    shouldFetch ? URL : null, // Only fetch if `shouldFetch` is true
+    [shouldFetch ? ENDPOINT_TASKS_BY_FILTERS : null, {
+      params: {
+        PageNumber: page + 1,
+        PageSize: rows,
+        SubProcessID: subprocessId,
+        EntityCountry: country,
+        TaskStatus: status,
+        TaskName: search
+      }
+    }],
     fetcher,
     swrOptions
   );

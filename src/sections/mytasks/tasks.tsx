@@ -61,6 +61,7 @@ export function MyTasksTasksView() {
     rowsPerPage: 10,
   });
 
+  console.log({state})
 
   // ============================= FETCH DATA SWR ===========================
   const {tasks, error, totalRecords, isLoading} = useGetTaskByFilter(
@@ -69,6 +70,7 @@ export function MyTasksTasksView() {
     Number(subprocessId),
     state.entity?.country || country,
     state.status?.name,
+    state.search,
   );
 
   useEffect(() => {
