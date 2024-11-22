@@ -29,7 +29,6 @@ type SummaryApiData = {
 
 
 export function useGetSummary(filters: { [key: string]: any }) {
-  console.log('submit', filters.isSubmit)
   const {data, isLoading: isSummaryLoading, error: summaryError, isValidating} = useSWR<ApiData<ISummaryData>>(
     filters.isSubmit ?  [`${ENDPOINT}`, {
       params: {

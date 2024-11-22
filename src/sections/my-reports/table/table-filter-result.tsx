@@ -9,7 +9,6 @@ export function TableFilterResult(
   {
     filters,
   }: TableFilterResultProps) {
-  console.log(filters)
   return (
     <Stack>
         test

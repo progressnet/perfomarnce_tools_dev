@@ -25,7 +25,6 @@ export type IProcess = {
 const ENDPOINT = endpoints.process
 
 export function useGetProcess(searchFilter?: string) {
-  console.log('useGetProcess', searchFilter)
   const urlFilter = `${ENDPOINT}?searchTerm=${searchFilter}&PageNumber=1&PageSize=2000`;
   const noFilter = `${ENDPOINT}?PageNumber=1&PageSize=2000`;
   const { data, isLoading, error, isValidating } = useSWR<ApiData<IProcess>>(

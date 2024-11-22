@@ -14,6 +14,8 @@ import {LoginRedirectHandler} from "../../auth/LoginRedirectHandler";
 
 const SSO = {
   SignInPage: lazy(() => import('src/pages/auth/sso/sign-in')),
+  LoginRedirect: lazy(() => import('src/pages/auth/sso/login-redirect')),
+  Test: lazy(() => import('src/pages/auth/sso/test')),
 };
 
 
@@ -35,7 +37,15 @@ const authSSO = {
       path: 'login-redirect',
       element: (
         <Suspense fallback={<SplashScreen />}>
-          <LoginRedirectHandler />
+          <SSO.LoginRedirect />
+        </Suspense>
+      ),
+    },
+    {
+      path: 'test',
+      element: (
+        <Suspense fallback={<SplashScreen />}>
+          <SSO.Test />
         </Suspense>
       ),
     },

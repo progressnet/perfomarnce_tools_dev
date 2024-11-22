@@ -34,7 +34,6 @@ export const filterReducer = (state: FiltersProps, action: FilterAction): Filter
 
     case 'SET_FILTER': {
       const { field, value } = action;
-      console.log('reducer', {value})
       if (field === 'country') {
         return {
           ...state,

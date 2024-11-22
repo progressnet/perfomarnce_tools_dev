@@ -61,7 +61,6 @@ export function MyReportsTable(
   //
   const [filter, dispatchFilter] = useReducer<React.Reducer<FiltersProps, FilterAction>>(filterReducer, initialFilterState);
   // ===============================================================================
-  console.log({filter})
   const {summary, summaryFilterData, isLoading, errorMessage, isError} = useGetSummary({
     startDate: filter.start,
     endDate: filter.end,
@@ -78,7 +77,6 @@ export function MyReportsTable(
 
   // ===============================================================================
   const handleFilter = useCallback((field: keyof FiltersProps, value: number | string) => {
-    console.log({field, value})
     dispatchFilter({ type: 'SET_FILTER', field, value });
   }, [])
 
