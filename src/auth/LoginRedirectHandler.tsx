@@ -17,6 +17,7 @@ export function LoginRedirectHandler() {
 
   useEffect(() => {
     const locationSearchEmail = location.search.split('email=')[1];
+    console.log({locationSearchEmail});
     if (locationSearchEmail) {
       localStorage.setItem('email', locationSearchEmail);
       const handleEmail = async () => {

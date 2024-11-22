@@ -16,12 +16,12 @@ import {ExpandableRow} from "./table-expanded-row";
 import { TableFiltersRow} from "./table-filters-row";
 import {TableCellCountry} from "./table-cell-country";
 import {Scrollbar} from "../../../components/scrollbar";
-import { filterReducer, initialFilterState} from "../reducer";
+import {filterReducer, FiltersProps, initialFilterState} from "../reducer";
 import {createDateColumns} from "../utils/create-date-columns";
 import {CELL_BOX_SHADOW, FIRST_CELL_WIDTH, CELL_BORDER_RIGHT, FIRST_COLUMN_WIDTH} from "../config";
 
 import type {FilterAction} from "../reducer";
-import type {FiltersProps} from "./table-filters-row";
+
 import type {IDateColumn} from "../../../types/summary";
 
 
@@ -61,20 +61,24 @@ export function MyReportsTable(
   //
   const [filter, dispatchFilter] = useReducer<React.Reducer<FiltersProps, FilterAction>>(filterReducer, initialFilterState);
   // ===============================================================================
+  console.log({filter})
   const {summary, summaryFilterData, isLoading, errorMessage, isError} = useGetSummary({
     startDate: filter.start,
     endDate: filter.end,
-    masterProcess: filter.masterProcess,
-    subProcess: filter.subProcess,
-    entity: filter.entity,
     country: filter.country,
-    task: filter.task,
-    agent: filter.agent,
+    isSubmit: filter.isSubmit,
+    // entity: filter.entity,
+    // masterProcess: filter.masterProcess,
+    // subProcess: filter.subProcess,
+    // country: filter.country,
+    // task: filter.task,
+    // agent: filter.agent,
   });
 
 
   // ===============================================================================
   const handleFilter = useCallback((field: keyof FiltersProps, value: number | string) => {
+    console.log({field, value})
     dispatchFilter({ type: 'SET_FILTER', field, value });
   }, [])
 
@@ -123,6 +127,7 @@ export function MyReportsTable(
     <Box>
       <Card>
         <TableFiltersRow
+          isLoading={isLoading}
           filtersData={summaryFilterData}
           open={open}
           setOpen={setOpen}

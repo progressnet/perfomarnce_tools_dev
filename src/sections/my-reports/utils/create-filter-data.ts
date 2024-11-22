@@ -1,6 +1,7 @@
 import type {Country} from "src/types/summary-filters";
 
-import type {FiltersProps} from "../table/table-filters-row";
+import type {FiltersProps} from "../reducer";
+
 
 
 export const createFilterData = (data: Country[]) => {
@@ -63,10 +64,10 @@ export const generateFilterData = (filtersData: Country[], filter: FiltersProps)
   const { countries, entities, masterProcesses, subProcesses, tasks, agents } = createFilterData(filtersData || []);
   return [
     { key: 'name', label: 'Countries', name: 'country', options: countries },
-    { key: 'name', label: 'Entities', name: 'entity', options: entities },
-    { key: 'id', label: 'Master Processes', name: 'masterProcess', options: masterProcesses },
-    { key: 'id', label: 'Sub Processes', name: 'subProcess', options: subProcesses },
-    { key: 'id', label: 'Task', name: 'task', options:  tasks },
-    { key: 'id', label: 'Agent', name: 'agent', options: agents },
+    // { key: 'name', label: 'Entities', name: 'entity', options: entities },
+    // { key: 'id', label: 'Master Processes', name: 'masterProcess', options: masterProcesses },
+    // { key: 'id', label: 'Sub Processes', name: 'subProcess', options: subProcesses },
+    // { key: 'id', label: 'Task', name: 'task', options:  tasks },
+    // { key: 'id', label: 'Agent', name: 'agent', options: agents },
   ];
 };

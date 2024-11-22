@@ -25,8 +25,7 @@ type ApiData = {
 }
 
 //
-export function useGetExportExcel(filters: { [key: string]: string | number | boolean | null | Filter }) {
-  console.log(filters.isSubmit)
+export function useGetExportExcel(filters: { [key: string]: string | string[] | number | boolean | null }) {
   const { data, isLoading, error, isValidating } = useSWR<ApiData>(
     filters.isSubmit
       ? [ENDPOINT, {
