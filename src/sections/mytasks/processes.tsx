@@ -93,7 +93,6 @@ const ProcessesList = ({data, isLoading}: ProcessesListProps,) => {
                 <Typography sx={{fontSize: '16px'}} variant="subtitle1">{process.processName}</Typography>
                 <Stack spacing={1} flexDirection="row" alignItems="center">
                   <SubTitle text={`${process?.numberOfSubprocesses} Sub-Processes`}/>
-
                 </Stack>
               </Stack>
               <Stack sx={{minWidth: '40px'}}>

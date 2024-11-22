@@ -54,6 +54,7 @@ export const endpoints = {
   // reports:
   summary: '/SummaryWithParameters',
   reportFilters: '/ReportFilters',
+  exportExcel: '/ExportExcel',
   auth: {
     me: '/auth/me',
     email: '/auth/email',

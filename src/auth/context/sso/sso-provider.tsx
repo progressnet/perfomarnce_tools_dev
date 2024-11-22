@@ -1,12 +1,6 @@
 import { useMemo, useState, useEffect } from 'react';
-import { useLocation, useNavigate } from "react-router-dom";
 
-import {setEmailSession} from "../jwt";
 import { SSOContext } from "./sso-context";
-import {paths} from "../../../routes/paths";
-import axios, { endpoints } from "../../../utils/axios";
-
-import type { IUser } from "./sso-context";
 import {usePathname} from "../../../routes/hooks";
 
 type Props = {
@@ -24,8 +18,6 @@ export function SSOProvider({ children }: Props) {
   useEffect(() => {
 
   }, [pathname])
-
-
 
 
   const memoizedValue = useMemo(

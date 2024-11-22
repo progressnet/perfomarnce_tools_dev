@@ -1,7 +1,8 @@
-import type {SetStateAction} from "react";
-
 import dayjs from "dayjs";
+import {toast} from "sonner";
 import * as React from "react";
+import type {SetStateAction} from "react";
+import { useState} from "react";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -19,6 +20,7 @@ import Drawer, {drawerClasses} from "@mui/material/Drawer";
 import {Iconify} from "../../../components/iconify";
 import {paper, varAlpha} from "../../../theme/styles";
 import {generateFilterData} from "../utils/create-filter-data";
+import {useGetExportExcel} from "../../../actions/export-excel";
 
 import type { Country} from "../../../types/summary-filters";
 import type { GenerateFilterDataProps} from "../utils/create-filter-data";
@@ -58,6 +60,8 @@ export function TableFiltersRow(
     filtersData,
     dispatchFilter,
   }: TableFiltersRowProps) {
+  const [isSubmit, setIsSubmit] = useState(false);
+  const {fileUrl, isLoading} = useGetExportExcel({...filter, isSubmit});
   //
   const toggleDrawer = (openDrawer: boolean) => () => {
     setOpen(openDrawer);
@@ -66,6 +70,33 @@ export function TableFiltersRow(
 
   const data = React.useMemo(() => generateFilterData(filtersData, filter), [filtersData, filter]);
 
+
+  const handleExportExcel = async () => {
+    setIsSubmit(true);
+    //
+    if(!fileUrl) return;
+    try {
+      const response = await fetch(`${fileUrl}`);
+      if(!response) {
+        toast.error('Error exporting excel file')
+        setIsSubmit(false);
+        return;
+      }
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'my-report.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      setIsSubmit(false);
+    } catch (e) {
+        toast.error(e?.message)
+    }
+
+  }
   return (
     <Stack  padding={2}>
       <Stack flexDirection="row" spacing={2} alignItems="center" justifyContent="space-between">
@@ -109,7 +140,7 @@ export function TableFiltersRow(
         </Stack>
         <Stack>
           <IconButton
-            onClick={() => console.log('download')}
+            onClick={handleExportExcel}
             sx={{
             backgroundColor: 'primary.main',
             '&:hover': {

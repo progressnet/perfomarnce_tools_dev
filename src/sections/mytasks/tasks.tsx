@@ -61,7 +61,6 @@ export function MyTasksTasksView() {
     rowsPerPage: 10,
   });
 
-  console.log({state})
 
   // ============================= FETCH DATA SWR ===========================
   const {tasks, error, totalRecords, isLoading} = useGetTaskByFilter(
