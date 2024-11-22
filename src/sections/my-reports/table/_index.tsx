@@ -7,6 +7,7 @@ import {Box, Card, Table, TableRow, TableBody,  TableFooter} from "@mui/material
 
 import { useGetSummary } from "src/actions/summary";
 
+import Alert from "@mui/material/Alert";
 import {TableSumCell} from "./table-sum-cell";
 import {TableFlexCell} from "./table-flex-cell";
 import {CustomTableHeader} from "./table-header";
@@ -21,6 +22,7 @@ import {CELL_BOX_SHADOW, FIRST_CELL_WIDTH, CELL_BORDER_RIGHT, FIRST_COLUMN_WIDTH
 import type {FiltersProps} from "./table-filters-row";
 import type {IDateColumn} from "../../../types/summary";
 import {FilterAction, filterReducer, initialFilterState} from "../reducer";
+import {TableSpinner} from "./table-spinner";
 
 
 //
@@ -59,7 +61,7 @@ export function MyReportsTable(
   //
   const [filter, dispatchFilter] = useReducer<React.Reducer<FiltersProps, FilterAction>>(filterReducer, initialFilterState);
   // ===============================================================================
-  const {summary, summaryFilterData, error} = useGetSummary({
+  const {summary, summaryFilterData, isLoading, errorMessage, isError} = useGetSummary({
     startDate: filter.start,
     endDate: filter.end,
     masterProcess: filter.masterProcess,
@@ -71,7 +73,6 @@ export function MyReportsTable(
   });
 
 
-  console.log('FILTERS', filter)
   // ===============================================================================
   const handleFilter = useCallback((field: keyof FiltersProps, value: number | string) => {
     dispatchFilter({ type: 'SET_FILTER', field, value });
@@ -107,6 +108,17 @@ export function MyReportsTable(
     } , 0)
   );
 
+
+  if(isError ) {
+    return (
+      <Box>
+        <Alert sx={{maxWidth: 500}} severity="error">{
+          errorMessage
+        }</Alert>
+      </Box>
+    )
+  }
+
   return (
     <Box>
       <Card>
@@ -122,7 +134,9 @@ export function MyReportsTable(
           <Scrollbar>
             <Table size={table.dense ? 'small' : 'medium'} sx={{minWidth: 960}}>
               <CustomTableHeader columns={dateColumns}/>
-              <TableBody>
+              <TableSpinner isLoading={isLoading} />
+              <TableBody sx={{position: 'relative'}}>
+
                 {
                   summary.map((country, index) => {
                     return (

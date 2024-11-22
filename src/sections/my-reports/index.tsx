@@ -1,4 +1,3 @@
-
 import {MyReportsTable} from "./table/_index";
 import {DashboardContent} from "../../layouts/dashboard";
 import {useTable} from "../../components/custom-table/use-table";

@@ -29,8 +29,6 @@ type SummaryApiData = {
 
 
 export function useGetSummary(filters: { [key: string]: string | number | null | Filter }) {
-  // First fetch: Summary data
-  console.log('summary', {filters})
   const {data, isLoading: isSummaryLoading, error: summaryError, isValidating} = useSWR<ApiData<ISummaryData>>(
     [`${ENDPOINT}`, {
       params: {
@@ -47,6 +45,7 @@ export function useGetSummary(filters: { [key: string]: string | number | null |
     fetcher,
     swrOptions
   );
+
   // Second fetch: Summary filter data
   const {
     data: summaryFilterData,
@@ -68,12 +67,14 @@ export function useGetSummary(filters: { [key: string]: string | number | null |
     fetcher,
     swrOptions
   );
+
   return useMemo(
     () => ({
       summary: data?.data || [],
       summaryFilterData: summaryFilterData?.data?.countries || [],
       isLoading: isSummaryLoading || isSummaryFilterLoading,
-      error: summaryError || summaryFilterError,
+      isError: summaryError || summaryFilterError,
+      errorMessage: `api/SummaryWithParameters: ${summaryError}` || `api/SummaryFilter: ${summaryFilterError}`,
       isValidating,
       empty: !isSummaryLoading && !data?.data?.length,
     }),
