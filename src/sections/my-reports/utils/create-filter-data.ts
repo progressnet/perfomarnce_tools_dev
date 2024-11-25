@@ -32,7 +32,11 @@ type Agent = {
   name: string;
 };
 
-export type FilterOptionAutocomplete = Entity | MasterProcess | SubProcess | Task | Agent;
+export type FilterOptionAutocomplete = {
+  id: string;
+  label: string;
+  value: number;
+};
 
 
 

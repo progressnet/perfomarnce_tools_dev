@@ -19,13 +19,12 @@ import Drawer, {drawerClasses} from "@mui/material/Drawer";
 
 import {Iconify} from "../../../components/iconify";
 import {paper, varAlpha} from "../../../theme/styles";
-import {FilterOptionAutocomplete, generateFilterData} from "../utils/create-filter-data";
+import { generateFilterData} from "../utils/create-filter-data";
 import {useGetExportExcel} from "../../../actions/export-excel";
 
-import {FiltersProps, MapFilterProps} from "../reducer";
+import type {FiltersProps} from "../reducer";
 import type { Country} from "../../../types/summary-filters";
 import type { GenerateFilterDataProps} from "../utils/create-filter-data";
-import {ExpandKeys} from "./_index";
 
 
 export type Filter = {
@@ -38,7 +37,10 @@ export type TableFiltersRowProps = {
   open: boolean;
   setOpen: React.Dispatch<SetStateAction<boolean>>;
   filter: FiltersProps;
-  handleFilter: (type: keyof FiltersProps, value: number | string) => void;
+  handleFilter: (
+    type: keyof FiltersProps,
+    value: number[] | string[] | string | number
+  ) => void;
   filtersData: Country[],
   dispatchFilter: React.Dispatch<any>;
   isLoading: boolean;
@@ -162,7 +164,10 @@ type FilterDrawerProps = {
   open: boolean;
   toggleDrawer: (open: boolean) => () => void;
   filter: FiltersProps;
-  handleFilter: (type: keyof FiltersProps, value: number[] | string[]) => void;
+  handleFilter: (
+    type: keyof FiltersProps,
+    value: number[] | string[] | string | number
+  ) => void;
   data: GenerateFilterDataProps[];
   dispatchFilter: React.Dispatch<any>;
   isLoading: boolean,
@@ -216,13 +221,13 @@ const FilterDrawer =
                     }}
                     isOptionEqualToValue={(option, value) => option?.name === value?.name}
                     id={`rhf-autocomplete-${index}`}
-                    onChange={(event, newValue: FilterOptionAutocomplete[]) =>
+                    onChange={(event, newValue: any) =>
                       handleFilter(
                         item.name,
-                        newValue.map((value) => value[item.key])
+                        newValue.map((value: any) => value[item.key])
                       )
                     }
-                    value={item?.options.filter((option: any) => filter[item.name as ExpandKeys].includes(option[item.key])) }
+                    value={item?.options.filter((option: any) => filter[item.name as keys].includes(option[item.key])) }
                     renderInput={(params) => (
                       <TextField
                         label={item.label}
@@ -239,5 +244,7 @@ const FilterDrawer =
     )
   }
 
+
+export type keys = 'country' | 'entity' | 'masterProcess' | 'subProcess' | 'task' | 'agent';
 
 

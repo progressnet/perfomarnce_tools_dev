@@ -13,7 +13,6 @@ export type FiltersProps = SharedTypes & {
   start: string; // stringDate
   end: string; // stringDate
 }
-export type MapFilterProps = SharedTypes
 export type FilterAction =
   | { type: 'SET_FILTER'; field: keyof FiltersProps; value: any }
   | { type: 'RESET_FILTERS' };

@@ -17,7 +17,7 @@ import { TableFiltersRow} from "./table-filters-row";
 import {TableCellCountry} from "./table-cell-country";
 import {Scrollbar} from "../../../components/scrollbar";
 import {transformFilter} from "../utils/transform-filter";
-import {filterReducer, initialFilterState} from "../reducer";
+import {filterReducer, initialFilterState, SharedTypes} from "../reducer";
 import {createDateColumns} from "../utils/create-date-columns";
 import {CELL_BOX_SHADOW, FIRST_CELL_WIDTH, CELL_BORDER_RIGHT, FIRST_COLUMN_WIDTH} from "../config";
 
@@ -74,10 +74,15 @@ export function MyReportsTable(
 
 
   // ===============================================================================
-  const handleFilter = useCallback((field: keyof FiltersProps, value: number | string) => {
-    dispatchFilter({ type: 'SET_FILTER', field, value });
-  }, [])
-
+  const handleFilter = useCallback(
+    (
+      field: "end" | "start" | keyof SharedTypes | "isSubmit",
+      value:  string[] | number[] | string | number
+    ) => {
+      dispatchFilter({ type: 'SET_FILTER', field, value });
+    },
+    []
+  );
   // ===============================================================================
   const handleExpanded = useCallback(
     (id: string | number | null, type: ExpandKeys) => {

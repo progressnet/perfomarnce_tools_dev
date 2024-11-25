@@ -34,6 +34,7 @@ export default defineConfig({
       },
     ],
   },
+  base: "./",
   server: { port: PORT, host: true },
   preview: { port: PORT, host: true },
 });
