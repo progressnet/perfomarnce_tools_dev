@@ -7,7 +7,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-export function SSOGuard({ children }: Props) {
+function SSOGuard({ children }: Props) {
   const email = localStorage.getItem('email');
   console.log('guard email', email)
 
