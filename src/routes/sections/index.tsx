@@ -12,10 +12,11 @@ export function Router() {
     {
       path: '/',
       element: <Navigate to={CONFIG.auth.redirectPath} replace />,
-    },   {
-      path: '/FinanceFactoryTimesheet/',
-      element: <Navigate to={CONFIG.auth.redirectPath} replace />,
     },
+    // {
+    //   path: '/FinanceFactoryTimesheet/',
+    //   element: <Navigate to={CONFIG.auth.redirectPath} replace />,
+    // },
     ...authRoutes,
     ...dashboardRoutes,
     { path: '*', element: <Navigate to="/404" replace /> },
