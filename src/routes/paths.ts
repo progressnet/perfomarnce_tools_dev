@@ -1,16 +1,16 @@
 
 
 const ROOTS = {
-  AUTH: '/FinanceFactoryTimesheet/auth',
-  DASHBOARD: '/FinanceFactoryTimesheet/dashboard',
+  AUTH: '/auth',
+  DASHBOARD: '/dashboard',
 };
 
 // ----------------------------------------------------------------------
 
 export const paths = {
-  page403: '/FinanceFactoryTimesheet/error/403',
-  page404: '/FinanceFactoryTimesheet/error/404',
-  page500: '/FinanceFactoryTimesheet/error/500',
+  page403: '/error/403',
+  page404: '/error/404',
+  page500: '/error/500',
   // AUTH
   auth: {
     sso: {

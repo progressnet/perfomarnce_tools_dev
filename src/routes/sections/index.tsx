@@ -10,18 +10,19 @@ import { dashboardRoutes } from './dashboard';
 
 export function Router() {
   return useRoutes([
-    // {
-    //   path: '/',
-    //   element: <Navigate to={CONFIG.auth.redirectPath} replace />,
-    // },
-    // {
-    //   path: '/FinanceFactoryTimesheet/',
-    //   element: <Navigate to={CONFIG.auth.redirectPath} replace />,
-    // },
     {
-      path: '/FinanceFactoryTimesheet/',
+      path: '/',
+      element: <Navigate to={CONFIG.auth.redirectPath} replace />,
+    },
+    {
+      path: '/FinanceFactoryTimesheet',
+      element: <Navigate to={CONFIG.auth.redirectPath} replace />,
+    },
+ {
+      path: '/test',
       element: <Stack>TEST PAGE</Stack>,
     },
+
     ...authRoutes,
     ...dashboardRoutes,
     { path: '*', element: <Navigate to="/404" replace /> },

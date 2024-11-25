@@ -52,7 +52,7 @@ const authSSO = {
 };
 export const authRoutes = [
   {
-    path: '/FinanceFactoryTimesheet/auth',
+    path: '/auth',
     element: (
       <Suspense fallback={<SplashScreen />}>
         <Outlet />

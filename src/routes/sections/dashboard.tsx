@@ -25,7 +25,7 @@ const layoutContent = (
 
 export const dashboardRoutes = [
   {
-    path: `/FinanceFactoryTimesheet/dashboard`,
+    path: `/dashboard`,
     element: <SSOGuard>{layoutContent}</SSOGuard>,
     children: [
       { element:  <CalendarPage />,  index: true },

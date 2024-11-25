@@ -61,7 +61,7 @@ export function LoginRedirectHandler() {
       </Stack>
     )
   }
-  return <SplashScreen />;
+  return <Stack>Login Redirect</Stack>;
 }
 
 
