@@ -23,7 +23,6 @@ build
 
 # environment variables
 .env
-.env
 .env.development.local
 .env.test.local
 .env.production.local

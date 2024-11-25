@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react";
-import {useLocation, useNavigate} from "react-router-dom";
+import {useLocation, useNavigate, } from "react-router-dom";
 
 import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
@@ -16,6 +16,7 @@ export function LoginRedirectHandler() {
   const location = useLocation();
 
   useEffect(() => {
+    console.log('LoginRedirect Page: ', location);
     const locationSearchEmail = location.search.split('email=')[1];
     console.log({locationSearchEmail});
     if (locationSearchEmail) {
