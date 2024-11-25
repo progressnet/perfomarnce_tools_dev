@@ -11,10 +11,10 @@ function SSOGuard({ children }: Props) {
   const email = localStorage.getItem('email');
   console.log('guard email', email)
 
-  if (!email) {
-    // Redirect to login if no email in localStorage
-    return <Navigate to={paths.auth.sso.signIn} />;
-  }
+  // if (!email) {
+  //   // Redirect to login if no email in localStorage
+  //   return <Navigate to={paths.auth.sso.signIn} />;
+  // }
 
   return children;
 }
