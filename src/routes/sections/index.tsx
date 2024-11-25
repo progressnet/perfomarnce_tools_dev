@@ -19,7 +19,7 @@ export function Router() {
     //   element: <Navigate to={CONFIG.auth.redirectPath} replace />,
     // },
     {
-      path: '/FinanceFactoryTimesheet/test',
+      path: '/FinanceFactoryTimesheet/',
       element: <Stack>TEST PAGE</Stack>,
     },
     ...authRoutes,
