@@ -37,7 +37,6 @@ export function LoginRedirectHandler() {
           setError(e?.message || 'E: Error decrypting email');
         }
 
-
       }
       handleEmail().then(r => r);
     } else {
